@@ -1,0 +1,110 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
+using CG_TP1.Shapes;
+using System.IO;
+using System.Reflection;
+
+namespace CG_TP1
+{
+    static class Program
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            Application.Run(new MainWindow(getExercises()));
+        }
+
+        private static Exercise[] getExercises()
+        {
+            List<Exercise> exercises = new List<Exercise>();
+
+            exercises.Add(new Exercise(
+                "Ejercicio 1",
+                delegate()
+                {
+                    return new Sierpinski(new OpenTK.Vector4[]{
+                        new OpenTK.Vector4(-.75f, -.75f, 0f, 1f),
+                        new OpenTK.Vector4(0, .75f, 0f, 1f),
+                        new OpenTK.Vector4(.75f, -.75f, 0f, 1f)
+                    });
+                }
+            ));
+
+            exercises.Add(new Exercise(
+                "Ejercicio 2",
+                delegate()
+                {
+                    string path = Path.Combine(Environment.CurrentDirectory, @"..\..\PolylineData.txt");
+
+                    string[] lines = System.IO.File.ReadAllLines(path);
+
+                    int count = lines.Length;
+
+                    Vector4[] vertices = new Vector4[count];
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        string[] numbers = lines[i].Split(' ');
+                        float x = float.Parse(numbers[0]);
+                        float y = float.Parse(numbers[1]);
+
+                        vertices[i] = new Vector4(x, y, 0f, 1f);
+                    }
+
+                    return new Polygon(vertices, false);
+                }
+            ));
+
+            exercises.Add(new Exercise(
+                "Ejercicio 3.a.1",
+                delegate()
+                {
+                    Vector4[] vertices = new Vector4[4];
+
+                    vertices[0] = new Vector4(-0.5f, 0.5f, 0f, 1f);
+                    vertices[1] = new Vector4(0.5f, 0.5f, 0f, 1f);
+                    vertices[2] = new Vector4(0.25f, -0.5f, 0f, 1f);
+                    vertices[3] = new Vector4(-0.25f, -0.5f, 0f, 1f);
+
+                    return new Polygon(vertices, true);
+                }
+            ));
+
+            exercises.Add(new Exercise(
+                "Ejercicio 3.b",
+                delegate()
+                {
+                    return new RegularPolygon(8, 0.5f, true);
+                }
+            ));
+
+            exercises.Add(new Exercise(
+                "Ejercicio 4.1",
+                delegate()
+                {
+                    return new Cross(1f, 1f);
+                }
+            ));
+
+            exercises.Add(new Exercise(
+                "Ejercicio 4.2",
+                delegate()
+                {
+                    return new Star(.285f, .75f);
+                }
+            ));
+
+            return exercises.ToArray();
+        }
+    }
+}
