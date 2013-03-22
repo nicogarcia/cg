@@ -49,5 +49,11 @@ namespace CG_TP1
             glControl1.Refresh();
         }
 
+        private void glControl_Resize(object sender, EventArgs e)
+        {
+            GLManager.refreshViewport(this.Width, this.Height);
+            glControl1.Invalidate();
+        }
+
     }
 }

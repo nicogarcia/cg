@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using CG_TP1.Shapes;
 
 namespace CG_TP1
 {
@@ -21,7 +22,7 @@ namespace CG_TP1
                 new Vector4(halfBase + center.X, -halfHeight + center.Y, 0f, 1f),
             };
 
-            GLManager.addDrawable(this, BeginMode.Triangles);
+            GLManager.addDrawable(this, BeginMode.Triangles, ProgramObject.DEFAULT_PROGRAM);
         }
 
     }

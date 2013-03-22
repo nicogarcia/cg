@@ -15,9 +15,9 @@ namespace CG_TP1.Shapes
             this.vertices = vertices;
 
             if (solid)
-                GLManager.addDrawable(this, BeginMode.Polygon);
+                GLManager.addDrawable(this, BeginMode.Polygon, ProgramObject.DEFAULT_PROGRAM);
             else
-                GLManager.addDrawable(this, BeginMode.LineStrip);
+                GLManager.addDrawable(this, BeginMode.LineStrip, ProgramObject.DEFAULT_PROGRAM);
         }
     }
 }

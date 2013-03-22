@@ -46,6 +46,7 @@
             this.glControl1.VSync = false;
             this.glControl1.Load += new System.EventHandler(this.glControl_Load);
             this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl_Paint);
+            this.glControl1.Resize += new System.EventHandler(this.glControl_Resize);
             // 
             // comboBox1
             // 

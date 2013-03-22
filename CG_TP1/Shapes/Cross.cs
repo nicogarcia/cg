@@ -28,7 +28,7 @@ namespace CG_TP1.Shapes
             for (int i = 0; i < 12; i++, theta += steps[i % 3], radius = radii[i % 3])
                 vertices[i] = new Vector4(radius * (float)Math.Cos(theta), radius * (float)Math.Sin(theta), 0f, 1f);
 
-            GLManager.addDrawable(this, BeginMode.LineLoop);
+            GLManager.addDrawable(this, BeginMode.LineLoop, ProgramObject.DEFAULT_PROGRAM);
 
         }
     }

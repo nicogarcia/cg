@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using CG_TP1.Shapes;
 
 namespace CG_TP1
 {
@@ -27,7 +28,7 @@ namespace CG_TP1
                 vertices[i++] = Pk;
             }
 
-            GLManager.addDrawable(this, BeginMode.Points);
+            GLManager.addDrawable(this, BeginMode.Points, ProgramObject.DEFAULT_PROGRAM);
         }
     }
 }
