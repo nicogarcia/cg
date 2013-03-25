@@ -29,6 +29,22 @@ namespace CG_TP1
             List<Exercise> exercises = new List<Exercise>();
 
             exercises.Add(new Exercise(
+                "TP2-Rombo",
+                delegate()
+                {
+                    Matrix4 transformacion = Matrix4.CreateTranslation(-0.5f, 0f, 0f);
+                    Matrix4 transformacion1 = transformacion * Matrix4.CreateRotationZ((float) Math.PI/2) ;
+                    Matrix4 transformacion2 = transformacion * Matrix4.CreateRotationZ((float) Math.PI) ;
+                    Matrix4 transformacion3 = transformacion * Matrix4.CreateRotationZ((float) Math.PI*3/2) ;
+
+                    return new Drawable[] { new Romboid(0.75f, 0.25f, transformacion),
+                        new Romboid(0.75f, 0.25f, transformacion1),
+                        new Romboid(0.75f, 0.25f, transformacion2),
+                        new Romboid(0.75f, 0.25f, transformacion3)};
+                }
+            ));
+            /*
+            exercises.Add(new Exercise(
                 "Ejercicio 1",
                 delegate()
                 {
@@ -102,7 +118,7 @@ namespace CG_TP1
                 {
                     return new Star(.285f, .75f);
                 }
-            ));
+            ));*/
 
             return exercises.ToArray();
         }

@@ -9,6 +9,7 @@ namespace CG_TP1
     public abstract class Drawable
     {
         public Vector4[] vertices;
+        public Matrix4 transformation;
 
         public void paint()
         {

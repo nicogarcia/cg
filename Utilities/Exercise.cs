@@ -8,9 +8,9 @@ namespace CG_TP1
     public class Exercise
     {
         string title;
-        Func<Drawable> function;
+        Func<Drawable[]> function;
 
-        public Exercise(string title, Func<Drawable> function)
+        public Exercise(string title, Func<Drawable[]> function)
         {
             this.title = title;
             this.function = function;
@@ -21,7 +21,7 @@ namespace CG_TP1
             return title;
         }
 
-        public Drawable run()
+        public Drawable[] run()
         {
             return function.Invoke();
         }

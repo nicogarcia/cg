@@ -13,7 +13,7 @@ namespace CG_TP1
 {
     public partial class MainWindow : Form
     {
-        private Drawable drawable;
+        private Drawable[] figures;
         private Exercise[] functions;
 
         public MainWindow(Exercise[] functions)
@@ -31,8 +31,11 @@ namespace CG_TP1
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            if(drawable != null)
-                drawable.paint();
+            if (figures != null)
+                for (int i = 0; i < figures.Length; i++ )
+                {
+                    figures[i].paint();
+                }
 
             glControl1.SwapBuffers();
         }
@@ -45,7 +48,7 @@ namespace CG_TP1
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            drawable = ((Exercise)comboBox1.SelectedItem).run();
+            figures = ((Exercise)comboBox1.SelectedItem).run();
             glControl1.Refresh();
         }
 

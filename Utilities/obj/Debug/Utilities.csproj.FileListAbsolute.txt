@@ -9,3 +9,14 @@ C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Utiliti
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\bin\Debug\OpenTK.GLControl.xml
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\obj\Debug\Utilities.dll
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\obj\Debug\Utilities.pdb
+C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\bin\Debug\Utilities.dll
+C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\bin\Debug\Utilities.pdb
+C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\bin\Debug\OpenTK.Compatibility.dll
+C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\bin\Debug\OpenTK.dll
+C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\bin\Debug\OpenTK.GLControl.dll
+C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\bin\Debug\OpenTK.xml
+C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\bin\Debug\OpenTK.Compatibility.xml
+C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\bin\Debug\OpenTK.GLControl.xml
+C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\obj\Debug\Utilities.dll
+C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\obj\Debug\Utilities.pdb

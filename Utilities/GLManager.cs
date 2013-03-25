@@ -27,9 +27,15 @@ namespace CG_TP1
             DrawingInfo drawing_info = new DrawingInfo();
             drawing_info.begin_mode = begin_mode;
             drawing_info.program = program;
-            
+
             GL.GenVertexArrays(1, out drawing_info.VAO_ID);
             GL.GenBuffers(1, out drawing_info.VBO_ID);
+
+            int location = GL.GetUniformLocation(drawing_info.program.program_handle, "projectionMatrix");
+            GL.UniformMatrix4(location, false, ref Matrix4.Identity);
+
+            location = GL.GetUniformLocation(drawing_info.program.program_handle, "modelView");
+            GL.UniformMatrix4(location, false, ref drawable.transformation);
 
             objects.Add(drawable, drawing_info);
         }
@@ -46,15 +52,20 @@ namespace CG_TP1
             GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(drawable.vertices.Length * Vector4.SizeInBytes),
                             drawable.vertices, BufferUsageHint.StaticDraw);
 
+
             GL.EnableVertexAttribArray(0);
+            GL.EnableVertexAttribArray(1);
+
             GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
+            GL.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 0, 4 * Vector4.SizeInBytes);
 
-            GL.DrawArrays(drawing_info.begin_mode, 0, drawable.vertices.Length);
+            GL.DrawArrays(drawing_info.begin_mode, 0, drawable.vertices.Length / 2);
 
-            GL.DisableVertexAttribArray(0);            
+            GL.DisableVertexAttribArray(0);
+            GL.DisableVertexAttribArray(1);
 
             GL.UseProgram(0);
-            
+
         }
 
         public static void refreshViewport(int width, int height)
