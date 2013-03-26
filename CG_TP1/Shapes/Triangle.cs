@@ -6,6 +6,8 @@ using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using CG_TP1.Shapes;
+using Utilities;
+using Utilities.Shaders;
 
 namespace CG_TP1
 {

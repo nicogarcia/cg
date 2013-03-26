@@ -5,7 +5,7 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace CG_TP1
+namespace Utilities.Shaders
 {
     public class FragmentShader : Shader
     {

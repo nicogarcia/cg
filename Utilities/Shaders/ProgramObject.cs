@@ -5,7 +5,7 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace CG_TP1.Shapes
+namespace Utilities.Shaders
 {
     public class ProgramObject
     {

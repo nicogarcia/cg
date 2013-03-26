@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 
-namespace CG_TP1
+namespace Utilities
 {
     public abstract class Drawable
     {

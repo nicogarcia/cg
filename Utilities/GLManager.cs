@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
-using CG_TP1.Shapes;
+using Utilities.Shaders;
 
-namespace CG_TP1
+namespace Utilities
 {
     // Contains the info necessary for each Drawable object
     class DrawingInfo
@@ -31,11 +31,7 @@ namespace CG_TP1
             GL.GenVertexArrays(1, out drawing_info.VAO_ID);
             GL.GenBuffers(1, out drawing_info.VBO_ID);
 
-            int location = GL.GetUniformLocation(drawing_info.program.program_handle, "projectionMatrix");
-            GL.UniformMatrix4(location, false, ref Matrix4.Identity);
 
-            location = GL.GetUniformLocation(drawing_info.program.program_handle, "modelView");
-            GL.UniformMatrix4(location, false, ref drawable.transformation);
 
             objects.Add(drawable, drawing_info);
         }
@@ -52,6 +48,11 @@ namespace CG_TP1
             GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(drawable.vertices.Length * Vector4.SizeInBytes),
                             drawable.vertices, BufferUsageHint.StaticDraw);
 
+            int location = GL.GetUniformLocation(drawing_info.program.program_handle, "projectionMatrix");
+            GL.UniformMatrix4(location, false, ref Matrix4.Identity);
+
+            location = GL.GetUniformLocation(drawing_info.program.program_handle, "modelView");
+            GL.UniformMatrix4(location, false, ref drawable.transformation);
 
             GL.EnableVertexAttribArray(0);
             GL.EnableVertexAttribArray(1);
@@ -59,7 +60,16 @@ namespace CG_TP1
             GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
             GL.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 0, 4 * Vector4.SizeInBytes);
 
+
             GL.DrawArrays(drawing_info.begin_mode, 0, drawable.vertices.Length / 2);
+
+            /****/
+            Matrix4 zoom = Matrix4.Scale(3f) * Matrix4.CreateTranslation(new Vector3(0.5f, 0, 0));
+            GL.UniformMatrix4(location, false, ref zoom);
+            GL.Viewport(300, 0, 300, 300);
+
+            GL.DrawArrays(drawing_info.begin_mode, 0, drawable.vertices.Length / 2);
+            /****/
 
             GL.DisableVertexAttribArray(0);
             GL.DisableVertexAttribArray(1);

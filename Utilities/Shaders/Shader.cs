@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CG_TP1
+namespace Utilities.Shaders
 {
     public abstract class Shader
     {

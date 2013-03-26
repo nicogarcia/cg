@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
+using Utilities;
+using Utilities.Shaders;
 
 namespace CG_TP1.Shapes
 {

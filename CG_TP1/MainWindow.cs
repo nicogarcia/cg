@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
+using Utilities;
 
 namespace CG_TP1
 {
@@ -54,7 +55,18 @@ namespace CG_TP1
 
         private void glControl_Resize(object sender, EventArgs e)
         {
-            GLManager.refreshViewport(this.Width, this.Height);
+            int aspect_y = 1, aspect_x = 1;
+
+            // Calculate resize ratios for resizing
+            int ratioW = glControl1.Width / aspect_x;
+            int ratioH = glControl1.Height / aspect_y;
+
+            // smaller ratio will ensure that the image fits in the view
+            int ratio = ratioW < ratioH ? ratioW : ratioH;
+
+            GL.Viewport((glControl1.Width - aspect_x * ratio) / 2, (glControl1.Height - aspect_y * ratio) / 2,
+                aspect_x * ratio, aspect_y * ratio);
+            
             glControl1.Invalidate();
         }
 
