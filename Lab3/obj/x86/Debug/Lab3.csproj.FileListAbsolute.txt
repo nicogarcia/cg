@@ -9,9 +9,9 @@ C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\bi
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\bin\Debug\OpenTK.Compatibility.xml
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\bin\Debug\OpenTK.GLControl.xml
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\obj\x86\Debug\Lab3.Form1.resources
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\obj\x86\Debug\Lab3.Properties.Resources.resources
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\obj\x86\Debug\Lab3.exe
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\obj\x86\Debug\Lab3.pdb
+C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\obj\x86\Debug\Lab3.MainWindow.resources

@@ -9,31 +9,42 @@ using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Utilities.Shaders;
+using System.IO;
 
 namespace Lab3
 {
-    public partial class Form1 : Form
+    public partial class MainWindow : Form
     {
         int VAO_ID;
         int VBO_ID;
         int projection_location;
         int model_view_location;
-        Vector4[][] vertices;
-        float[] bounds = new float[4];
-        float aspect_x, aspect_y;
         ProgramObject program;
         Matrix4 projMatrix;
         Matrix4 zoomMatrix;
-        
 
-        public Form1()
+        Vector4[][] vertices;
+        float[] bounds = new float[4];
+
+        // Figure aspect ratio
+        float aspect_x, aspect_y;
+
+        // Selection aspect ratio
+        float selection_x = 0.25f, selection_y = 0.125f;
+
+        // Left viewport
+        Rectangle left_viewport;
+
+        bool picture_loaded = false;
+
+        public MainWindow()
         {
             InitializeComponent();
         }
 
         private void glControl1_Load(object sender, EventArgs e)
         {
-            program =  new ProgramObject(
+            program = new ProgramObject(
             new VertexShader(Shaders.VERTEX_TRANSF_SHADER), new FragmentShader(Shaders.DEFAULT_FRAGMENT_SHADER));
             GL.ClearColor(Color.Yellow);
 
@@ -44,7 +55,7 @@ namespace Lab3
             model_view_location = GL.GetUniformLocation(program.program_handle, "modelView");
 
         }
-        
+
 
         private void glControl_Paint(object sender, PaintEventArgs e)
         {
@@ -56,10 +67,10 @@ namespace Lab3
 
                 GL.BindVertexArray(VAO_ID);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
-                
+
                 // Calculate resize ratios for resizing
-                int ratioW = (int) (glControl1.Width / 2 / aspect_x);
-                int ratioH = (int) (glControl1.Height / aspect_y);
+                int ratioW = (int)(glControl1.Width / 2 / aspect_x);
+                int ratioH = (int)(glControl1.Height / aspect_y);
 
                 // smaller ratio will ensure that the image fits in the view
                 int ratio = ratioW < ratioH ? ratioW : ratioH;
@@ -71,39 +82,50 @@ namespace Lab3
 
                     GL.UniformMatrix4(projection_location, false, ref projMatrix);
                     GL.UniformMatrix4(model_view_location, false, ref Matrix4.Identity);
-                    
+
                     GL.EnableVertexAttribArray(0);
                     GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
 
-                    GL.Viewport((int) (glControl1.Width / 2 - aspect_x * ratio) / 2, (int) (glControl1.Height - aspect_y * ratio) / 2,
-                    (int) (aspect_x * ratio), (int) (aspect_y * ratio));
-                    
+                    left_viewport = new Rectangle(
+                        (int)(glControl1.Width / 2 - aspect_x * ratio) / 2,
+                        (int)(glControl1.Height - aspect_y * ratio) / 2,
+                        (int)(aspect_x * ratio),
+                        (int)(aspect_y * ratio));
+
+                    GL.Viewport(left_viewport);
+
                     GL.DrawArrays(BeginMode.LineStrip, 0, polylines.Length);
                 }
-                
+
+
+                // Calculate resize ratios for resizing
+                int sel_ratioW = (int)(glControl1.Width / 2 / selection_x);
+                int sel_ratioH = (int)(glControl1.Height / selection_y);
+
+                // smaller ratio will ensure that the image fits in the view
+                int sel_ratio = sel_ratioW < sel_ratioH ? sel_ratioW : sel_ratioH;
+
                 foreach (Vector4[] polylines in vertices)
                 {
                     GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(polylines.Length * Vector4.SizeInBytes),
                                     polylines, BufferUsageHint.StaticDraw);
 
-                    Matrix4 zoom = Matrix4.Scale(1f) * zoomMatrix;
-
-                    GL.UniformMatrix4(projection_location, false, ref zoom);
+                    GL.UniformMatrix4(projection_location, false, ref zoomMatrix);
                     GL.UniformMatrix4(model_view_location, false, ref Matrix4.Identity);
 
                     GL.EnableVertexAttribArray(0);
                     GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
 
-                    GL.Viewport((int)(glControl1.Width / 2 - aspect_x * ratio) / 2 + glControl1.Width / 2, (int)(glControl1.Height - aspect_y * ratio) / 2,
-                    (int)(aspect_x * ratio), (int)(aspect_y * ratio));
+                    GL.Viewport(
+                        (int)(glControl1.Width / 2 - selection_x * sel_ratio) / 2 + glControl1.Width / 2,
+                        (int)(glControl1.Height - selection_y * sel_ratio) / 2,
+                        (int)(selection_x * sel_ratio),
+                        (int)(selection_y * sel_ratio));
 
                     GL.DrawArrays(BeginMode.LineStrip, 0, polylines.Length);
                 }
 
-                /****/
-
                 GL.UseProgram(0);
-
 
                 glControl1.SwapBuffers();
             }
@@ -111,19 +133,95 @@ namespace Lab3
 
         private void button1_Click(object sender, EventArgs e)
         {
+            DialogResult result = folderBrowserDialog1.ShowDialog();
 
+            if (result != DialogResult.OK)
+                return;
 
+            label1.Text = folderBrowserDialog1.SelectedPath;
+
+            DirectoryInfo dinfo = new DirectoryInfo(folderBrowserDialog1.SelectedPath);
+            FileInfo[] Files = dinfo.GetFiles("*.grs");
+
+            listBox1.Items.Clear();
+            foreach (FileInfo file in Files)
+            {
+                listBox1.Items.Add(file.Name);
+            }
             
-            //DialogResult result = openFileDialog1.ShowDialog();
-            string filename = @"C:\Users\Administrador\Desktop\dragon.grs";//openFileDialog1.FileName;
-            Console.WriteLine(filename);
-            
-            string[] lines = System.IO.File.ReadAllLines(filename);
+        }
+
+        private void glControl_Click(object sender, EventArgs e)
+        {
+            // Selection box offsets
+            float delta_x = 0.1f;
+            float delta_y = 0.1f;
+
+            MouseEventArgs mea = (MouseEventArgs)e;
+            float screen_x = mea.X;
+            float screen_y = glControl1.Height - mea.Y;
+
+            Vector3 mouse_position = new Vector3(screen_x, screen_y, 0f);
+
+            Vector4 world_position = new Vector4(
+                    vector_unproject(
+                        mouse_position,
+                        Matrix4.Identity,
+                        projMatrix,
+                        new Rectangle(0, 0, glControl1.Width / 2, glControl1.Height)
+                     ),
+                     1f);
+
+            zoomMatrix = Matrix4.CreateOrthographicOffCenter(
+                world_position.X - delta_x,
+                world_position.X + delta_x,
+                world_position.Y - delta_y,
+                world_position.Y + delta_y,
+                -1f, 1f);
+
+            glControl1.Invalidate();
+        }
+
+        private void glControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!picture_loaded)
+                return;
+
+            MouseEventArgs mea = (MouseEventArgs)e;
+            float screen_x = mea.X;
+            float screen_y = glControl1.Height - mea.Y;
+
+            Vector3 mouse_position = new Vector3(screen_x, screen_y, 0f);
+
+            Vector4 world_position = new Vector4(
+                    vector_unproject(
+                        mouse_position,
+                        Matrix4.Identity,
+                        projMatrix,
+                        left_viewport),
+                        1f
+                );
+
+            zoomMatrix = Matrix4.CreateOrthographicOffCenter(
+                world_position.X - selection_x,
+                world_position.X + selection_x,
+                world_position.Y - selection_y,
+                world_position.Y + selection_y,
+                -1f, 1f);
+
+            glControl1.Invalidate();
+        }
+
+        private void list_SelectedChanged(object sender, EventArgs e)
+        {
+            picture_loaded = false;
+
+            string[] lines = System.IO.File.ReadAllLines(label1.Text + "\\" + listBox1.SelectedItem.ToString());
 
             // i stores the reading cursor
             int i = 0;
-            while (lines[i] != "" && lines[i++][0] != '*') { }
-            
+            while (lines[i++][0] != '*') { }
+
             // At the line after '**************'
 
             // Replace double spaces by only one
@@ -145,7 +243,7 @@ namespace Lab3
             vertices = new Vector4[num_of_polylines][];
 
             // For each polyline
-            for(int j = 0; j < num_of_polylines; j++)
+            for (int j = 0; j < num_of_polylines; j++)
             {
                 // Read the number of vertices
                 int num_of_vertices;
@@ -163,48 +261,31 @@ namespace Lab3
 
                     float x, y;
                     string[] parts = lines[i++].Split(' ');
-                    
+
                     float.TryParse(parts[0], out x);
                     float.TryParse(parts[1], out y);
 
                     vertices[j][k] = new Vector4(x, y, 0f, 1f);
                 }
             }
+
+            // Initialize projection and zoom with picture extents
             projMatrix = Matrix4.CreateOrthographicOffCenter(bounds[0], bounds[2], bounds[3], bounds[1], -1f, 1f);
-            zoomMatrix = Matrix4.CreateOrthographicOffCenter(bounds[0], bounds[2], bounds[3], bounds[1], -1f, 1f);
+            zoomMatrix = Matrix4.Identity;
 
 
             // Define aspect ratio
             aspect_x = bounds[2] - bounds[0];
-            aspect_y = bounds[1] - bounds[3];            
+            aspect_y = bounds[1] - bounds[3];
+
 
             glControl1.Invalidate();
-        }
 
-        private void glControl_Click(object sender, EventArgs e)
-
-        {
-            float fix_X,fix_Y;
-            fix_X = 100;
-            fix_Y = 50;
-            MouseEventArgs mea = (MouseEventArgs)e;
-            float  x = mea.X; 
-            float y = (glControl1.Height -mea.Y);
-            Vector3[] vertex = new Vector3[] {new Vector3(x,y, 0f),
-                new Vector3(x + fix_X, y + fix_Y,0f), new Vector3(x +fix_X, y +fix_Y,0f), new Vector3(x + fix_X, y -fix_Y,0f)};
-            Vector4 transf0 = new Vector4(unproj(vertex[0],Matrix4.Identity, projMatrix, new Rectangle(0,0,glControl1.Width/2,glControl1.Height)),1f);
-            Vector4 transf1 = new Vector4(unproj(vertex[1], Matrix4.Identity, projMatrix, new Rectangle(0, 0, glControl1.Width / 2, glControl1.Height)), 1f);
-            Vector4 transf2 = new Vector4(unproj(vertex[2], Matrix4.Identity, projMatrix, new Rectangle(0, 0, glControl1.Width / 2, glControl1.Height)), 1f);
-            Vector4 transf3 = new Vector4(unproj(vertex[3], Matrix4.Identity, projMatrix, new Rectangle(0, 0, glControl1.Width / 2, glControl1.Height)), 1f);
-
-            zoomMatrix = Matrix4.CreateOrthographicOffCenter(transf0.X,transf0.X + 0.25f,transf0.Y,transf0.Y + 0.35f,-1f,1f);
-
-            glControl1.Invalidate();
+            picture_loaded = true;
         }
 
 
-
-        Vector3 unproj(Vector3 win, Matrix4 mViewMat, Matrix4 projMat, Rectangle viewport)
+        Vector3 vector_unproject(Vector3 win, Matrix4 mViewMat, Matrix4 projMat, Rectangle viewport)
         {
             Vector3 resul = Vector3.Zero;
             Vector4 _in = Vector4.Zero;
@@ -226,23 +307,23 @@ namespace Lab3
             _in.Y = _in.Y * 2 - 1;
             _in.Z = _in.Z * 2 - 1;
 
-                        //Antitransformamos.
-             _out = Vector4.Transform(_in, oneMatrix);
-             if ((_out.W > float.Epsilon) || (_out.W < -float.Epsilon))
-             {
-                 _out.X = _out.X / _out.W;
-                 _out.Y = _out.Y / _out.W;
-                 _out.Z = _out.Z / _out.W;
-             }
-             else
-             {
-                     throw new Exception("UnProject: No pudo antitransformar.");
-             }
+            //Antitransformamos.
+            _out = Vector4.Transform(_in, oneMatrix);
+            if ((_out.W > float.Epsilon) || (_out.W < -float.Epsilon))
+            {
+                _out.X = _out.X / _out.W;
+                _out.Y = _out.Y / _out.W;
+                _out.Z = _out.Z / _out.W;
+            }
+            else
+            {
+                throw new Exception("UnProject: No pudo antitransformar.");
+            }
 
-             resul.X = _out.X;
-             resul.Y = _out.Y;
-             resul.Z = _out.Z;
-             return resul;
+            resul.X = _out.X;
+            resul.Y = _out.Y;
+            resul.Z = _out.Z;
+            return resul;
         }
 
     }
