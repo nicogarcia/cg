@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CG_TP1", "CG_TP1\CG_TP1.csproj", "{86E3D985-62A8-4238-8C72-5FFC07392020}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CG_TP2", "CG_TP2\CG_TP2.csproj", "{576F956F-8FB8-4805-AC89-16B8466F2305}"

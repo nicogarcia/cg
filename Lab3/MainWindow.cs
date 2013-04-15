@@ -22,15 +22,17 @@ namespace Lab3
         ProgramObject program;
         Matrix4 projMatrix;
         Matrix4 zoomMatrix;
+        bool selectA = true;
 
         Vector4[][] vertices;
+        Vector4[] single_array;
         float[] bounds = new float[4];
 
         // Figure aspect ratio
         float aspect_x, aspect_y;
 
         // Selection aspect ratio
-        float selection_x = 0.25f, selection_y = 0.125f;
+        float selection_x = 0.15f, selection_y = 0.1f;
 
         // Left viewport
         Rectangle left_viewport;
@@ -40,13 +42,15 @@ namespace Lab3
         public MainWindow()
         {
             InitializeComponent();
+            aToolStripMenuItem.Enabled = false;
+
         }
 
         private void glControl1_Load(object sender, EventArgs e)
         {
             program = new ProgramObject(
             new VertexShader(Shaders.VERTEX_TRANSF_SHADER), new FragmentShader(Shaders.DEFAULT_FRAGMENT_SHADER));
-            GL.ClearColor(Color.Yellow);
+            GL.ClearColor(Color.Black);
 
             GL.GenVertexArrays(1, out VAO_ID);
             GL.GenBuffers(1, out VBO_ID);
@@ -54,6 +58,11 @@ namespace Lab3
             projection_location = GL.GetUniformLocation(program.program_handle, "projectionMatrix");
             model_view_location = GL.GetUniformLocation(program.program_handle, "modelView");
 
+
+            GL.BindVertexArray(VAO_ID);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
+            GL.EnableVertexAttribArray(0);
+            GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
         }
 
 
@@ -68,53 +77,52 @@ namespace Lab3
                 GL.BindVertexArray(VAO_ID);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
 
+                GL.UniformMatrix4(projection_location, false, ref projMatrix);
+                GL.UniformMatrix4(model_view_location, false, ref Matrix4.Identity);
+
                 // Calculate resize ratios for resizing
-                int ratioW = (int)(glControl1.Width / 2 / aspect_x);
+                int ratioW;
+                if (selectA)
+                    ratioW = (int)(glControl1.Width / aspect_x);
+                else
+                    ratioW = (int)(glControl1.Width / 2 / aspect_x);
                 int ratioH = (int)(glControl1.Height / aspect_y);
 
                 // smaller ratio will ensure that the image fits in the view
                 int ratio = ratioW < ratioH ? ratioW : ratioH;
-
-                foreach (Vector4[] polylines in vertices)
-                {
-                    GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(polylines.Length * Vector4.SizeInBytes),
-                                    polylines, BufferUsageHint.StaticDraw);
-
-                    GL.UniformMatrix4(projection_location, false, ref projMatrix);
-                    GL.UniformMatrix4(model_view_location, false, ref Matrix4.Identity);
-
-                    GL.EnableVertexAttribArray(0);
-                    GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
-
+                
+                if (selectA)
                     left_viewport = new Rectangle(
-                        (int)(glControl1.Width / 2 - aspect_x * ratio) / 2,
+                        (int)(glControl1.Width - aspect_x * ratio) / 2,
                         (int)(glControl1.Height - aspect_y * ratio) / 2,
                         (int)(aspect_x * ratio),
                         (int)(aspect_y * ratio));
 
-                    GL.Viewport(left_viewport);
+                else left_viewport = new Rectangle(
+                       (int)(glControl1.Width / 2 - aspect_x * ratio) / 2,
+                       (int)(glControl1.Height - aspect_y * ratio) / 2,
+                       (int)(aspect_x * ratio),
+                       (int)(aspect_y * ratio));
+                GL.Viewport(left_viewport);
 
-                    GL.DrawArrays(BeginMode.LineStrip, 0, polylines.Length);
+                int current = 0;
+                for (int i = 0; i < vertices.Length; i++)
+                {
+                    GL.DrawArrays(BeginMode.LineStrip, current, vertices[i].Length);
+                    current += vertices[i].Length;
                 }
 
-
                 // Calculate resize ratios for resizing
-                int sel_ratioW = (int)(glControl1.Width / 2 / selection_x);
-                int sel_ratioH = (int)(glControl1.Height / selection_y);
-
-                // smaller ratio will ensure that the image fits in the view
-                int sel_ratio = sel_ratioW < sel_ratioH ? sel_ratioW : sel_ratioH;
-
-                foreach (Vector4[] polylines in vertices)
+                if (!selectA)
                 {
-                    GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(polylines.Length * Vector4.SizeInBytes),
-                                    polylines, BufferUsageHint.StaticDraw);
+                    int sel_ratioW = (int)(glControl1.Width / 2 / selection_x);
+                    int sel_ratioH = (int)(glControl1.Height / selection_y);
+
+                    // smaller ratio will ensure that the image fits in the view
+                    int sel_ratio = sel_ratioW < sel_ratioH ? sel_ratioW : sel_ratioH;
 
                     GL.UniformMatrix4(projection_location, false, ref zoomMatrix);
                     GL.UniformMatrix4(model_view_location, false, ref Matrix4.Identity);
-
-                    GL.EnableVertexAttribArray(0);
-                    GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
 
                     GL.Viewport(
                         (int)(glControl1.Width / 2 - selection_x * sel_ratio) / 2 + glControl1.Width / 2,
@@ -122,13 +130,38 @@ namespace Lab3
                         (int)(selection_x * sel_ratio),
                         (int)(selection_y * sel_ratio));
 
-                    GL.DrawArrays(BeginMode.LineStrip, 0, polylines.Length);
+                    current = 0;
+                    for (int i = 0; i < vertices.Length; i++)
+                    {
+                        GL.DrawArrays(BeginMode.LineStrip, current, vertices[i].Length);
+                        current += vertices[i].Length;
+                    }
                 }
 
                 GL.UseProgram(0);
 
                 glControl1.SwapBuffers();
             }
+        }
+
+        private Vector4[] createSingleVerticesArray()
+        {
+            int count = 0;
+            for (int i = 0; i < vertices.Length; i++)
+                count += vertices[i].Length;
+
+            Vector4[] single = new Vector4[count];
+
+            int current = 0;
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                for (int j = 0; j < vertices[i].Length; j++)
+                {
+                    single[current++] = vertices[i][j];
+                }
+            }
+
+            return single;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -148,68 +181,74 @@ namespace Lab3
             {
                 listBox1.Items.Add(file.Name);
             }
-            
+
         }
 
         private void glControl_Click(object sender, EventArgs e)
         {
-            // Selection box offsets
-            float delta_x = 0.1f;
-            float delta_y = 0.1f;
+            if (!selectA)
+            {
+                // Selection box offsets
+                float delta_x = 0.1f;
+                float delta_y = 0.1f;
 
-            MouseEventArgs mea = (MouseEventArgs)e;
-            float screen_x = mea.X;
-            float screen_y = glControl1.Height - mea.Y;
+                MouseEventArgs mea = (MouseEventArgs)e;
+                float screen_x = mea.X;
+                float screen_y = glControl1.Height - mea.Y;
 
-            Vector3 mouse_position = new Vector3(screen_x, screen_y, 0f);
+                Vector3 mouse_position = new Vector3(screen_x, screen_y, 0f);
 
-            Vector4 world_position = new Vector4(
-                    vector_unproject(
-                        mouse_position,
-                        Matrix4.Identity,
-                        projMatrix,
-                        new Rectangle(0, 0, glControl1.Width / 2, glControl1.Height)
-                     ),
-                     1f);
+                Vector4 world_position = new Vector4(
+                        vector_unproject(
+                            mouse_position,
+                            Matrix4.Identity,
+                            projMatrix,
+                            new Rectangle(0, 0, glControl1.Width / 2, glControl1.Height)
+                         ),
+                         1f);
 
-            zoomMatrix = Matrix4.CreateOrthographicOffCenter(
-                world_position.X - delta_x,
-                world_position.X + delta_x,
-                world_position.Y - delta_y,
-                world_position.Y + delta_y,
-                -1f, 1f);
+                zoomMatrix = Matrix4.CreateOrthographicOffCenter(
+                    world_position.X - delta_x,
+                    world_position.X + delta_x,
+                    world_position.Y - delta_y,
+                    world_position.Y + delta_y,
+                    -1f, 1f);
 
-            glControl1.Invalidate();
+                glControl1.Invalidate();
+            }
         }
 
         private void glControl_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!picture_loaded)
-                return;
+            if (!selectA)
+            {
+                if (!picture_loaded)
+                    return;
 
-            MouseEventArgs mea = (MouseEventArgs)e;
-            float screen_x = mea.X;
-            float screen_y = glControl1.Height - mea.Y;
+                MouseEventArgs mea = (MouseEventArgs)e;
+                float screen_x = mea.X;
+                float screen_y = glControl1.Height - mea.Y;
 
-            Vector3 mouse_position = new Vector3(screen_x, screen_y, 0f);
+                Vector3 mouse_position = new Vector3(screen_x, screen_y, 0f);
 
-            Vector4 world_position = new Vector4(
-                    vector_unproject(
-                        mouse_position,
-                        Matrix4.Identity,
-                        projMatrix,
-                        left_viewport),
-                        1f
-                );
+                Vector4 world_position = new Vector4(
+                        vector_unproject(
+                            mouse_position,
+                            Matrix4.Identity,
+                            projMatrix,
+                            left_viewport),
+                            1f
+                    );
 
-            zoomMatrix = Matrix4.CreateOrthographicOffCenter(
-                world_position.X - selection_x,
-                world_position.X + selection_x,
-                world_position.Y - selection_y,
-                world_position.Y + selection_y,
-                -1f, 1f);
+                zoomMatrix = Matrix4.CreateOrthographicOffCenter(
+                    world_position.X - selection_x,
+                    world_position.X + selection_x,
+                    world_position.Y - selection_y,
+                    world_position.Y + selection_y,
+                    -1f, 1f);
 
-            glControl1.Invalidate();
+                glControl1.Invalidate();
+            }
         }
 
         private void list_SelectedChanged(object sender, EventArgs e)
@@ -273,11 +312,16 @@ namespace Lab3
             projMatrix = Matrix4.CreateOrthographicOffCenter(bounds[0], bounds[2], bounds[3], bounds[1], -1f, 1f);
             zoomMatrix = Matrix4.Identity;
 
-
             // Define aspect ratio
             aspect_x = bounds[2] - bounds[0];
             aspect_y = bounds[1] - bounds[3];
 
+            single_array = createSingleVerticesArray();
+
+            GL.BindVertexArray(VAO_ID);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
+            GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(single_array.Length * Vector4.SizeInBytes),
+                            single_array, BufferUsageHint.StaticDraw);
 
             glControl1.Invalidate();
 
@@ -326,30 +370,20 @@ namespace Lab3
             return resul;
         }
 
+        private void aToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            selectA = true;
+            aToolStripMenuItem.Enabled = false;
+            bToolStripMenuItem.Enabled = true;
+        }
+
+        private void bToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            selectA = false;
+            aToolStripMenuItem.Enabled = true;
+            bToolStripMenuItem.Enabled = false;
+        }
+
     }
 }
 
-
-/* Square test 
-
-
-                Vector4[] vert = new Vector4[]{
-                    new Vector4(bounds[0] + 0.05f, bounds[3], 0f, 1f),
-                    new Vector4(bounds[0] + 0.05f, bounds[1], 0f, 1f),
-                    new Vector4(bounds[2], bounds[1], 0f, 1f),
-                    new Vector4(bounds[2], bounds[3], 0f, 1f),
-                };
-
-                GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(vert.Length * Vector4.SizeInBytes),
-                                   vert, BufferUsageHint.StaticDraw);
-
-
-                GL.UniformMatrix4(projection_location, false, ref translation);
-                GL.UniformMatrix4(model_view_location, false, ref Matrix4.Identity);
-
-                GL.EnableVertexAttribArray(0);
-                GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
-
-                GL.Viewport(0, 0, glControl1.Width, glControl1.Height);
-                GL.DrawArrays(BeginMode.LineLoop, 0, vert.Length);
-*/

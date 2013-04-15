@@ -41,7 +41,11 @@ namespace Utilities.Shaders
             void main(){
                 gl_Position = projectionMatrix * modelView * position;
 
-                fragment_input_color = input_color;
+                float rojo = 1.0 - abs(position.x);
+                float verde = 1.0 - abs(position.y);
+                float azul = abs(position.x + position.y);
+
+                fragment_input_color = vec4(rojo, azul, verde, 1.0);
             } 
             ";
     }

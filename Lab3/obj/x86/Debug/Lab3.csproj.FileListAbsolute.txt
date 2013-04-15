@@ -15,3 +15,36 @@ C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\ob
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\obj\x86\Debug\Lab3.exe
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\obj\x86\Debug\Lab3.pdb
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab3\obj\x86\Debug\Lab3.MainWindow.resources
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\bin\Debug\Lab3.exe
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\bin\Debug\Lab3.pdb
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\bin\Debug\OpenTK.Compatibility.dll
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\bin\Debug\OpenTK.dll
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\bin\Debug\OpenTK.GLControl.dll
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\bin\Debug\Utilities.dll
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\bin\Debug\Utilities.pdb
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\bin\Debug\OpenTK.xml
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\bin\Debug\OpenTK.Compatibility.xml
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\bin\Debug\OpenTK.GLControl.xml
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\obj\x86\Debug\Lab3.MainWindow.resources
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\obj\x86\Debug\Lab3.Properties.Resources.resources
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\obj\x86\Debug\Lab3.csproj.GenerateResource.Cache
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\obj\x86\Debug\Lab3.exe
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\obj\x86\Debug\Lab3.pdb
+C:\Users\GNZNotebook\Documents\Uns\Grafica\Nico\cg-master\Lab3\obj\x86\Debug\Lab3.csprojResolveAssemblyReference.cache
+C:\Users\grafica\Desktop\cg-master\Lab3\obj\x86\Debug\Lab3.exe
+C:\Users\grafica\Desktop\cg-master\Lab3\obj\x86\Debug\Lab3.pdb
+C:\Users\grafica\Desktop\cg-master\Lab3\bin\Debug\Lab3.exe
+C:\Users\grafica\Desktop\cg-master\Lab3\bin\Debug\Lab3.pdb
+C:\Users\grafica\Desktop\cg-master\Lab3\bin\Debug\OpenTK.Compatibility.dll
+C:\Users\grafica\Desktop\cg-master\Lab3\bin\Debug\OpenTK.dll
+C:\Users\grafica\Desktop\cg-master\Lab3\bin\Debug\OpenTK.GLControl.dll
+C:\Users\grafica\Desktop\cg-master\Lab3\bin\Debug\Utilities.dll
+C:\Users\grafica\Desktop\cg-master\Lab3\bin\Debug\Utilities.pdb
+C:\Users\grafica\Desktop\cg-master\Lab3\bin\Debug\OpenTK.xml
+C:\Users\grafica\Desktop\cg-master\Lab3\bin\Debug\OpenTK.Compatibility.xml
+C:\Users\grafica\Desktop\cg-master\Lab3\bin\Debug\OpenTK.GLControl.xml
+C:\Users\grafica\Desktop\cg-master\Lab3\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\grafica\Desktop\cg-master\Lab3\obj\x86\Debug\Lab3.MainWindow.resources
+C:\Users\grafica\Desktop\cg-master\Lab3\obj\x86\Debug\Lab3.Properties.Resources.resources
+C:\Users\grafica\Desktop\cg-master\Lab3\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\grafica\Desktop\cg-master\Lab3\obj\x86\Debug\GenerateResource.write.1.tlog

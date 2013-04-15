@@ -47,3 +47,20 @@ C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\obj\x8
 C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\obj\x86\Debug\CG_TP1.Properties.Resources.resources
 C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\grafica\Desktop\cg-master\CG_TP1\bin\Debug\CG_TP1.exe
+C:\Users\grafica\Desktop\cg-master\CG_TP1\bin\Debug\CG_TP1.pdb
+C:\Users\grafica\Desktop\cg-master\CG_TP1\bin\Debug\OpenTK.Compatibility.dll
+C:\Users\grafica\Desktop\cg-master\CG_TP1\bin\Debug\OpenTK.dll
+C:\Users\grafica\Desktop\cg-master\CG_TP1\bin\Debug\OpenTK.GLControl.dll
+C:\Users\grafica\Desktop\cg-master\CG_TP1\bin\Debug\Utilities.dll
+C:\Users\grafica\Desktop\cg-master\CG_TP1\bin\Debug\Utilities.pdb
+C:\Users\grafica\Desktop\cg-master\CG_TP1\bin\Debug\OpenTK.xml
+C:\Users\grafica\Desktop\cg-master\CG_TP1\bin\Debug\OpenTK.Compatibility.xml
+C:\Users\grafica\Desktop\cg-master\CG_TP1\bin\Debug\OpenTK.GLControl.xml
+C:\Users\grafica\Desktop\cg-master\CG_TP1\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\grafica\Desktop\cg-master\CG_TP1\obj\x86\Debug\CG_TP1.MainWindow.resources
+C:\Users\grafica\Desktop\cg-master\CG_TP1\obj\x86\Debug\CG_TP1.Properties.Resources.resources
+C:\Users\grafica\Desktop\cg-master\CG_TP1\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\grafica\Desktop\cg-master\CG_TP1\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\grafica\Desktop\cg-master\CG_TP1\obj\x86\Debug\CG_TP1.exe
+C:\Users\grafica\Desktop\cg-master\CG_TP1\obj\x86\Debug\CG_TP1.pdb

@@ -28,17 +28,37 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.glControl1 = new OpenTK.GLControl();
             this.button1 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.listBox1 = new System.Windows.Forms.ListBox();
-            this.glControl1 = new OpenTK.GLControl();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.ejercicioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // glControl1
+            // 
+            this.glControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.glControl1.BackColor = System.Drawing.Color.Black;
+            this.glControl1.Location = new System.Drawing.Point(0, 0);
+            this.glControl1.Name = "glControl1";
+            this.glControl1.Size = new System.Drawing.Size(524, 402);
+            this.glControl1.TabIndex = 2;
+            this.glControl1.VSync = false;
+            this.glControl1.Load += new System.EventHandler(this.glControl1_Load);
+            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl_Paint);
+            this.glControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseMove);
             // 
             // button1
             // 
@@ -66,24 +86,9 @@
             this.listBox1.ItemHeight = 20;
             this.listBox1.Location = new System.Drawing.Point(12, 72);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(202, 344);
+            this.listBox1.Size = new System.Drawing.Size(202, 304);
             this.listBox1.TabIndex = 3;
             this.listBox1.SelectedValueChanged += new System.EventHandler(this.list_SelectedChanged);
-            // 
-            // glControl1
-            // 
-            this.glControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.glControl1.BackColor = System.Drawing.Color.Black;
-            this.glControl1.Location = new System.Drawing.Point(0, 0);
-            this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(524, 426);
-            this.glControl1.TabIndex = 2;
-            this.glControl1.VSync = false;
-            this.glControl1.Load += new System.EventHandler(this.glControl1_Load);
-            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl_Paint);
-            this.glControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseMove);
             // 
             // panel1
             // 
@@ -91,9 +96,9 @@
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.listBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(220, 428);
+            this.panel1.Size = new System.Drawing.Size(220, 404);
             this.panel1.TabIndex = 4;
             // 
             // label1
@@ -113,10 +118,43 @@
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel2.Controls.Add(this.glControl1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(220, 0);
+            this.panel2.Location = new System.Drawing.Point(220, 24);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(526, 428);
+            this.panel2.Size = new System.Drawing.Size(526, 404);
             this.panel2.TabIndex = 5;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ejercicioToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(746, 24);
+            this.menuStrip1.TabIndex = 6;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // ejercicioToolStripMenuItem
+            // 
+            this.ejercicioToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aToolStripMenuItem,
+            this.bToolStripMenuItem});
+            this.ejercicioToolStripMenuItem.Name = "ejercicioToolStripMenuItem";
+            this.ejercicioToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
+            this.ejercicioToolStripMenuItem.Text = "Ejercicio";
+            // 
+            // aToolStripMenuItem
+            // 
+            this.aToolStripMenuItem.Name = "aToolStripMenuItem";
+            this.aToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aToolStripMenuItem.Text = "a";
+            this.aToolStripMenuItem.Click += new System.EventHandler(this.aToolStripMenuItem_Click);
+            // 
+            // bToolStripMenuItem
+            // 
+            this.bToolStripMenuItem.Name = "bToolStripMenuItem";
+            this.bToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bToolStripMenuItem.Text = "b";
+            this.bToolStripMenuItem.Click += new System.EventHandler(this.bToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -125,11 +163,16 @@
             this.ClientSize = new System.Drawing.Size(746, 428);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainWindow";
             this.Text = "CG - Lab 3";
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -143,6 +186,10 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem ejercicioToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bToolStripMenuItem;
     }
 }
 
