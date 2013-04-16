@@ -45,7 +45,7 @@ namespace Utilities.Shaders
                 float verde = 1.0 - abs(position.y);
                 float azul = abs(position.x + position.y);
 
-                fragment_input_color = vec4(rojo, azul, verde, 1.0);
+                fragment_input_color = vec4(0, 0, 0, 1.0);
             } 
             ";
     }

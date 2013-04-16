@@ -49,9 +49,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dict.cs" />
     <Compile Include="Drawable.cs" />
     <Compile Include="Exercise.cs" />
     <Compile Include="GLManager.cs" />
+    <Compile Include="PolyNet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shaders\FragmentShader.cs" />
     <Compile Include="Shaders\ProgramObject.cs" />
