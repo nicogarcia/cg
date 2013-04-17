@@ -52,14 +52,9 @@ namespace Utilities
 
         private HalfEdge existHalfEdge(Vector4 origin, Vector4 dest)
         {
-            try
-            {
+            if(halfEdges.ContainsKey(origin) && halfEdges[origin].ContainsKey(dest))
                 return halfEdges[origin][dest];
-            }
-            catch (KeyNotFoundException k)
-            {
-                return null;
-            }
+            return null;
         }
 
     }

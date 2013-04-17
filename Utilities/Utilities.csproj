@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Camera.cs" />
     <Compile Include="Dict.cs" />
     <Compile Include="Drawable.cs" />
     <Compile Include="Exercise.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Shaders\Shader.cs" />
     <Compile Include="Shaders\Shaders.cs" />
     <Compile Include="Shaders\VertexShader.cs" />
+    <Compile Include="Spherical.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
