@@ -273,12 +273,10 @@ namespace Lab5
             openGLControl1.load();
         }
 
-        private void OpenGLControl_Paint(object sender, PaintEventArgs e)
+        private void resize(object sender, EventArgs e)
         {
-            GL.ClearColor(Color.Azure);
-            openGLControl1.paint();
-        }
 
+        }
     }
 }
 /*

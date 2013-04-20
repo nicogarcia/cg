@@ -47,6 +47,8 @@ namespace Utilities
 
         public void shrinkRadio()
         {
+            if (radio <= 0.2f)
+                return;
             radio -= 0.2f;
             setXYZ();
         }

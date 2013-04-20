@@ -17,12 +17,14 @@ namespace Utilities
             foreach (Triangle triangle in this)
             {
                 Vertex[] vertices = triangle.getArray();
+                int count = this.Count;
 
                 for (int i = 0; i < 3; i++)
                 {
-                    toRet[cursor++] = vertices[i].position;
-                    toRet[cursor++] = vertices[i].color;
-                    toRet[cursor++] = vertices[i].normal;
+                    toRet[cursor] = vertices[i].position;
+                    toRet[cursor + count] = vertices[i].color;
+                    toRet[cursor + 2 * count] = vertices[i].normal;
+                    cursor++;
                 }
             }
 
@@ -31,7 +33,20 @@ namespace Utilities
 
         public void triangulate(Face[] faces)
         {
-            throw new NotImplementedException();
+            foreach (Face f in faces)
+            {
+                Vector4[] vertices = f.vertices();
+                for(int i = 0; i < vertices.Length - 2; i++)
+                {
+                    Triangle t = new Triangle(new Vertex[]{
+                        new Vertex(vertices[0]),
+                        new Vertex(vertices[i + 1]),
+                        new Vertex(vertices[i + 2]),
+                    });
+                    Add(t);
+                }
+
+            }
         }
     }
 }

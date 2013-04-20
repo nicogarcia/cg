@@ -5,6 +5,7 @@ using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Utilities
 {
@@ -18,30 +19,85 @@ namespace Utilities
 
         public OpenGLControl()
         {
-            camera = new Camera(new Spherical(5f, 0, (float) Math.PI / 4));
+            camera = new Camera(new Spherical(2f, 0, 0));
 
-            projMatrix = Matrix4.Identity;
-            zoomMatrix = Matrix4.Identity;
+            projMatrix = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, this.Height / this.Width, 0.000001f, 10f);
+            zoomMatrix = camera.lookAt();
 
         }
 
         public void load()
         {
-            GL.ClearColor(Color.Yellow);
-        }
-
-        public void paint()
-        {
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-
-            
-            foreach(Drawable3D draw in objects){
-                draw.paint(projMatrix, zoomMatrix);
-            }
+            GL.ClearColor(Color.Azure);
 
             GL.Viewport(0, 0, this.Width, this.Height);
 
-            this.SwapBuffers();
+            this.Paint += new PaintEventHandler(this.paint);
+            this.Resize += new EventHandler(this.resize);
+            this.MouseWheel += new MouseEventHandler(OpenGLControl_MouseWheel);
+            this.KeyPress += new KeyPressEventHandler(OpenGLControl_KeyPress);
+        }       
+
+        public void paint(object sender, PaintEventArgs e)
+        {
+            OpenGLControl control = (OpenGLControl)sender;
+
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+
+            foreach (Drawable3D draw in objects)
+            {
+                draw.paint(projMatrix, zoomMatrix);
+            }
+
+            control.SwapBuffers();
+        }
+
+        public void resize(object sender, EventArgs e)
+        {
+            OpenGLControl control = (OpenGLControl)sender;
+
+            GL.Viewport(0, 0, control.Width, control.Height);
+
+            control.Invalidate();
+        }
+
+        public void OpenGLControl_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta < 0)
+                camera.position.growRadio();
+            else
+                camera.position.shrinkRadio();
+
+            zoomMatrix = camera.lookAt();
+            this.Invalidate();
+        }
+
+        public void OpenGLControl_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            switch (e.KeyChar)
+            {
+                case 'w':
+                    camera.position.growTheta();
+                    break;
+                case 's':
+                    camera.position.shrinkTheta();
+                    break;
+                case 'd':
+                    camera.position.growPhi();
+                    break;
+                case 'a':
+                    camera.position.shrinkPhi();
+                    break;
+                case '-':
+                    camera.position.growRadio();
+                    break;
+                case '+':
+                    camera.position.shrinkRadio();
+                    break;
+            }
+
+            zoomMatrix = camera.lookAt();
+            this.Invalidate();
         }
     }
 }

@@ -41,7 +41,7 @@
             this.openGLControl1.TabIndex = 3;
             this.openGLControl1.VSync = false;
             this.openGLControl1.Load += new System.EventHandler(this.OpenGLControl_Load);
-            this.openGLControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.OpenGLControl_Paint);
+            this.openGLControl1.Resize += new System.EventHandler(this.resize);
             // 
             // glControl1
             // 

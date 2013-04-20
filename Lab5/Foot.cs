@@ -37,7 +37,7 @@ namespace Lab5
             {
 
               float scale_step = (float) (pend * Math.Pow((i + 1) * step - height / 2,2) + width / 4);
-
+                
                 Matrix4 transform = Matrix4.Scale(scale_step, scale_step, 1f) * Matrix4.CreateTranslation(new Vector3(0, 0, step * (i + 1)));
                 
                 // Generate next section

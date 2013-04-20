@@ -33,6 +33,9 @@
             // 
             // openGLControl1
             // 
+            this.openGLControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.openGLControl1.BackColor = System.Drawing.Color.Black;
             this.openGLControl1.Location = new System.Drawing.Point(2, 2);
             this.openGLControl1.Name = "openGLControl1";
@@ -40,7 +43,6 @@
             this.openGLControl1.TabIndex = 0;
             this.openGLControl1.VSync = false;
             this.openGLControl1.Load += new System.EventHandler(this.OpenGLcontrol_load);
-            this.openGLControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.OpenGLcontrol_paint);
             // 
             // Form1
             // 
