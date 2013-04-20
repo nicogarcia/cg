@@ -10,7 +10,7 @@ using Utilities.Shaders;
 
 namespace CG_TP1
 {
-    class Sierpinski : Drawable
+    class Sierpinski : Drawable2D
     {
         const int ITERATIONS = 1 << 20;
        

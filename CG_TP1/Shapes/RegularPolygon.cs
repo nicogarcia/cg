@@ -10,7 +10,7 @@ using Utilities.Shaders;
 
 namespace CG_TP1
 {
-    class RegularPolygon : Drawable
+    class RegularPolygon : Drawable2D
     {
         public RegularPolygon(int edges, float radius, bool solid)
         {

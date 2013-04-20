@@ -10,7 +10,7 @@ using Utilities.Shaders;
 
 namespace CG_TP1
 {
-    class Square : Drawable
+    class Square : Drawable2D
     {   
 
         public Square()

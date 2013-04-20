@@ -15,3 +15,4 @@ C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\ob
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\obj\x86\Debug\Lab5.exe
 C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\obj\x86\Debug\Lab5.pdb
+C:\Users\Administrador\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\obj\x86\Debug\Lab5.Form1.resources

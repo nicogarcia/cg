@@ -9,7 +9,7 @@ using Utilities.Shaders;
 
 namespace CG_TP1.Shapes
 {
-    class Star : Drawable
+    class Star : Drawable2D
     {
         public Star(float inner_radius, float outer_radius)
         {

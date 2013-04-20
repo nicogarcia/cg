@@ -10,8 +10,8 @@ namespace Utilities.Shaders
         public const string DEFAULT_VERTEX_SHADER = @"
             #version 330
             out vec4 fragment_input_color;
-            //layout (location = 0) in vec4 position;
-            //layout (location = 1) in vec4 input_color;
+            layout (location = 0) in vec4 position;
+            layout (location = 1) in vec4 input_color;
             in vec4 position;
             in vec4 input_color;
             void main()
@@ -32,12 +32,36 @@ namespace Utilities.Shaders
         public const string VERTEX_TRANSF_SHADER = @"
             #version 330
             out vec4 fragment_input_color;
-            //layout (location = 0) in vec4 position;
-            //layout (location = 1) in vec4 input_color;
+            layout (location = 0) in vec4 position;
+            layout (location = 1) in vec4 input_color;
             in vec4 position;
             in vec4 input_color;
             uniform mat4 projectionMatrix;
             uniform mat4 modelView;
+            void main(){
+                gl_Position = projectionMatrix * modelView * position;
+
+                float rojo = 1.0 - abs(position.x);
+                float verde = 1.0 - abs(position.y);
+                float azul = abs(position.x + position.y);
+
+                fragment_input_color = vec4(0, 0, 0, 1.0);
+            } 
+            ";
+
+        public const string VERTEX_SHADER_LATEST = @"
+            #version 330
+            out vec4 fragment_input_color;
+            layout (location = 0) in vec4 position;
+            layout (location = 1) in vec4 color;
+            layout (location = 2) in vec4 normal;
+            //in vec4 position;
+            //in vec4 color;
+            //in vec4 normal;
+
+            uniform mat4 projectionMatrix;
+            uniform mat4 modelView;
+
             void main(){
                 gl_Position = projectionMatrix * modelView * position;
 

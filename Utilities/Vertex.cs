@@ -12,6 +12,11 @@ namespace Utilities
         public Vector4 color = new Vector4(0, 0, 0, 1f);
         public Vector4 normal  = new Vector4(0, 0, 0, 1f);
 
+        public Vertex(Vector4 position)
+        {
+            this.position = position;
+        }
+
         public Vector4[] getVertex()
         {
             return new Vector4[]{

@@ -9,7 +9,7 @@ using Utilities.Shaders;
 
 namespace CG_TP1.Shapes
 {
-    class Romboid : Drawable
+    class Romboid : Drawable2D
     {
         public Romboid(float width, float height, Matrix4 transformation)
         {

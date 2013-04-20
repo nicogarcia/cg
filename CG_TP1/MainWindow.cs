@@ -14,7 +14,7 @@ namespace CG_TP1
 {
     public partial class MainWindow : Form
     {
-        private Drawable[] figures;
+        private Drawable2D[] figures;
         private Exercise[] functions;
 
         public MainWindow(Exercise[] functions)

@@ -29,7 +29,7 @@ namespace CG_TP1
         {
             List<Exercise> exercises = new List<Exercise>();
 
-            exercises.Add(new Exercise(
+            /*exercises.Add(new Exercise(
                 "TP2-Rombo",
                 delegate()
                 {
@@ -38,22 +38,22 @@ namespace CG_TP1
                     Matrix4 transformacion2 = transformacion * Matrix4.CreateRotationZ((float) Math.PI) ;
                     Matrix4 transformacion3 = transformacion * Matrix4.CreateRotationZ((float) Math.PI*3/2) ;
 
-                    return new Drawable[] { new Romboid(0.75f, 0.25f, transformacion),
+                    return new Drawable2D[] { new Romboid(0.75f, 0.25f, transformacion),
                         new Romboid(0.75f, 0.25f, transformacion1),
                         new Romboid(0.75f, 0.25f, transformacion2),
                         new Romboid(0.75f, 0.25f, transformacion3)};
                 }
-            ));
-            /*
+            ));*/
+
             exercises.Add(new Exercise(
                 "Ejercicio 1",
                 delegate()
                 {
-                    return new Sierpinski(new OpenTK.Vector4[]{
+                    return new Drawable2D[] { new Sierpinski(new OpenTK.Vector4[]{
                         new OpenTK.Vector4(-.75f, -.75f, 0f, 1f),
                         new OpenTK.Vector4(0, .75f, 0f, 1f),
                         new OpenTK.Vector4(.75f, -.75f, 0f, 1f)
-                    });
+                    })};
                 }
             ));
 
@@ -78,7 +78,7 @@ namespace CG_TP1
                         vertices[i] = new Vector4(x, y, 0f, 1f);
                     }
 
-                    return new Polygon(vertices, false);
+                    return new Drawable2D[] { new Polygon(vertices, false) };
                 }
             ));
 
@@ -93,7 +93,7 @@ namespace CG_TP1
                     vertices[2] = new Vector4(0.25f, -0.5f, 0f, 1f);
                     vertices[3] = new Vector4(-0.25f, -0.5f, 0f, 1f);
 
-                    return new Polygon(vertices, true);
+                    return new Drawable2D[] { new Polygon(vertices, true) };
                 }
             ));
 
@@ -101,7 +101,7 @@ namespace CG_TP1
                 "Ejercicio 3.b",
                 delegate()
                 {
-                    return new RegularPolygon(8, 0.5f, true);
+                    return new Drawable2D[] { new RegularPolygon(8, 0.5f, true) };
                 }
             ));
 
@@ -109,7 +109,7 @@ namespace CG_TP1
                 "Ejercicio 4.1",
                 delegate()
                 {
-                    return new Cross(1f, 1f);
+                    return new Drawable2D[] { new Cross(1f, 1f) };
                 }
             ));
 
@@ -117,9 +117,9 @@ namespace CG_TP1
                 "Ejercicio 4.2",
                 delegate()
                 {
-                    return new Star(.285f, .75f);
+                    return new Drawable2D[] { new Star(.285f, .75f) };
                 }
-            ));*/
+            ));
 
             return exercises.ToArray();
         }

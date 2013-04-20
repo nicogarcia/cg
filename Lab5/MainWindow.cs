@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -95,10 +93,10 @@ namespace Lab5
             normals = new Vector4[168];
             Vector4[] vert = foot.polynet.halfEdges.Keys.ToArray();
             int cur = 0;
-            for (int i = 0; i < normals.Length - 1; i += 2, cur+=2)
+            for (int i = 0; i < normals.Length - 1; i += 2, cur += 2)
             {
                 normals[i] = vert[i / 2];
-                normals[i + 1] = normals[i] + new Vector4(foot.polynet.normal(normals[i]),0);
+                normals[i + 1] = normals[i] + new Vector4(foot.polynet.normal(normals[i]), 0);
             }
 
             int cursor = 0;
@@ -170,7 +168,7 @@ namespace Lab5
 
                 // apply rotation 
                 projMatrix = rotx * roty * rotz;
-                projMatrix *= Matrix4.CreatePerspectiveFieldOfView(2f, 1f,0.1f, 100f);
+                projMatrix *= Matrix4.CreatePerspectiveFieldOfView(2f, 1f, 0.1f, 100f);
                 //projMatrix *= Matrix4.CreateOrthographicOffCenter(-5f, 5f, -5f, 5f, -5f, 1000f);
 
                 zoomMatrix = cam.lookAt();
@@ -190,12 +188,12 @@ namespace Lab5
                 }
 
 
+                GL.BindVertexArray(VAO_ID);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
+                GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(normals.Length * Vector4.SizeInBytes),
+                                normals, BufferUsageHint.StaticDraw);
                 for (int i = 0; i < 1; i++)
                 {
-                    GL.BindVertexArray(VAO_ID);
-                    GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
-                    GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(normals.Length * Vector4.SizeInBytes),
-                                    normals, BufferUsageHint.StaticDraw);
                     GL.DrawArrays(BeginMode.Lines, 0, normals.Length);
                 }
 
@@ -262,6 +260,24 @@ namespace Lab5
             glControl1.Invalidate();
         }
 
+        private void OpenGLControl_Load(object sender, EventArgs e)
+        {
+            ProgramObject prog = new ProgramObject(
+                new VertexShader(Shaders.VERTEX_SHADER_LATEST),
+                    new FragmentShader(Shaders.DEFAULT_FRAGMENT_SHADER));
+
+            Draw draw = new Draw(prog, BeginMode.LineLoop);
+
+            openGLControl1.objects.Add(draw);
+
+            openGLControl1.load();
+        }
+
+        private void OpenGLControl_Paint(object sender, PaintEventArgs e)
+        {
+            GL.ClearColor(Color.Azure);
+            openGLControl1.paint();
+        }
 
     }
 }

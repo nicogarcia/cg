@@ -9,7 +9,7 @@ using Utilities.Shaders;
 
 namespace CG_TP1.Shapes
 {
-    class Polygon : Drawable
+    class Polygon : Drawable2D
     {
 
         public Polygon(Vector4[] vertices, bool solid)

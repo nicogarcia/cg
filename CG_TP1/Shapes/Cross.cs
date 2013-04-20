@@ -9,7 +9,7 @@ using Utilities.Shaders;
 
 namespace CG_TP1.Shapes
 {
-    class Cross : Drawable
+    class Cross : Drawable2D
     {
         public Cross(float width, float height)
         {

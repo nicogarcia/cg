@@ -20,9 +20,9 @@ namespace Utilities
     // Handles the communication between the Drawable objects and OpenGl
     public class GLManager
     {
-        static Dictionary<Drawable, DrawingInfo> objects = new Dictionary<Drawable, DrawingInfo>();
+        static Dictionary<Drawable2D, DrawingInfo> objects = new Dictionary<Drawable2D, DrawingInfo>();
 
-        public static void addDrawable(Drawable drawable, BeginMode begin_mode, ProgramObject program)
+        public static void addDrawable(Drawable2D drawable, BeginMode begin_mode, ProgramObject program)
         {
             DrawingInfo drawing_info = new DrawingInfo();
             drawing_info.begin_mode = begin_mode;
@@ -36,7 +36,7 @@ namespace Utilities
             objects.Add(drawable, drawing_info);
         }
 
-        public static void paintDrawable(Drawable drawable)
+        public static void paintDrawable(Drawable2D drawable)
         {
             DrawingInfo drawing_info = objects[drawable];
 
@@ -63,13 +63,11 @@ namespace Utilities
 
             GL.DrawArrays(drawing_info.begin_mode, 0, drawable.vertices.Length / 2);
 
-            /****/
             Matrix4 zoom = Matrix4.Scale(3f) * Matrix4.CreateTranslation(new Vector3(0.5f, 0, 0));
             GL.UniformMatrix4(location, false, ref zoom);
             GL.Viewport(300, 0, 300, 300);
 
             GL.DrawArrays(drawing_info.begin_mode, 0, drawable.vertices.Length / 2);
-            /****/
 
             GL.DisableVertexAttribArray(0);
             GL.DisableVertexAttribArray(1);

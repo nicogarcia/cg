@@ -11,7 +11,7 @@ using Utilities.Shaders;
 
 namespace CG_TP1
 {
-    class Triangle : Drawable
+    class Triangle : Drawable2D
     {
         public Triangle(float Base, float Height, PointF center)
         {
