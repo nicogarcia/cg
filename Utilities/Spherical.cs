@@ -29,7 +29,7 @@ namespace Utilities
 
         public void growRadio()
         {
-            radio += 0.1f;
+            radio += 0.2f;
             setXYZ();
         }
 
@@ -47,7 +47,7 @@ namespace Utilities
 
         public void shrinkRadio()
         {
-            radio -= 0.1f;
+            radio -= 0.2f;
             setXYZ();
         }
 

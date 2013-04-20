@@ -18,9 +18,16 @@ namespace Lab5
 
             polynet.addFace(face_vertices);
 
+            face_vertices = new Vector4[]{
+                face_vertices[0],
+                face_vertices[3],
+                face_vertices[2],
+                face_vertices[1],
+            };
+
             float step = height / divisions;
             float width = (face_vertices[0] - face_vertices[1]).Length;
-            float pend = 9 / 4f * width / (float) Math.Pow(height, 1);
+            float pend = 9 / 4f * width / (float) Math.Pow(height, 2);
 
             Vector4[] currentFace = face_vertices;
             Vector4[] nextFace = new Vector4[4];
@@ -29,16 +36,16 @@ namespace Lab5
             for (int i = 0; i < divisions; i++)
             {
 
-              float scale_step = (float) ((i + 1) * step / height + width / 1.85f);
+              float scale_step = (float) (pend * Math.Pow((i + 1) * step - height / 2,2) + width / 4);
 
-                Matrix4 transform = Matrix4.Scale(scale_step, scale_step, 1f) * Matrix4.CreateTranslation(new Vector3(0, 0, step));
+                Matrix4 transform = Matrix4.Scale(scale_step, scale_step, 1f) * Matrix4.CreateTranslation(new Vector3(0, 0, step * (i + 1)));
                 
                 // Generate next section
                 nextFace = new Vector4[]{
-                    Vector4.Transform(currentFace[0],transform),
-                    Vector4.Transform(currentFace[1],transform),
-                    Vector4.Transform(currentFace[2],transform),
-                    Vector4.Transform(currentFace[3],transform),
+                    Vector4.Transform(face_vertices[0],transform),
+                    Vector4.Transform(face_vertices[1],transform),
+                    Vector4.Transform(face_vertices[2],transform),
+                    Vector4.Transform(face_vertices[3],transform),
                 };
 
                 // Generate Faces
