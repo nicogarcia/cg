@@ -115,7 +115,6 @@ namespace Lab5
 
             }
 
-
             foreach (Face face in cover.polynet.faces)
             {
                 Vector4[] array = face.vertices();
@@ -258,19 +257,6 @@ namespace Lab5
                 cam.position.shrinkRadio();
 
             glControl1.Invalidate();
-        }
-
-        private void OpenGLControl_Load(object sender, EventArgs e)
-        {
-            ProgramObject prog = new ProgramObject(
-                new VertexShader(Shaders.VERTEX_SHADER_LATEST),
-                    new FragmentShader(Shaders.DEFAULT_FRAGMENT_SHADER));
-
-            Draw draw = new Draw(prog, BeginMode.LineLoop);
-
-            openGLControl1.objects.Add(draw);
-
-            openGLControl1.load();
         }
 
         private void resize(object sender, EventArgs e)

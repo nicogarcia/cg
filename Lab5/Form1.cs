@@ -23,10 +23,10 @@ namespace Lab5
         private void OpenGLcontrol_load(object sender, EventArgs e)
         {
             ProgramObject prog = new ProgramObject(
-                new VertexShader(Shaders.VERTEX_SHADER_LATEST),
+                new VertexShader(Shaders.VERTEX_TRANSF_SHADER),
                     new FragmentShader(Shaders.DEFAULT_FRAGMENT_SHADER));
 
-            Draw draw = new Draw(prog, BeginMode.LineLoop);
+            //Draw draw = new Draw(prog, BeginMode.LineLoop);
 
             /*Vertex[] vertices = new Vertex[]{
                 new Vertex(new Vector4(0.5f, -0.5f, 0, 1f)),
@@ -36,7 +36,82 @@ namespace Lab5
             };*/
 
 
-            openGLControl1.objects.Add(draw);
+            Vector4[] vertices = new Vector4[]{
+                new Vector4(1f, -1f, 0, 1f),
+                new Vector4(-1f, -1f, 0, 1f),
+                new Vector4(-1f, 1f, 0, 1f),
+                new Vector4(1f, 1f, 0, 1f),
+            };
+
+            NewFoot sweep = new NewFoot(vertices,
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        return Matrix4.CreateTranslation(new Vector3(0, 0, (current + 1) * 0.1f));
+                    }
+                ),
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        return Matrix4.Identity;
+                    }
+                ),
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        current++;
+
+                        float pend = 4 * 0.5f / (float)Math.Pow(steps * 0.1f, 2);
+                        float scale_factor = (float)(pend * Math.Pow(current*0.1f - steps*0.1f / 2f, 2) + 0.5f);
+                        Console.WriteLine(scale_factor);
+                        return Matrix4.Scale(scale_factor, scale_factor, 1f);
+                    }
+                )
+                , 50, prog);
+
+
+            float x = 2.0f;
+            float y = 2.0f;
+            float z = 5f;
+            float aux = 0.15f;
+
+            Vector4[] bottom = new Vector4[]{new Vector4(-x, -y + aux, z, 1.0f),
+               new Vector4(-x + aux, -y, z, 1.0f),
+               new Vector4(x - aux, -y, z, 1.0f),
+               new Vector4(x, -y + aux, z, 1.0f),
+               new Vector4(x, y - aux, z, 1.0f),
+               new Vector4(x - aux, y, z, 1.0f),
+               new Vector4(-x + aux, y, z, 1.0f),
+               new Vector4(-x, y - aux, z, 1.0f)
+            };
+
+
+            NewFoot sweep2 = new NewFoot(bottom,
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        return Matrix4.CreateTranslation(new Vector3(0, 0, (current + 1) * 0.1f));
+                    }
+                ),
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        return Matrix4.Identity;
+                    }
+                ),
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        return Matrix4.Identity;
+                    }
+                )
+                , 5, prog);
+
+            openGLControl1.objects.Add(sweep);
+            openGLControl1.objects.Add(sweep2);
+
+            sweep.transformation = Matrix4.CreateTranslation(0, -1f, 0);
+            sweep2.transformation = Matrix4.CreateTranslation(0, -1f, 0);
 
             openGLControl1.load();
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Utilities;
 using OpenTK;
+using Utilities.Shaders;
 
 namespace Lab5
 {
@@ -11,8 +12,8 @@ namespace Lab5
     {
 
         public NewFoot(Vector4[] face_vertices, Func<int, int, Matrix4> translation_step,
-            Func<int, int, Matrix4> rotation_step, Func<int, int, Matrix4> scale_step, int steps)
-            : base(face_vertices, translation_step, rotation_step, scale_step, steps)
+            Func<int, int, Matrix4> rotation_step, Func<int, int, Matrix4> scale_step, int steps, ProgramObject program)
+            : base(face_vertices, translation_step, rotation_step, scale_step, steps, program)
         {
 
         }

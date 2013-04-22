@@ -18,8 +18,8 @@ namespace Utilities
         public ProgramObject program;
         public BeginMode begin_mode;
 
-        private int projection_location;
-        private int model_view_location;
+        protected int projection_location;
+        protected int model_view_location;
 
         private Vector4[] toDraw;
 
@@ -62,13 +62,14 @@ namespace Utilities
                             toDraw, BufferUsageHint.StaticDraw);
         }
 
-        public void paint(Matrix4 projMatrix, Matrix4 zoomMatrix)
+        public virtual void paint(Matrix4 projMatrix, Matrix4 zoomMatrix)
         {
             GL.UseProgram(program.program_handle);
 
             GL.BindVertexArray(VAO_ID);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
 
+            projMatrix = projMatrix * transformation;
             GL.UniformMatrix4(projection_location, false, ref projMatrix);
             GL.UniformMatrix4(model_view_location, false, ref zoomMatrix);
 

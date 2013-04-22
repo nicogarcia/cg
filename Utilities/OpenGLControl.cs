@@ -19,9 +19,10 @@ namespace Utilities
 
         public OpenGLControl()
         {
-            camera = new Camera(new Spherical(2f, 0, 0));
+            camera = new Camera(new Spherical(8f, (float)Math.PI / 4,0));
 
-            projMatrix = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, this.Height / this.Width, 0.000001f, 10f);
+            //projMatrix = Matrix4.CreateOrthographicOffCenter(-10f, 10f, -10f, 10f, 0.0001f, 10000f);
+            projMatrix = Matrix4.CreatePerspectiveFieldOfView(1f, this.Width / this.Height, 0.000001f, 100000f);
             zoomMatrix = camera.lookAt();
 
         }
@@ -55,6 +56,8 @@ namespace Utilities
         public void resize(object sender, EventArgs e)
         {
             OpenGLControl control = (OpenGLControl)sender;
+
+            projMatrix = Matrix4.CreatePerspectiveFieldOfView(1f, this.Width / (float) this.Height, 0.000001f, 100000f);
 
             GL.Viewport(0, 0, control.Width, control.Height);
 

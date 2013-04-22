@@ -20,7 +20,7 @@ namespace Utilities
 
         public void addFace(Vector4[] vertices)
         {
-            HalfEdge[] halfEdges = new HalfEdge[vertices.Length];
+            HalfEdge[] currentHalfEdges = new HalfEdge[vertices.Length];
 
             //add halfedges
             for (int curr = 0; curr < vertices.Length; curr++)
@@ -34,33 +34,38 @@ namespace Utilities
                 if (exist == null)
                 {
                     // create half edge from current to next vertex
-                    halfEdges[curr] = new HalfEdge(vertices[curr], vertices[next_he]);
+                    currentHalfEdges[curr] = new HalfEdge(vertices[curr], vertices[next_he]);
+                    HalfEdge twin = new HalfEdge(vertices[next_he],vertices[curr]);
+
+                    currentHalfEdges[curr].twin = twin;
+                    twin.twin = currentHalfEdges[curr];
                     // add halfedge to polynet halfedges dictionary
-                    this.halfEdges.Add(vertices[curr], vertices[next_he], halfEdges[curr]);
+                    this.halfEdges.Add(vertices[curr], vertices[next_he], currentHalfEdges[curr]);
+                    this.halfEdges.Add(vertices[next_he], vertices[curr], twin);
                 }
                 else
                 {
-                    halfEdges[curr] = exist;
+                    currentHalfEdges[curr] = exist;
                 }
             }
 
             // create face with some halfedge
-            Face face = new Face(halfEdges[0]);
+            Face face = new Face(currentHalfEdges[0]);
             // calculate face's normal
             face.normal = faceNormal(vertices);
             // add face to faces list
             faces.Add(face);
 
             // link halfedges with next and prev
-            for(int i = 0; i < halfEdges.Length; i++){
-                int next = (i + 1) % halfEdges.Length;
-                int prev = (halfEdges.Length + i - 1) % halfEdges.Length;
+            for(int i = 0; i < currentHalfEdges.Length; i++){
+                int next = (i + 1) % currentHalfEdges.Length;
+                int prev = (currentHalfEdges.Length + i - 1) % currentHalfEdges.Length;
 
-                halfEdges[i].next = halfEdges[next];
-                halfEdges[i].prev = halfEdges[prev];
+                currentHalfEdges[i].next = currentHalfEdges[next];
+                currentHalfEdges[i].prev = currentHalfEdges[prev];
 
                 // link face to halfedge
-                halfEdges[i].face = face;
+                currentHalfEdges[i].face = face;
             }
         }
 
@@ -92,7 +97,7 @@ namespace Utilities
 
         private HalfEdge existHalfEdge(Vector4 origin, Vector4 dest)
         {
-            // check if halfedge exists in O(1)
+            // check if halfedge exists in 
             if(halfEdges.ContainsKey(origin) && halfEdges[origin].ContainsKey(dest))
                 return halfEdges[origin][dest];
             return null;
@@ -134,9 +139,11 @@ namespace Utilities
         public HalfEdge(Vector4 origin, Vector4 dest)
         {
             this.origin = origin;
+            /*
             twin = new HalfEdge();
             twin.origin = dest;
-            twin.twin = this;
+            twin.twin = this;*/
+
         }
 
         public HalfEdge()
