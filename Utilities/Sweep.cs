@@ -11,8 +11,9 @@ namespace Utilities
     public abstract class Sweep : Drawable3D
     {
         public PolyNet polynet = new PolyNet();
-        public Vector4[] firstFace, tapa, indices,count;
-        public Vector4[][] draw;
+        public Vector4[] firstFace, tapa;
+        int [] indices,count;
+        public Vector4[] draw;
         int steps;
 
         public Sweep(Vector4[] face_vertices, Func<int, int, Matrix4> translation_step,
@@ -67,13 +68,18 @@ namespace Utilities
             tapa = currentFace;
             polynet.addFace(tapa);
             draw = triangulate();
+
+            GL.BindVertexArray(VAO_ID);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
+            GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(draw.Length * Vector4.SizeInBytes),
+                            draw, BufferUsageHint.StaticDraw);
         }
 
-        public Vector4[][] triangulate()
+        public Vector4[] triangulate()
         {
             Vector4[][] toDraw = new Vector4[firstFace.Length + 2][];
-            indices = new Vector4[firstFace.Length + 2];
-            count = new Vector4[firstFace.Length + 2];
+            indices = new int[firstFace.Length + 2];
+            count = new int[firstFace.Length + 2];
             //agregar base y tapa
 
             toDraw[firstFace.Length] = new Vector4[firstFace.Length];
@@ -119,8 +125,19 @@ namespace Utilities
                 toDraw[i][messi++] = current.next.next.origin;
 
             }
+            Vector4[] toRet = new Vector4[2 * firstFace.Length *( 2 + steps)];
+            int roman = 0;
+            for (int i = 0; i < toDraw.Length; i++)
+            {
+                indices[i] = roman;
+                for (int j = 0; j < toDraw[i].Length; j++)
+                {
+                    toRet[roman++] = toDraw[i][j];
+                }
+                count[i] = toDraw[i].Length;
+            }
 
-            return toDraw;
+            return toRet;
         }
 
         public override void paint(Matrix4 projMatrix, Matrix4 zoomMatrix)
@@ -135,19 +152,11 @@ namespace Utilities
             GL.UniformMatrix4(projection_location, false, ref projMatrix);
             GL.UniformMatrix4(model_view_location, false, ref zoomMatrix);
 
-            for (int i = 0; i < draw.Length; i++)
-            {
-                // Position attrib
-                GL.EnableVertexAttribArray(0);
-                GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
+            GL.EnableVertexAttribArray(0);
+            GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
 
-                GL.BindVertexArray(VAO_ID);
-                GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
-                GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(draw[i].Length * Vector4.SizeInBytes),
-                                draw[i], BufferUsageHint.StaticDraw);
+            GL.MultiDrawArrays(BeginMode.LineLoop, indices, count, count.Length);
 
-                GL.DrawArrays(BeginMode.LineLoop, 0, draw[i].Length);
-            }
             GL.UseProgram(0);
         }
 
