@@ -35,11 +35,6 @@ namespace Utilities
 
         public void growTheta()
         {
-            if (theta >= Math.PI)
-            {
-                phi +=(float) Math.PI;
-                theta =(float) Math.PI;
-            }
             theta += 0.1f;
             setXYZ();
         }

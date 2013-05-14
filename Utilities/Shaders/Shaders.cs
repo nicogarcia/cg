@@ -72,5 +72,63 @@ namespace Utilities.Shaders
                 fragment_input_color = vec4(rojo, verde, azul, 1.0);
             } 
             ";
+
+        public const string VERTEX_SHADER_TEXTURE = @"
+                //layout (location = 0) in vec3 VertexPosition; 
+                //layout (location = 1) in vec3 VertexNormal; 
+                //layout (location = 2) in vec2 VertexTexCoord;
+                in vec4 VertexPosition; 
+                in vec4 VertexNormal; 
+                in vec2 VertexTexCoord; 
+                
+                out vec4 Position; 
+                out vec4 Normal; 
+                out vec2 TexCoord; 
+                
+                uniform mat4 ModelViewMatrix; 
+                uniform mat4 NormalMatrix; 
+                uniform mat4 ProjectionMatrix; 
+                uniform mat4 MVP;
+                
+                void main() 
+                { 
+                    TexCoord = VertexTexCoord; 
+                    Normal = normalize( NormalMatrix * VertexNormal); 
+                    Position = ModelViewMatrix * VertexPosition; 
+                    gl_Position = MVP * VertexPosition; 
+                }
+        ";
+
+        public const string FRAGMENT_SHADER_TEXTURE = @"
+            in vec4 Position; 
+            in vec4 Normal; 
+            in vec2 TexCoord;
+            uniform sampler2D Tex1;
+            struct LightInfo { 
+                vec4 Position; // Light position in eye coords. 
+                vec3 Intensity; // A,D,S intensity
+            }; 
+            uniform LightInfo Light;
+            struct MaterialInfo { 
+                vec3 Ka; // Ambient reflectivity
+                vec3 Kd; // Diffuse reflectivity
+                vec3 Ks; // Specular reflectivity
+                float Shininess; // Specular shininess factor 
+            }; 
+            uniform MaterialInfo Material; 
+            layout( location = 0 ) out vec4 FragColor;
+
+            void phongModel( vec4 pos, vec4 norm, out vec3 ambAndDiff, out vec3 spec ) { 
+                // Compute the ADS shading model here, return ambient 
+                // and diffuse color in ambAndDiff, and return specular 
+                // color in spec
+            }
+            void main() { 
+                vec3 ambAndDiff, spec; 
+                vec4 texColor = texture( Tex1, TexCoord ); 
+                phongModel(Position, Normal, ambAndDiff, spec); 
+                FragColor = vec4(ambAndDiff, 1.0) * texColor + vec4(spec, 1.0); 
+            }
+        ";
     }
 }

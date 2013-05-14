@@ -125,6 +125,7 @@ namespace Utilities
                 list.Add(current.origin);
                 current = current.next;
             } while (current != halfEdge);
+
             return list.ToArray();
         }
     }

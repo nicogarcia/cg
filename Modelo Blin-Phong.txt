@@ -1,0 +1,44 @@
+//shaders
+        private string vertexShaderSource = @"
+                    #version 150
+					//datos genericos
+					uniform vec4 ka,ks,kd;
+                    uniform float shininess;
+                    uniform vec4 LightPosition;// se asume una fuente de luz blanca
+                    uniform mat4 projection;
+                    uniform mat4 modelview;
+                    uniform mat4 modelviewN;
+					//datos de entrada
+                    in vec4 vPosition;
+                    in vec4 Normal;
+					//datos de salida
+                    out vec4 color;
+					//metodos
+                    void main()
+                    {
+						//computo el color del vertice
+						float nDotL, nDotH,pf;
+                        vec4 ambient = vec4(0), diffuse = vec4(0), specular = vec4(0);
+                        vec3 N = normalize((modelviewN * Normal).xyz), L = normalize( LightPosition.xyz - (modelview  * vPosition).xyz);
+                        vec3 E = - normalize((modelview * vPosition).xyz), H = normalize(L+E);
+                        nDotL = max(dot(L,N),0.0);
+						nDotH = max(dot(N,H),0.0);
+						if(nDotL == 0)
+							pf = 0;
+						else
+							pf = pow(nDotH, shininess);
+                        ambient = ka;
+                        diffuse= kd * nDotL;
+                        specular = ks * pf;
+                        color = vec4((ambient +diffuse + specular).xyz,1.0);
+						//computo la posicion del vertice en el espacio de clipping
+						gl_Position = projection * modelview * vPosition;
+                    }";
+        private string fragmentShaderSource = @"
+                    #version 150
+                    out vec4 colorSalida;
+                    in vec4 color;
+                    void main()
+                    {
+                        colorSalida = color;
+                    }";

@@ -1,0 +1,75 @@
+//shaders
+        private string vertexShaderSource = @"
+                    #version 150
+                    //datos genericos
+					uniform vec4 ka,ks,kd;
+                    uniform float shininess;
+                    uniform float rugosidad, indice;
+                    uniform vec4 LightPosition;// se asume una fuente de luz blanca
+                    uniform mat4 projection;
+                    uniform mat4 modelview;
+                    uniform mat4 modelviewN;
+					//datos de entrada
+                    in vec4 vPosition;
+                    in vec4 Normal;
+					//datos de salida
+                    out vec4 color;
+					//metodos
+                    float factorDeAtenuacionGeometrico(const in vec3 normal, const in vec3 L, const in vec3 V)
+                    {
+	                    vec3 H = normalize(L + V);
+	                    float nDotH = max(0,dot(normal,H)), nDotL = max(0,dot(normal,L)), nDotV = max(0,dot(normal,V));
+	                    float vDotH = max(0,dot(V,H));
+	                    float Gs = 2*(nDotH * nDotL)/(vDotH);
+	                    float Ge = 2*(nDotH * nDotV)/(vDotH);
+	                    return min(1,min(Gs,Ge));
+                    }
+                    float distribucionDeBeckmannD(const in float m, const in vec3 H, const in vec3 normal)
+                    {
+	                    float nDotH = max(0,dot(normal,H));
+	                    float a = 1-pow(nDotH,2), b = m*m*pow(nDotH,2),c = 2 * m * m * pow(nDotH,4);
+	                    return (a/b)/c;
+                    }
+                    float reflectanciaFresnel(const in float n, const in vec3 V, const in vec3 H)
+                    {
+	                    float toR = 0;
+		                float c  = dot(V,H);
+                        float g = sqrt(n*n + c*c - 1 );
+                        float sumaGC = g + c, restaGC = g - c;
+		                float num1 = pow(restaGC,2);
+		                float den1 = pow(sumaGC,2);		
+		                float num2 = pow(c*sumaGC - 1,2);
+                        float den2 = pow(c*restaGC + 1,2);
+		                toR = 0.5f * (num1/den1)*(1 + (num2/den2));
+	                    return toR;
+                    }
+                    void main()
+                    {
+						//computo el color del vertice
+                        vec4 ambient = vec4(0), diffuse = vec4(0), specular = vec4(0);
+                        vec3 N = normalize((modelviewN * Normal).xyz), L = normalize( LightPosition.xyz - (modelview  * vPosition).xyz);
+                        vec3 E = - normalize((modelview * vPosition).xyz), H = normalize(L+E);
+                        float nDotL = max(0, dot(N,L));
+						float ndotH = max(dot(N,H),0.0);
+                        float pf;
+                        if(nDotL == 0)
+			                pf = 0;
+		                else
+			                pf = pow(ndotH, shininess);
+                        float cookTorrance = (reflectanciaFresnel(indice, E, H)/3.1415f)*(distribucionDeBeckmannD(rugosidad, H,N) * factorDeAtenuacionGeometrico(N,L,E))/(dot(N,E)*dot(N,L));
+                        cookTorrance = max(0.0f,min(1.0f,cookTorrance));
+                        ambient = ka;
+                        diffuse = kd * nDotL;
+                        specular = ks * cookTorrance * pf;
+                        color = vec4((ambient +diffuse + specular).xyz,1.0);
+						//computo la posicion del vertice en el espacio de clipping
+						gl_Position = projection * modelview * vPosition;
+                    }";
+        private string fragmentShaderSource = @"
+                    #version 150
+                    out vec4 colorSalida;
+                    in vec4 color;
+                    void main()
+                    {
+                        colorSalida = color;
+                    }";

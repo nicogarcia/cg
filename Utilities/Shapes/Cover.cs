@@ -6,9 +6,9 @@ using Utilities;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace Lab5
+namespace Utilities
 {
-    class Cover
+    public class Cover
     {
         public PolyNet polynet = new PolyNet();
 

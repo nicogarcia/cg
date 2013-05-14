@@ -18,6 +18,7 @@ namespace Lab5
         public Form1()
         {
             InitializeComponent();
+
         }
 
         private void OpenGLcontrol_load(object sender, EventArgs e)
@@ -69,7 +70,6 @@ namespace Lab5
                 )
                 , 50, prog);
 
-
             float x = 2.0f;
             float y = 2.0f;
             float z = 5f;
@@ -109,9 +109,9 @@ namespace Lab5
 
             openGLControl1.objects.Add(sweep);
             openGLControl1.objects.Add(sweep2);
-
-            sweep.transformation = Matrix4.CreateTranslation(0, -1f, 0);
-            sweep2.transformation = Matrix4.CreateTranslation(0, -1f, 0);
+            
+            sweep.transformation = Matrix4.CreateTranslation(0, -0.65f, 0);
+            sweep2.transformation = Matrix4.CreateTranslation(0, -0.65f, 0);
 
             openGLControl1.load();
         }

@@ -52,11 +52,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Shapes\Cover.cs" />
+    <Compile Include="Shapes\Cylinder.cs" />
     <Compile Include="Dict.cs" />
     <Compile Include="Drawable3D.cs" />
     <Compile Include="Drawable2D.cs" />
     <Compile Include="Exercise.cs" />
     <Compile Include="GLManager.cs" />
+    <Compile Include="Shapes\NewFoot.cs" />
+    <Compile Include="ObjLoader.cs" />
     <Compile Include="OpenGLControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -68,7 +72,7 @@
     <Compile Include="Shaders\Shaders.cs" />
     <Compile Include="Shaders\VertexShader.cs" />
     <Compile Include="Spherical.cs" />
-    <Compile Include="Sweep.cs" />
+    <Compile Include="Shapes\Sweep.cs" />
     <Compile Include="Triangle.cs" />
     <Compile Include="TriangleCollection.cs" />
     <Compile Include="Vertex.cs" />

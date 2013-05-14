@@ -16,12 +16,15 @@ namespace Utilities
         public Vector4[] draw;
         int steps;
 
-        public Sweep(Vector4[] face_vertices, Func<int, int, Matrix4> translation_step,
-            Func<int, int, Matrix4> rotation_step, Func<int, int, Matrix4> scale_step, int steps, ProgramObject program) :
+        public Sweep(int steps, ProgramObject program) :
             base(program, BeginMode.TriangleStrip)
         {
             this.steps = steps;
-            polynet.addFace(face_vertices);
+        }
+
+        public void createSweep(Vector4[] face_vertices, Func<int, int, Matrix4> translation_step,
+            Func<int, int, Matrix4> rotation_step, Func<int, int, Matrix4> scale_step){
+             polynet.addFace(face_vertices);
 
             Vector4[] backwards = new Vector4[face_vertices.Length];
 
@@ -43,8 +46,6 @@ namespace Utilities
                 Matrix4 transform = translation_step(i, steps) * scale_step(i, steps);
 
                 // Generate next section
-
-
                 nextFace = new Vector4[backwards.Length];
                 for (int j = 0; j < backwards.Length; j++)
                 {
@@ -74,7 +75,6 @@ namespace Utilities
             GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(draw.Length * Vector4.SizeInBytes),
                             draw, BufferUsageHint.StaticDraw);
         }
-
         public Vector4[] triangulate()
         {
             Vector4[][] toDraw = new Vector4[firstFace.Length + 2][];
@@ -155,7 +155,8 @@ namespace Utilities
             GL.EnableVertexAttribArray(0);
             GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
 
-            GL.MultiDrawArrays(BeginMode.LineLoop, indices, count, count.Length);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            GL.MultiDrawArrays(BeginMode.TriangleStrip, indices, count, count.Length);
 
             GL.UseProgram(0);
         }
