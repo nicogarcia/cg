@@ -14,10 +14,13 @@ namespace Utilities
             float step = 2 * (float)Math.PI / faces;
             float theta = 0;
 
-            Vector4[] base_vertices = new Vector4[faces];
+            Vertex[] base_vertices = new Vertex[faces];
 
             for (int i = 0; i < faces; i++, theta += step)
-                base_vertices[i] = new Vector4(radius * (float)Math.Cos(theta), radius * (float)Math.Sin(theta), -radius * 2, 1f);
+            {
+                base_vertices[i] = new Vertex(radius * (float)Math.Cos(theta), radius * (float)Math.Sin(theta), -radius * 2, 1f);
+                base_vertices[i].texture = new Vector4(new Vector2(184 + 128 * (float) Math.Cos(theta)/ 500, 188 + 128 * (float) Math.Sin(theta) / 375));
+            }
 
             createSweep(
                 base_vertices,

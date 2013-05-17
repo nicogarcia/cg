@@ -11,9 +11,8 @@ namespace Utilities
     public abstract class Sweep : Drawable3D
     {
         public PolyNet polynet = new PolyNet();
-        public Vector4[] firstFace, tapa;
-        int [] indices,count;
-        public Vector4[] draw;
+        public Vertex[] firstFace, tapa;
+        int[] indices, count;
         int steps;
 
         public Sweep(int steps, ProgramObject program) :
@@ -22,14 +21,13 @@ namespace Utilities
             this.steps = steps;
         }
 
-        public void createSweep(Vector4[] face_vertices, Func<int, int, Matrix4> translation_step,
-            Func<int, int, Matrix4> rotation_step, Func<int, int, Matrix4> scale_step){
-             polynet.addFace(face_vertices);
+        public void createSweep(Vertex[] face_vertices, Func<int, int, Matrix4> translation_step,
+            Func<int, int, Matrix4> rotation_step, Func<int, int, Matrix4> scale_step)
+        {
+            polynet.addFace(face_vertices);
 
-            Vector4[] backwards = new Vector4[face_vertices.Length];
-
+            Vertex[] backwards = new Vertex[face_vertices.Length];
             backwards[0] = face_vertices[0];
-
             for (int i = 1; i < backwards.Length; i++)
             {
                 backwards[i] = face_vertices[backwards.Length - i];
@@ -37,8 +35,8 @@ namespace Utilities
 
             firstFace = backwards;
 
-            Vector4[] currentFace = backwards;
-            Vector4[] nextFace = new Vector4[backwards.Length];
+            Vertex[] currentFace = backwards;
+            Vertex[] nextFace = new Vertex[backwards.Length];
 
             // For each division
             for (int i = 0; i < steps; i++)
@@ -46,16 +44,16 @@ namespace Utilities
                 Matrix4 transform = translation_step(i, steps) * scale_step(i, steps);
 
                 // Generate next section
-                nextFace = new Vector4[backwards.Length];
+                nextFace = new Vertex[backwards.Length];
                 for (int j = 0; j < backwards.Length; j++)
                 {
-                    nextFace[j] = Vector4.Transform(backwards[j], transform);
+                    nextFace[j] = new Vertex(Vector4.Transform(backwards[j].position, transform));
                 }
 
                 // Generate Faces
                 for (int j = 0; j < backwards.Length; j++)
                 {
-                    Vector4[] v = new Vector4[]{
+                    Vertex[] v = new Vertex[]{
                         currentFace[j],
                         currentFace[(j + 1) % backwards.Length],
                         nextFace[(j + 1) % backwards.Length],
@@ -68,76 +66,82 @@ namespace Utilities
             }
             tapa = currentFace;
             polynet.addFace(tapa);
-            draw = triangulate();
 
-            GL.BindVertexArray(VAO_ID);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
-            GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(draw.Length * Vector4.SizeInBytes),
-                            draw, BufferUsageHint.StaticDraw);
+            // Fill ArrayBuffer
+            triangulate();
+            base.fillArrayBuffer();
         }
-        public Vector4[] triangulate()
+        public void triangulate()
         {
-            Vector4[][] toDraw = new Vector4[firstFace.Length + 2][];
+            Vertex[][] toDrawAux = new Vertex[firstFace.Length + 2][];
             indices = new int[firstFace.Length + 2];
             count = new int[firstFace.Length + 2];
             //agregar base y tapa
 
-            toDraw[firstFace.Length] = new Vector4[firstFace.Length];
-            toDraw[firstFace.Length + 1] = new Vector4[firstFace.Length];
+            toDrawAux[firstFace.Length] = new Vertex[firstFace.Length];
+            toDrawAux[firstFace.Length + 1] = new Vertex[firstFace.Length];
 
             int top = firstFace.Length + 1;
 
             int cursor = 1;
-            toDraw[firstFace.Length][0] = firstFace[0];
-            toDraw[firstFace.Length + 1][0] = tapa[0];
+            toDrawAux[firstFace.Length][0] = firstFace[0];
+            toDrawAux[firstFace.Length + 1][0] = tapa[0];
             for (int i = 1; i < top / 2; i++)
             {
-                toDraw[firstFace.Length][cursor] = firstFace[i];
-                toDraw[firstFace.Length + 1][cursor++] = tapa[i];
-                toDraw[firstFace.Length][cursor] = firstFace[firstFace.Length - i];
-                toDraw[firstFace.Length + 1][cursor++] = tapa[firstFace.Length - i];
+                toDrawAux[firstFace.Length][cursor] = firstFace[i];
+                toDrawAux[firstFace.Length + 1][cursor++] = tapa[i];
+                toDrawAux[firstFace.Length][cursor] = firstFace[firstFace.Length - i];
+                toDrawAux[firstFace.Length + 1][cursor++] = tapa[firstFace.Length - i];
             }
 
             if (top % 2 != 0)
             {
-                toDraw[firstFace.Length][cursor] = firstFace[firstFace.Length / 2];
-                toDraw[firstFace.Length + 1][cursor] = tapa[firstFace.Length / 2];
+                toDrawAux[firstFace.Length][cursor] = firstFace[firstFace.Length / 2];
+                toDrawAux[firstFace.Length + 1][cursor] = tapa[firstFace.Length / 2];
             }
 
-            // agregar caras extrudadas
+            // Generate i triangle strips
             for (int i = 0; i < firstFace.Length; i++)
             {
                 int messi = 0;
-                toDraw[i] = new Vector4[2 + 2 * steps];
+                toDrawAux[i] = new Vertex[2 + 2 * steps];
+
+                // Get HalfEdge from i to the next
                 HalfEdge current = polynet.halfEdges[firstFace[i]][firstFace[(i + 1) % firstFace.Length]];
 
-                toDraw[i][messi++] = current.origin;
+                // Start from vertex i (origin of current half edge)
+                toDrawAux[i][messi++] = current.origin;
 
+                // Alternate between left and right, "steps" times
                 for (int j = 0; j < steps; j++)
                 {
-                    toDraw[i][messi++] = current.next.origin;
-                    toDraw[i][messi++] = current.prev.origin;
+                    // Left vertex
+                    toDrawAux[i][messi++] = current.next.origin;
+                    // Right vertex
+                    toDrawAux[i][messi++] = current.prev.origin;
 
+                    // Advance
                     current = polynet.halfEdges[current.prev.origin][current.next.next.origin];
-
                 }
 
-                toDraw[i][messi++] = current.next.next.origin;
+                // Last vertex
+                toDrawAux[i][messi++] = current.next.next.origin;
 
             }
-            Vector4[] toRet = new Vector4[2 * firstFace.Length *( 2 + steps)];
+
+            // Generate the single array with vertices
+            toDraw = new Vertex[2 * firstFace.Length * (2 + steps)];
             int roman = 0;
-            for (int i = 0; i < toDraw.Length; i++)
+            for (int i = 0; i < toDrawAux.Length; i++)
             {
                 indices[i] = roman;
-                for (int j = 0; j < toDraw[i].Length; j++)
+                for (int j = 0; j < toDrawAux[i].Length; j++)
                 {
-                    toRet[roman++] = toDraw[i][j];
+                    toDrawAux[i][j].normal = new Vector4(polynet.normal(toDrawAux[i][j]));
+                    toDraw[roman++] = toDrawAux[i][j];
                 }
-                count[i] = toDraw[i].Length;
+                count[i] = toDrawAux[i].Length;
             }
-
-            return toRet;
         }
 
         public override void paint(Matrix4 projMatrix, Matrix4 zoomMatrix)
@@ -149,12 +153,21 @@ namespace Utilities
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
 
             projMatrix = projMatrix * transformation;
+            Matrix4 normalMatrix = Matrix4.Invert(Matrix4.Transpose(zoomMatrix));
+
             GL.UniformMatrix4(projection_location, false, ref projMatrix);
             GL.UniformMatrix4(model_view_location, false, ref zoomMatrix);
+            GL.UniformMatrix4(normal_location, false, ref normalMatrix);
+            
+            GL.Uniform4(light_position_location, 3.0f, 3.0f, 3.0f, 1f);
+            // Light Intensity?
+            GL.Uniform3(material_ka_location, 0.10f, 0.19f, 0.17f);
+            GL.Uniform3(material_kd_location, 0.40f, 0.74f, 0.69f);
+            GL.Uniform3(material_ks_location, 0.30f, 0.31f, 0.31f);
+            GL.Uniform1(material_shine_location, 12.8f);
 
-            GL.EnableVertexAttribArray(0);
-            GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
-
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.Texture2D);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.MultiDrawArrays(BeginMode.TriangleStrip, indices, count, count.Length);
 

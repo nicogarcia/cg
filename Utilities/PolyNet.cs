@@ -10,15 +10,15 @@ namespace Utilities
     public class PolyNet
     {
         public List<Face> faces;
-        public Dict<Vector4,HalfEdge> halfEdges;
+        public Dict<Vertex,HalfEdge> halfEdges;
 
         public PolyNet()
         {
             faces = new List<Face>();
-            halfEdges = new Dict<Vector4, HalfEdge>();
+            halfEdges = new Dict<Vertex, HalfEdge>();
         }
 
-        public void addFace(Vector4[] vertices)
+        public void addFace(Vertex[] vertices)
         {
             HalfEdge[] currentHalfEdges = new HalfEdge[vertices.Length];
 
@@ -69,12 +69,12 @@ namespace Utilities
             }
         }
 
-        private Vector3 faceNormal(Vector4[] vertices)
+        private Vector3 faceNormal(Vertex[] vertices)
         {
             Vector3 edge1, edge2;
 
-            edge1 = new Vector3(vertices[1] - vertices[0]);
-            edge2 = new Vector3(vertices[2] - vertices[1]);
+            edge1 = new Vector3(vertices[1].position - vertices[0].position);
+            edge2 = new Vector3(vertices[2].position - vertices[1].position);
 
             // get face's normal vector with cross product
             Vector3 ret = Vector3.Cross(edge1, edge2);
@@ -82,12 +82,12 @@ namespace Utilities
         }
 
         // gets vertex normal as an average of faces normals
-        public Vector3 normal(Vector4 vertex)
+        public Vector3 normal(Vertex vertex)
         {
             Vector3 n = new Vector3(0, 0, 0);
-            Dictionary<Vector4, HalfEdge> d = halfEdges[vertex];
+            Dictionary<Vertex, HalfEdge> d = halfEdges[vertex];
 
-            foreach (KeyValuePair<Vector4, HalfEdge> kv in d) {
+            foreach (KeyValuePair<Vertex, HalfEdge> kv in d) {
                 Face f = kv.Value.face;
                 n += f.normal;
             }
@@ -95,7 +95,7 @@ namespace Utilities
             return Vector3.Normalize(n);
         }
 
-        private HalfEdge existHalfEdge(Vector4 origin, Vector4 dest)
+        private HalfEdge existHalfEdge(Vertex origin, Vertex dest)
         {
             // check if halfedge exists in 
             if(halfEdges.ContainsKey(origin) && halfEdges[origin].ContainsKey(dest))
@@ -115,9 +115,9 @@ namespace Utilities
             this.halfEdge = halfEdge;
         }
 
-        public Vector4[] vertices()
+        public Vertex[] vertices()
         {
-            List<Vector4> list = new List<Vector4>();
+            List<Vertex> list = new List<Vertex>();
             HalfEdge current = halfEdge;
 
             do
@@ -132,12 +132,12 @@ namespace Utilities
 
     public class HalfEdge
     {
-        public Vector4 origin;
+        public Vertex origin;
         public HalfEdge twin;
         public HalfEdge prev, next;
         public Face face;
 
-        public HalfEdge(Vector4 origin, Vector4 dest)
+        public HalfEdge(Vertex origin, Vertex dest)
         {
             this.origin = origin;
             /*

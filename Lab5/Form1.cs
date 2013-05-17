@@ -37,14 +37,14 @@ namespace Lab5
             };*/
 
 
-            Vector4[] vertices = new Vector4[]{
-                new Vector4(1f, -1f, 0, 1f),
-                new Vector4(-1f, -1f, 0, 1f),
-                new Vector4(-1f, 1f, 0, 1f),
-                new Vector4(1f, 1f, 0, 1f),
+            Vertex[] vertices = new Vertex[]{
+                new Vertex(1f, -1f, 0, 1f),
+                new Vertex(-1f, -1f, 0, 1f),
+                new Vertex(-1f, 1f, 0, 1f),
+                new Vertex(1f, 1f, 0, 1f),
             };
 
-            NewFoot sweep = new NewFoot(vertices,
+            Foot sweep = new Foot(vertices,
                 new Func<int, int, Matrix4>(
                     delegate(int current, int steps)
                     {
@@ -64,7 +64,6 @@ namespace Lab5
 
                         float pend = 4 * 0.5f / (float)Math.Pow(steps * 0.1f, 2);
                         float scale_factor = (float)(pend * Math.Pow(current*0.1f - steps*0.1f / 2f, 2) + 0.5f);
-                        Console.WriteLine(scale_factor);
                         return Matrix4.Scale(scale_factor, scale_factor, 1f);
                     }
                 )
@@ -75,18 +74,19 @@ namespace Lab5
             float z = 5f;
             float aux = 0.15f;
 
-            Vector4[] bottom = new Vector4[]{new Vector4(-x, -y + aux, z, 1.0f),
-               new Vector4(-x + aux, -y, z, 1.0f),
-               new Vector4(x - aux, -y, z, 1.0f),
-               new Vector4(x, -y + aux, z, 1.0f),
-               new Vector4(x, y - aux, z, 1.0f),
-               new Vector4(x - aux, y, z, 1.0f),
-               new Vector4(-x + aux, y, z, 1.0f),
-               new Vector4(-x, y - aux, z, 1.0f)
+            Vertex[] bottom = new Vertex[]{
+               new Vertex(-x, -y + aux, z, 1.0f),
+               new Vertex(-x + aux, -y, z, 1.0f),
+               new Vertex(x - aux, -y, z, 1.0f),
+               new Vertex(x, -y + aux, z, 1.0f),
+               new Vertex(x, y - aux, z, 1.0f),
+               new Vertex(x - aux, y, z, 1.0f),
+               new Vertex(-x + aux, y, z, 1.0f),
+               new Vertex(-x, y - aux, z, 1.0f)
             };
 
 
-            NewFoot sweep2 = new NewFoot(bottom,
+            Foot sweep2 = new Foot(bottom,
                 new Func<int, int, Matrix4>(
                     delegate(int current, int steps)
                     {

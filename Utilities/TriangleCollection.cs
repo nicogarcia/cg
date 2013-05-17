@@ -35,13 +35,13 @@ namespace Utilities
         {
             foreach (Face f in faces)
             {
-                Vector4[] vertices = f.vertices();
+                Vertex[] vertices = f.vertices();
                 for(int i = 0; i < vertices.Length - 2; i++)
                 {
                     Triangle t = new Triangle(new Vertex[]{
-                        new Vertex(vertices[0]),
-                        new Vertex(vertices[i + 1]),
-                        new Vertex(vertices[i + 2]),
+                        new Vertex(vertices[0].position),
+                        new Vertex(vertices[i + 1].position),
+                        new Vertex(vertices[i + 2].position),
                     });
                     Add(t);
                 }

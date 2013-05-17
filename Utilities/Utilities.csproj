@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Illumination.cs" />
     <Compile Include="Shapes\Cover.cs" />
     <Compile Include="Shapes\Cylinder.cs" />
     <Compile Include="Dict.cs" />
@@ -59,7 +60,7 @@
     <Compile Include="Drawable2D.cs" />
     <Compile Include="Exercise.cs" />
     <Compile Include="GLManager.cs" />
-    <Compile Include="Shapes\NewFoot.cs" />
+    <Compile Include="Shapes\Foot.cs" />
     <Compile Include="ObjLoader.cs" />
     <Compile Include="OpenGLControl.cs">
       <SubType>UserControl</SubType>
@@ -73,10 +74,12 @@
     <Compile Include="Shaders\VertexShader.cs" />
     <Compile Include="Spherical.cs" />
     <Compile Include="Shapes\Sweep.cs" />
+    <Compile Include="Texture\LoadImageTexture.cs" />
     <Compile Include="Triangle.cs" />
     <Compile Include="TriangleCollection.cs" />
     <Compile Include="Vertex.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

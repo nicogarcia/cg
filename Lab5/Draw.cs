@@ -24,9 +24,6 @@ namespace Lab5
 
 
             //triangles.triangulate(sweep.polynet.faces.ToArray());
-
-            reloadTriangles();
-
             
         }
     }

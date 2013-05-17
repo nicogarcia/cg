@@ -22,7 +22,7 @@ namespace Utilities
             camera = new Camera(new Spherical(8f, (float)Math.PI / 4,0));
 
             //projMatrix = Matrix4.CreateOrthographicOffCenter(-10f, 10f, -10f, 10f, 0.0001f, 10000f);
-            projMatrix = Matrix4.CreatePerspectiveFieldOfView(1f, this.Width / this.Height, 0.000001f, 100000f);
+            projMatrix = Matrix4.CreatePerspectiveFieldOfView(1f, this.Width / this.Height, 1f, 100f);
             zoomMatrix = camera.lookAt();
 
         }
@@ -43,7 +43,9 @@ namespace Utilities
         {
             OpenGLControl control = (OpenGLControl)sender;
 
-            GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.Enable(EnableCap.DepthTest);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             foreach (Drawable3D draw in objects)
             {
@@ -57,7 +59,7 @@ namespace Utilities
         {
             OpenGLControl control = (OpenGLControl)sender;
 
-            projMatrix = Matrix4.CreatePerspectiveFieldOfView(1f, this.Width / (float) this.Height, 0.000001f, 100000f);
+            projMatrix = Matrix4.CreatePerspectiveFieldOfView(1f, this.Width / (float) this.Height, 1f, 100f);
 
             GL.Viewport(0, 0, control.Width, control.Height);
 
