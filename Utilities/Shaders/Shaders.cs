@@ -87,9 +87,9 @@ namespace Utilities.Shaders
             //layout (location = 1) in vec3 VertexNormal; 
             //layout (location = 2) in vec2 VertexTexCoord;
             in vec4 VertexPosition; 
-            in vec4 VertexNormal;
+            in vec4 VertexNormal; 
             in vec4 VertexColor; 
-            in vec4 VertexTexCoord; 
+            in vec4 VertexTexCoord;
                 
             out vec4 Position;
             out vec4 Normal;
@@ -99,14 +99,13 @@ namespace Utilities.Shaders
             uniform mat4 modelView;
             uniform mat4 projectionMatrix;
             uniform mat4 normalMatrix;
-            //uniform mat4 MVP; WHAT'S THIS?
                 
             void main()
             {
                 TexCoord = vec2(VertexTexCoord);
                 Normal = normalize( normalMatrix * VertexNormal);
                 Position = modelView * VertexPosition;
-                //gl_Position = MVP * VertexPosition;
+                Color = VertexColor;
                 gl_Position = projectionMatrix * modelView * VertexPosition;
             }
         ";
@@ -186,7 +185,7 @@ namespace Utilities.Shaders
                 // color in spec
                 float diffuse = max( dot(L, N), 0.0);
                 ambAndDiff = material_ka + material_kd * diffuse;
-                spec = dot(L, N) < 0.0 ? vec3(0,0,0) : pow(max(dot(N, H), 0.0), material_shine);
+                spec = dot(L, N) < 0.0 ? vec3(0,0,0) :material_ks* pow(max(dot(N, H), 0.0), material_shine);
             }
 
             void main() {
@@ -196,11 +195,12 @@ namespace Utilities.Shaders
                 vec4 H = normalize(L+V);
 
                 vec3 ambAndDiff, spec;
-                vec4 texColor = texture( Tex1, TexCoord );//vec4(0.2, 0.2,0.2,1.0)
+                vec4 texColor = texture( Tex1, TexCoord );// vec4(0.0, 0.0,0.5,1.0); vec4(0.0, 0.0,0.5,1.0)
                 blinnPhongModel(L, N, H, ambAndDiff, spec);
 
                 FragColor = vec4(ambAndDiff, 1.0) * texColor + vec4(spec, 1.0);
                 //FragColor = vec4(texColor);
+                //FragColor = vec4(1, 0, 0, 1);//vec4(light_intensity, 1.0);
             }
         ";
         #endregion

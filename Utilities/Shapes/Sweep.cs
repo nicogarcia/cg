@@ -5,6 +5,7 @@ using System.Text;
 using OpenTK;
 using Utilities.Shaders;
 using OpenTK.Graphics.OpenGL;
+using System.Drawing;
 
 namespace Utilities
 {
@@ -12,9 +13,12 @@ namespace Utilities
     {
         public PolyNet polynet = new PolyNet();
         public Vertex[] firstFace, tapa;
-        int[] indices, count;
-        int steps;
 
+        int steps;
+        public Vector3 color;
+        Vector2[][] textures;
+        Func<int, int, Matrix4> translation_step;
+        
         public Sweep(int steps, ProgramObject program) :
             base(program, BeginMode.TriangleStrip)
         {
@@ -22,8 +26,11 @@ namespace Utilities
         }
 
         public void createSweep(Vertex[] face_vertices, Func<int, int, Matrix4> translation_step,
-            Func<int, int, Matrix4> rotation_step, Func<int, int, Matrix4> scale_step)
+            Func<int, int, Matrix4> rotation_step, Func<int, int, Matrix4> scale_step,Vector2[][] textures)
         {
+            this.translation_step = translation_step;
+            this.textures = textures;
+
             polynet.addFace(face_vertices);
 
             Vertex[] backwards = new Vertex[face_vertices.Length];
@@ -31,7 +38,7 @@ namespace Utilities
             for (int i = 1; i < backwards.Length; i++)
             {
                 backwards[i] = face_vertices[backwards.Length - i];
-            };
+            }
 
             firstFace = backwards;
 
@@ -71,110 +78,206 @@ namespace Utilities
             triangulate();
             base.fillArrayBuffer();
         }
+
         public void triangulate()
         {
-            Vertex[][] toDrawAux = new Vertex[firstFace.Length + 2][];
+
             indices = new int[firstFace.Length + 2];
             count = new int[firstFace.Length + 2];
-            //agregar base y tapa
 
-            toDrawAux[firstFace.Length] = new Vertex[firstFace.Length];
-            toDrawAux[firstFace.Length + 1] = new Vertex[firstFace.Length];
+            // Add Base and top
+            List<Vertex> Top = new List<Vertex>();
+            List<Vertex> Base = new List<Vertex>();
 
-            int top = firstFace.Length + 1;
+            Top.Add(tapa[0]);
+            Base.Add(firstFace[0]);
 
-            int cursor = 1;
-            toDrawAux[firstFace.Length][0] = firstFace[0];
-            toDrawAux[firstFace.Length + 1][0] = tapa[0];
-            for (int i = 1; i < top / 2; i++)
+            int len = firstFace.Length + 1;
+
+            for (int i = 1; i < len / 2; i++)
             {
-                toDrawAux[firstFace.Length][cursor] = firstFace[i];
-                toDrawAux[firstFace.Length + 1][cursor++] = tapa[i];
-                toDrawAux[firstFace.Length][cursor] = firstFace[firstFace.Length - i];
-                toDrawAux[firstFace.Length + 1][cursor++] = tapa[firstFace.Length - i];
+                Base.Add(firstFace[i]);
+                Top.Add(tapa[i]);
+
+                Base.Add(firstFace[firstFace.Length - i]);
+                Top.Add(tapa[firstFace.Length - i]);
             }
 
-            if (top % 2 != 0)
-            {
-                toDrawAux[firstFace.Length][cursor] = firstFace[firstFace.Length / 2];
-                toDrawAux[firstFace.Length + 1][cursor] = tapa[firstFace.Length / 2];
+            if (len % 2 != 0)
+            { // Face has odd number of vertices
+                Base.Add(firstFace[firstFace.Length / 2]);
+                Top.Add(tapa[firstFace.Length / 2]);
             }
 
             // Generate i triangle strips
+            /*
+                 * 2------------3
+                 * -            -
+                 * 0------------1
+            */
+            List<Vertex> vertexList = new List<Vertex>();
+            int verticesLastCount = 0;
             for (int i = 0; i < firstFace.Length; i++)
             {
-                int messi = 0;
-                toDrawAux[i] = new Vertex[2 + 2 * steps];
-
                 // Get HalfEdge from i to the next
                 HalfEdge current = polynet.halfEdges[firstFace[i]][firstFace[(i + 1) % firstFace.Length]];
 
+                TextureMapper.normal = current.face.normal;
+                TextureMapper.textureExtents = textures[i];
+                TextureMapper.faceExtents = faceExtents(firstFace[0], firstFace[1]);
+
+                indices[i] = vertexList.Count;
                 // Start from vertex i (origin of current half edge)
-                toDrawAux[i][messi++] = current.origin;
+                Vertex first = current.origin;
+                first.texture = TextureMapper.map(current.origin.position);
+                first.normal = new Vector4(current.face.normal);
+                vertexList.Add(first);
 
                 // Alternate between left and right, "steps" times
                 for (int j = 0; j < steps; j++)
                 {
                     // Left vertex
-                    toDrawAux[i][messi++] = current.next.origin;
+                    Vertex left = current.next.origin;
+                    left.texture = TextureMapper.map(left.position);
+                    left.normal = new Vector4(current.face.normal);
+                    vertexList.Add(left);
+
                     // Right vertex
-                    toDrawAux[i][messi++] = current.prev.origin;
+                    Vertex right = current.prev.origin;
+                    right.texture = TextureMapper.map(right.position);
+                    right.normal = new Vector4(current.face.normal);
+                    vertexList.Add(right);
 
                     // Advance
                     current = polynet.halfEdges[current.prev.origin][current.next.next.origin];
                 }
 
                 // Last vertex
-                toDrawAux[i][messi++] = current.next.next.origin;
+                Vertex last = current.next.origin;
+                last.texture = TextureMapper.map(last.position);
+                last.normal = new Vector4(current.face.normal);
+                vertexList.Add(last);
 
+                count[i] = vertexList.Count - indices[i];
+                //toEBO(vertexList.GetRange(verticesLastCount, vertexList.Count-verticesLastCount), verticesLastCount);
+                verticesLastCount = vertexList.Count;
             }
 
-            // Generate the single array with vertices
-            toDraw = new Vertex[2 * firstFace.Length * (2 + steps)];
-            int roman = 0;
-            for (int i = 0; i < toDrawAux.Length; i++)
-            {
-                indices[i] = roman;
-                for (int j = 0; j < toDrawAux[i].Length; j++)
-                {
-                    toDrawAux[i][j].normal = new Vector4(polynet.normal(toDrawAux[i][j]));
-                    toDraw[roman++] = toDrawAux[i][j];
-                }
-                count[i] = toDrawAux[i].Length;
-            }
+            toEBO(vertexList, 0);
+            toEBO(Base, vertexList.Count);
+            toEBO(Top, vertexList.Count + Base.Count);
+            
+            // Add vertices to "toDraw" single linear array
+            indices[indices.Length - 2] = vertexList.Count;
+            count[indices.Length - 2] = Base.Count;
+            vertexList.AddRange(Base);
+
+            indices[indices.Length - 1] = vertexList.Count;
+            count[indices.Length - 1] = Top.Count;
+            vertexList.AddRange(Top);
+
+            toDraw = vertexList.ToArray();
         }
 
-        public override void paint(Matrix4 projMatrix, Matrix4 zoomMatrix)
+        // Converts a list of triangle strips to triangle indices in ebo_list
+        private void toEBO(List<Vertex> face, int offset)
+        {
+            for (int i = 0; i < face.Count - 2; i++)
+            {
+                ebo_list.Add(i + offset);
+                ebo_list.Add(i + 1 + offset);
+                ebo_list.Add(i + 2 + offset);
+            }
+
+        }
+
+        /*
+         * 2 ---- 3
+         * |      |
+         * 0 ---- 1
+        */
+        private Vector4[] faceExtents(Vertex vertex, Vertex vertex_2)
+        {
+            Matrix4 tr = translation_step(steps, steps);
+
+            return new Vector4[]
+            {
+                vertex.position,
+                vertex_2.position,
+                Vector4.Transform(vertex.position, tr),
+                Vector4.Transform(vertex_2.position, tr)
+            };
+
+        }
+
+        public override void paint(Matrix4 projMatrix, Matrix4 modelViewMatrix)
         {
 
             GL.UseProgram(program.program_handle);
 
-            GL.BindVertexArray(VAO_ID);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
 
-            projMatrix = projMatrix * transformation;
-            Matrix4 normalMatrix = Matrix4.Invert(Matrix4.Transpose(zoomMatrix));
+            //GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO_ID);
+
+            modelViewMatrix *= transformation;
+            Matrix4 normalMatrix = Matrix4.Invert(Matrix4.Transpose(modelViewMatrix));
 
             GL.UniformMatrix4(projection_location, false, ref projMatrix);
-            GL.UniformMatrix4(model_view_location, false, ref zoomMatrix);
+            GL.UniformMatrix4(model_view_location, false, ref modelViewMatrix);
             GL.UniformMatrix4(normal_location, false, ref normalMatrix);
             
-            GL.Uniform4(light_position_location, 3.0f, 3.0f, 3.0f, 1f);
+            GL.Uniform4(light_position_location, 0.0f, 100.0f, -1.0f, 1f);
+
+            GL.Uniform3(light_intensity_location, color);
             // Light Intensity?
             GL.Uniform3(material_ka_location, 0.10f, 0.19f, 0.17f);
             GL.Uniform3(material_kd_location, 0.40f, 0.74f, 0.69f);
             GL.Uniform3(material_ks_location, 0.30f, 0.31f, 0.31f);
-            GL.Uniform1(material_shine_location, 12.8f);
+            GL.Uniform1(material_shine_location, 1.8f);
 
-            GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.Texture2D);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-            GL.MultiDrawArrays(BeginMode.TriangleStrip, indices, count, count.Length);
+            GL.BindVertexArray(VAO_ID);
+            //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            GL.DrawElements(BeginMode.Triangles, ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            //GL.MultiDrawArrays(BeginMode.TriangleStrip, indices, count, count.Length);
 
+
+            GL.BindVertexArray(0);
             GL.UseProgram(0);
         }
 
+    }
+
+    class TextureMapper
+    {
+        public static Vector2[] textureExtents;
+        public static Vector4[] faceExtents;
+        public static Vector3 normal;
+
+        public static Vector4 map(Vector4 position)
+        {
+            Vector4 w = faceExtents[1] - faceExtents[0];
+            Vector4 h = faceExtents[2] - faceExtents[0];
+
+            Vector4 proj_pos = position - Vector4.Dot(position - faceExtents[0], new Vector4(normal)) * new Vector4(normal);
+            
+            proj_pos -= faceExtents[0];
 
 
+
+            float ratio_w = Vector4.Dot(proj_pos, w) / w.LengthSquared;
+            float ratio_h = Vector4.Dot(proj_pos, h) / h.LengthSquared;
+
+            float texture_width = textureExtents[1].X - textureExtents[0].X;
+            float texture_height = textureExtents[2].Y - textureExtents[0].Y;
+            
+            if (texture_width > 1)
+                throw new NotImplementedException();
+
+            Vector4 texCoord = new Vector4(textureExtents[0].X + ratio_w * texture_width, textureExtents[0].Y + ratio_h * texture_height, 0f, 0f);
+
+            //Console.WriteLine(texCoord);
+            Random r = new Random();
+            texCoord = new Vector4((float) r.NextDouble(), (float) r.NextDouble(),0f, 0f);
+            return texCoord;
+        }
     }
 }

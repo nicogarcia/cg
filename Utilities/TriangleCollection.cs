@@ -6,6 +6,7 @@ using OpenTK;
 
 namespace Utilities
 {
+    // Unused
     public class TriangleCollection : List<Triangle>
     {
 
@@ -23,7 +24,7 @@ namespace Utilities
                 {
                     toRet[cursor] = vertices[i].position;
                     toRet[cursor + count] = vertices[i].color;
-                    toRet[cursor + 2 * count] = vertices[i].normal;
+                    //toRet[cursor + 2 * count] = vertices[i].normal;
                     cursor++;
                 }
             }

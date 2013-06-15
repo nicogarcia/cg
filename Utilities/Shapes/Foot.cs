@@ -16,7 +16,16 @@ namespace Utilities
             Func<int, int, Matrix4> rotation_step, Func<int, int, Matrix4> scale_step, int steps, ProgramObject program)
             : base(steps, program)
         {
-            createSweep(face_vertices, translation_step, rotation_step, scale_step);
+            Vector2[][] textures = new Vector2[face_vertices.Length][];
+            for (int i = 0; i < face_vertices.Length; i++)
+            {
+                textures[i] = new Vector2[4];
+                textures[i][0] = new Vector2((i % 2) / 2, 0);
+                textures[i][1] = new Vector2((i % 2) / 2 + 0.5f, 0);
+                textures[i][2] = new Vector2((i % 2) / 2, 1f);
+                textures[i][3] = new Vector2((i % 2) / 2 + 0.5f, 1f);
+            }
+            createSweep(face_vertices, translation_step, rotation_step, scale_step, textures);
             /*
             Vertex[][] toDraw = new Vertex[firstFace.Length + 2][];
             //indices = new int[firstFace.Length + 2];

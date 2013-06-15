@@ -30,6 +30,8 @@ namespace Utilities
         public void load()
         {
             GL.ClearColor(Color.Azure);
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.Texture2D);
 
             GL.Viewport(0, 0, this.Width, this.Height);
 
@@ -44,8 +46,9 @@ namespace Utilities
             OpenGLControl control = (OpenGLControl)sender;
 
             GL.ActiveTexture(TextureUnit.Texture0);
-            GL.Enable(EnableCap.DepthTest);
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.Clear(ClearBufferMask.DepthBufferBit);
 
             foreach (Drawable3D draw in objects)
             {

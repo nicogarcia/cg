@@ -82,7 +82,7 @@ namespace Utilities
         }
 
         // gets vertex normal as an average of faces normals
-        public Vector3 normal(Vertex vertex)
+        public Vector4 normal(Vertex vertex)
         {
             Vector3 n = new Vector3(0, 0, 0);
             Dictionary<Vertex, HalfEdge> d = halfEdges[vertex];
@@ -92,7 +92,22 @@ namespace Utilities
                 n += f.normal;
             }
 
-            return Vector3.Normalize(n);
+            return Vector4.Normalize(new Vector4(n));
+        }
+
+        // gets all vertex normals
+        public List<Vector4> normals(Vertex vertex)
+        {
+            Dictionary<Vertex, HalfEdge> d = halfEdges[vertex];
+            List<Vector4> normals = new List<Vector4>();
+
+            foreach (KeyValuePair<Vertex, HalfEdge> kv in d)
+            {
+                Face f = kv.Value.face;
+                 normals.Add(new Vector4(f.normal));
+            }
+
+            return normals;
         }
 
         private HalfEdge existHalfEdge(Vertex origin, Vertex dest)

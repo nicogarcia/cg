@@ -16,6 +16,7 @@ namespace Lab8
     public partial class Lab8 : Form
     {
         Foot sweep;
+        Foot cover;
         Cylinder cylinder;
 
         public Lab8()
@@ -30,9 +31,10 @@ namespace Lab8
                     new FragmentShader(Shaders.FRAGMENT_SHADER_ILLUMINATION));
 
             // Constants
-            int num = 100;
+            int num = 4;
             float radius = 1.0f;
             cylinder = new Cylinder(radius, num, program);
+            cylinder.color = new Vector3(1.0f, 0, 0);
 
 
             Vertex[] vertices = new Vertex[]{
@@ -66,8 +68,49 @@ namespace Lab8
                     }
                 )
                 , 20, program);
+            sweep.transformation = Matrix4.CreateTranslation(0, 0, -1f);
+            sweep.color = new Vector3(0, 1.0f, 0);
 
             openGLControl1.objects.Add(cylinder);
+
+
+            float x = 2.0f;
+            float y = 2.0f;
+            float z = 2f;
+            float aux = 0.15f;
+
+            Vertex[] bottom = new Vertex[]{
+               new Vertex(-x, -y + aux, z, 1.0f),
+               new Vertex(-x + aux, -y, z, 1.0f),
+               new Vertex(x - aux, -y, z, 1.0f),
+               new Vertex(x, -y + aux, z, 1.0f),
+               new Vertex(x, y - aux, z, 1.0f),
+               new Vertex(x - aux, y, z, 1.0f),
+               new Vertex(-x + aux, y, z, 1.0f),
+               new Vertex(-x, y - aux, z, 1.0f)
+            };
+
+            cover = new Foot(bottom,
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        return Matrix4.CreateTranslation(new Vector3(0, 0, (current + 1) * 0.1f));
+                    }
+                ),
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        return Matrix4.Identity;
+                    }
+                ),
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        return Matrix4.Identity;
+                    }
+                )
+                , 5, program);
+            cover.color = new Vector3(0, 0, 1.0f);
 
             //cargo la textura
             Utilities.LoadImageTexture.LoadTexture(@"..\..\texture.jpg");
@@ -79,8 +122,11 @@ namespace Lab8
         {
             openGLControl1.objects.Clear();
 
-            if (figureDropDown.SelectedItem.Equals("Mesa")) 
+            if (figureDropDown.SelectedItem.Equals("Mesa"))
+            {
                 openGLControl1.objects.Add(sweep);
+                openGLControl1.objects.Add(cover);
+            }
             else
                 openGLControl1.objects.Add(cylinder);
 

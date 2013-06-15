@@ -9,14 +9,22 @@ namespace Utilities
     public class Vertex
     {
         public Vector4 position = new Vector4(0, 0, 0, 1f);
-        public Vector4 normal  = new Vector4(0, 0, 0, 1f);
-        public Vector4 color = new Vector4(0, 0, 0, 1f);
-        public Vector4 texture = new Vector4(0, 0, 0, 1f);
+        public Vector4 normal = new Vector4(0, 0, 0, 1f);
+        public Vector4 color = new Vector4(1.0f, 0, 0, 1f);
+        public Vector4 texture = new Vector4(0, 0, 0, 0);
 
         public Vertex(Vector4 position)
         {
             this.position = position;
         }
+        /*
+        public Vertex(Vertex otherVertex, Vector4 texture)
+        {
+            position = otherVertex.position;
+            normals = otherVertex.normals;
+            color = otherVertex.color;
+            this.textures.Add(texture);
+        }*/
 
         public Vertex(float x,float y,float z,float w)
         {
@@ -25,12 +33,14 @@ namespace Utilities
         
         public Vector4[] ToArray()
         {
-            return new Vector4[]{
-                position,
-                normal,
-                color,
-                texture
-            };
+            Vector4[] toret = new Vector4[4];
+
+            toret[1] = position;
+            toret[0] = normal;
+            toret[2] = color;
+            toret[3] = texture;
+
+            return toret;
         }
 
     }
@@ -38,16 +48,19 @@ namespace Utilities
     public class VertexArray
     {
         public static Vector4[] singleVector4Array(Vertex[] array){
-            Vector4[] toReturn = new Vector4[array.Length * 4];
 
-            for(int i = 0; i < array.Length; i++){
-                toReturn[i * 4] = array[i].position;
-                toReturn[i * 4 + 1] = array[i].normal;
-                toReturn[i * 4 + 2] = array[i].color;
-                toReturn[i * 4 + 3] = array[i].texture;
+            Vector4[] toRet = new Vector4[4 * array.Length];
+            int count = array.Length;
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                toRet[i] = array[i].position;
+                toRet[i + count] = array[i].normal;
+                toRet[i + count * 2] = array[i].position;
+                toRet[i + count * 3] = array[i].texture;
             }
 
-            return toReturn;
+            return toRet;
         }
     }
 }
