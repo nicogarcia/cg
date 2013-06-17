@@ -1,0 +1,8 @@
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\bin\Release\CG_TP2.exe
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\bin\Release\CG_TP2.pdb
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Release\ResolveAssemblyReference.cache
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Release\CG_TP2.Properties.Resources.resources
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Release\GenerateResource.read.1.tlog
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Release\GenerateResource.write.1.tlog
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Release\CG_TP2.exe
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Release\CG_TP2.pdb

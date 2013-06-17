@@ -15,7 +15,6 @@ namespace Utilities
         public Vertex[] firstFace, tapa;
 
         int steps;
-        public Vector3 color;
         Vector2[][] textures;
         Func<int, int, Matrix4> translation_step;
         
@@ -25,7 +24,7 @@ namespace Utilities
             this.steps = steps;
         }
 
-        public void createSweep(Vertex[] face_vertices, Func<int, int, Matrix4> translation_step,
+        public void createSweep(Vertex[] face_vertices, Vector4 color, Func<int, int, Matrix4> translation_step,
             Func<int, int, Matrix4> rotation_step, Func<int, int, Matrix4> scale_step,Vector2[][] textures)
         {
             this.translation_step = translation_step;
@@ -54,7 +53,8 @@ namespace Utilities
                 nextFace = new Vertex[backwards.Length];
                 for (int j = 0; j < backwards.Length; j++)
                 {
-                    nextFace[j] = new Vertex(Vector4.Transform(backwards[j].position, transform));
+                    Vertex new_vertex = new Vertex(Vector4.Transform(backwards[j].position, transform), color, backwards[j].texture);
+                    nextFace[j] = new_vertex;
                 }
 
                 // Generate Faces
@@ -163,9 +163,9 @@ namespace Utilities
                 verticesLastCount = vertexList.Count;
             }
 
-            toEBO(vertexList, 0);
-            toEBO(Base, vertexList.Count);
-            toEBO(Top, vertexList.Count + Base.Count);
+            //toEBO(vertexList, 0);
+            //toEBO(Base, vertexList.Count);
+            //toEBO(Top, vertexList.Count + Base.Count);
             
             // Add vertices to "toDraw" single linear array
             indices[indices.Length - 2] = vertexList.Count;
@@ -215,32 +215,39 @@ namespace Utilities
 
             GL.UseProgram(program.program_handle);
 
-
-            //GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO_ID);
-
-            modelViewMatrix *= transformation;
+            modelViewMatrix = transformation * modelViewMatrix;
             Matrix4 normalMatrix = Matrix4.Invert(Matrix4.Transpose(modelViewMatrix));
 
             GL.UniformMatrix4(projection_location, false, ref projMatrix);
             GL.UniformMatrix4(model_view_location, false, ref modelViewMatrix);
             GL.UniformMatrix4(normal_location, false, ref normalMatrix);
             
-            GL.Uniform4(light_position_location, 0.0f, 100.0f, -1.0f, 1f);
+            GL.Uniform4(light_position_location, -3.0f, -3.0f, -3.0f, 1f);
 
-            GL.Uniform3(light_intensity_location, color);
+            GL.Uniform3(light_intensity_location, 1.0f, 1.0f, 1.0f);
             // Light Intensity?
-            GL.Uniform3(material_ka_location, 0.10f, 0.19f, 0.17f);
-            GL.Uniform3(material_kd_location, 0.40f, 0.74f, 0.69f);
-            GL.Uniform3(material_ks_location, 0.30f, 0.31f, 0.31f);
-            GL.Uniform1(material_shine_location, 1.8f);
+            // Silver ADSs
+            // 0.19225	0.19225	0.19225	0.50754	0.50754	0.50754	0.508273	0.508273	0.508273	0.4
+
+            GL.Uniform3(material_ka_location, 0.19225f, 0.19225f, 0.19225f);
+            GL.Uniform3(material_kd_location, 0.50754f, 0.50754f, 0.50754f);
+            GL.Uniform3(material_ks_location, 0.508273f, 0.508273f, 0.508273f);
+            GL.Uniform1(material_shine_location, 0.4f);
+            GL.Uniform1(colored_location, colored ? 1.0f : 0f);
 
             GL.BindVertexArray(VAO_ID);
-            //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.DrawElements(BeginMode.Triangles, ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
             //GL.MultiDrawArrays(BeginMode.TriangleStrip, indices, count, count.Length);
 
+            GL.BindVertexArray(0);
+
+            GL.BindVertexArray(NVAO_ID);
+
+            //GL.DrawElements(BeginMode.Lines, normals_ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
 
             GL.BindVertexArray(0);
+
             GL.UseProgram(0);
         }
 
@@ -261,8 +268,6 @@ namespace Utilities
             
             proj_pos -= faceExtents[0];
 
-
-
             float ratio_w = Vector4.Dot(proj_pos, w) / w.LengthSquared;
             float ratio_h = Vector4.Dot(proj_pos, h) / h.LengthSquared;
 
@@ -275,8 +280,9 @@ namespace Utilities
             Vector4 texCoord = new Vector4(textureExtents[0].X + ratio_w * texture_width, textureExtents[0].Y + ratio_h * texture_height, 0f, 0f);
 
             //Console.WriteLine(texCoord);
+            /*
             Random r = new Random();
-            texCoord = new Vector4((float) r.NextDouble(), (float) r.NextDouble(),0f, 0f);
+            texCoord = new Vector4((float) r.NextDouble(), (float) r.NextDouble(),0f, 0f);*/
             return texCoord;
         }
     }

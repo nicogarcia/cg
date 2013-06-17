@@ -14,10 +14,14 @@ namespace Utilities
         public int VAO_ID;
         public int VBO_ID;
         public int EBO_ID;
+        public int NVBO_ID;
+        public int NEBO_ID;
+        public int NVAO_ID;
 
         public Matrix4 transformation = Matrix4.Identity;
         public ProgramObject program;
         public BeginMode begin_mode;
+        public bool colored = true;
 
         protected int projection_location;
         protected int model_view_location;
@@ -28,10 +32,12 @@ namespace Utilities
         protected int material_kd_location;
         protected int material_ks_location;
         protected int material_shine_location;
+        protected int colored_location;
 
         public Vertex[] toDraw;
         public int[] indices, count;
         public int[] ebo_array;
+        public int[] normals_ebo_array;
         public List<int> ebo_list = new List<int>();
 
         public Drawable3D(ProgramObject program, BeginMode begin_mode)
@@ -49,6 +55,7 @@ namespace Utilities
             material_kd_location = GL.GetUniformLocation(program.program_handle, "material_kd");
             material_ks_location = GL.GetUniformLocation(program.program_handle, "material_ks");
             material_shine_location = GL.GetUniformLocation(program.program_handle, "material_shine");
+            colored_location = GL.GetUniformLocation(program.program_handle, "colored");
 
         }
 
@@ -73,35 +80,18 @@ namespace Utilities
 
         public void fillArrayBuffer()
         {
+
+            /**** VBO ****/
             Vector4[] vertexArray = VertexArray.singleVector4Array(toDraw);
-
-            /* Vertex array of cube */
-
-            /*vertexArray = new Vector4[]{
-                // Position
-                new Vector4(1.0f, 1.0f, 10.0f, 1.0f),
-                new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                // Normal
-                new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                // Color
-                new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                new Vector4(-10.0f, 10.0f, 1.0f, 1.0f),
-                new Vector4(-1.0f, -1.0f, 1.0f, 1.0f),
-                //Tex
-                new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-                new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-            };*/
-
+            
             GL.GenBuffers(1, out VBO_ID);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vertexArray.Length * Vector4.SizeInBytes),
                 vertexArray, BufferUsageHint.StaticDraw);
+            /**************/
 
-            /*ebo_list = new List<int>();
+            /**** EBO ****/
+            ebo_list = new List<int>();
 
             for (int j = 0; j < indices.Length; j++)
             {
@@ -111,18 +101,15 @@ namespace Utilities
                     ebo_list.Add(indices[j] + i + 1);
                     ebo_list.Add(indices[j] + i + 2);
                 }
-            }*/
+            }
 
             ebo_array = ebo_list.ToArray();
-            /*
-            ebo_array = new int[]{
-                0,1,2
-            };*/
-
             GL.GenBuffers(1, out EBO_ID);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO_ID);
             GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(ebo_array.Length * sizeof(int)),
                 ebo_array, BufferUsageHint.StaticDraw);
+            
+            /*************/
 
             GL.GenVertexArrays(1, out VAO_ID);
             GL.BindVertexArray(VAO_ID);
@@ -131,18 +118,22 @@ namespace Utilities
             // Position attrib
             GL.EnableVertexAttribArray(0);
             GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
+            GL.BindAttribLocation(program.program_handle, 0, "VertexPosition");
 
             // Normal attrib
             GL.EnableVertexAttribArray(1);
             GL.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 0, vertexArray.Length / 4 * Vector4.SizeInBytes);
+            GL.BindAttribLocation(program.program_handle, 1, "VertexNormal");
 
             // Color attrib
             GL.EnableVertexAttribArray(2);
             GL.VertexAttribPointer(2, 4, VertexAttribPointerType.Float, false, 0, 2 * vertexArray.Length / 4 * Vector4.SizeInBytes);
+            GL.BindAttribLocation(program.program_handle, 2, "VertexColor");
 
             // Texture attrib
             GL.EnableVertexAttribArray(3);
             GL.VertexAttribPointer(3, 4, VertexAttribPointerType.Float, false, 0, 3 * vertexArray.Length / 4 * Vector4.SizeInBytes);
+            GL.BindAttribLocation(program.program_handle, 3, "VertexTexCoord");
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO_ID);
 
@@ -150,39 +141,76 @@ namespace Utilities
 
 
 
-            /*// Load BufferData with "draw" array data
+            /**** NBO ****/
 
-            GL.GenBuffers(1, out VBO_ID);
-            GL.GenVertexArrays(1, out VAO_ID);
+            Vector4[] normalsArray = new Vector4[toDraw.Length * 2];
+            for (int i = 0; i < toDraw.Length; i++)
+            {
+                normalsArray[2 * i] = vertexArray[i];
+                Vector4 normalized;
+                //Vector4.Normalize(ref vertexArray[i + toDraw.Length], out normalized);
+                normalsArray[2 * i + 1] = vertexArray[i + toDraw.Length] + vertexArray[i];
+                //Vector4.Transform(normalsArray[2 * i + 1],Matrix4.CreateRotationX(0.2f) * Matrix4.CreateRotationY(0.2f));
+            }
 
-            GL.BindVertexArray(VAO_ID);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
+            GL.GenBuffers(1, out NVBO_ID);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, NVBO_ID);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(normalsArray.Length * Vector4.SizeInBytes),
+                normalsArray, BufferUsageHint.StaticDraw);
 
-            Vector4[] vertexArray = VertexArray.singleVector4Array(toDraw);
-            GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr(vertexArray.Length * Vector4.SizeInBytes),
-                            vertexArray, BufferUsageHint.StaticDraw);
+            /**************/
+            /**** NEBO ****/
+            normals_ebo_array = new int[toDraw.Length];
 
+            for (int i = 0; i < toDraw.Length; i++)
+            {
+                normals_ebo_array[i] = 2 * i;
+            }
+
+            GL.GenBuffers(1, out NEBO_ID);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, NEBO_ID);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(normals_ebo_array.Length * sizeof(int)),
+                normals_ebo_array, BufferUsageHint.StaticDraw);
+
+            /*************/
+
+            GL.GenVertexArrays(1, out NVAO_ID);
+            GL.BindVertexArray(NVAO_ID);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, NVBO_ID);
 
             // Position attrib
-            GL.EnableVertexAttribArray(5);
-            GL.BindAttribLocation(program.program_handle, 5, "VertexPosition");
-            GL.VertexAttribPointer(5, 4, VertexAttribPointerType.Float, false, 0, 0);
+            GL.EnableVertexAttribArray(0);
+            GL.VertexAttribPointer(0, 4, VertexAttribPointerType.Float, false, 0, 0);
+            GL.BindAttribLocation(program.program_handle, 0, "VertexPosition");
 
-            // Normal attrib
-            GL.EnableVertexAttribArray(10);
-            GL.BindAttribLocation(program.program_handle, 10, "VertexNormal");
-            GL.VertexAttribPointer(10, 4, VertexAttribPointerType.Float, false, 0, vertexArray.Length / 4 * Vector4.SizeInBytes);
 
-            // Color attrib
-            GL.EnableVertexAttribArray(2);
-            GL.BindAttribLocation(program.program_handle, 2, "VertexColor");
-            GL.VertexAttribPointer(2, 4, VertexAttribPointerType.Float, false, 0, 2 * vertexArray.Length / 4 * Vector4.SizeInBytes);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, NEBO_ID);
 
-            // Texture attrib
-            GL.EnableVertexAttribArray(3);
-            GL.BindAttribLocation(program.program_handle, 3, "VertexTexCoord");
-            GL.VertexAttribPointer(3, 4, VertexAttribPointerType.Float, false, 0, 3 * vertexArray.Length / 4 * Vector4.SizeInBytes);
-            */
+            GL.BindVertexArray(0);
         }
     }
 }
+/* Vertex array of cube */
+
+/*vertexArray = new Vector4[]{
+    // Position
+    new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
+    new Vector4(-1.0f, 1.0f, 1.0f, 1.0f),
+    new Vector4(-1.0f, -1.0f, 1.0f, 1.0f),
+    // Normal
+    new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
+    new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
+    new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
+    // Color
+    new Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+    new Vector4(0.0f, 1.0f, 0.0f, 1.0f),
+    new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
+    //Tex
+    new Vector4(0.5f, 0.5f, 1.0f, 1.0f),
+    new Vector4(0.75f, 0.75f, 1.0f, 1.0f),
+    new Vector4(0.0f, 0.25f, 1.0f, 1.0f),
+};*/
+
+/*ebo_array = new int[]{
+    0,1,2
+};*/

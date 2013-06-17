@@ -44,7 +44,7 @@ namespace Lab5
                 new Vertex(1f, 1f, 0, 1f),
             };
 
-            Foot sweep = new Foot(vertices,
+            /*Foot sweep = new Sweep(vertices,
                 new Func<int, int, Matrix4>(
                     delegate(int current, int steps)
                     {
@@ -113,7 +113,7 @@ namespace Lab5
             sweep.transformation = Matrix4.CreateTranslation(0, -0.65f, 0);
             sweep2.transformation = Matrix4.CreateTranslation(0, -0.65f, 0);
 
-            openGLControl1.load();
+            openGLControl1.load();*/
         }
 
     }

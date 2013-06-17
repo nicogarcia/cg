@@ -82,14 +82,15 @@ namespace Utilities.Shaders
 
         #region V_TEXTURE
         public const string VERTEX_SHADER_TEXTURE = @"
-            #version 330
-            //layout (location = 0) in vec3 VertexPosition; 
-            //layout (location = 1) in vec3 VertexNormal; 
-            //layout (location = 2) in vec2 VertexTexCoord;
-            in vec4 VertexPosition; 
-            in vec4 VertexNormal; 
-            in vec4 VertexColor; 
-            in vec4 VertexTexCoord;
+            #version 140
+            layout (location = 0) in vec4 VertexPosition; 
+            layout (location = 1) in vec4 VertexNormal; 
+            layout (location = 2) in vec4 VertexColor; 
+            layout (location = 3) in vec4 VertexTexCoord;
+            //in vec4 VertexPosition; 
+            //in vec4 VertexNormal; 
+            //in vec4 VertexColor; 
+            //in vec4 VertexTexCoord;
                 
             out vec4 Position;
             out vec4 Normal;
@@ -162,7 +163,7 @@ namespace Utilities.Shaders
 
         #region F_ILLUMINATION
         public const string FRAGMENT_SHADER_ILLUMINATION = @"
-            #version 330
+            #version 140
             in vec4 Position;
             in vec4 Normal;
             in vec4 Color;
@@ -176,8 +177,10 @@ namespace Utilities.Shaders
             uniform vec3 material_ks;
             uniform float material_shine;
 
-            //layout( location = 0 ) out vec4 FragColor;
-            out vec4 FragColor;
+            uniform float colored;
+
+            layout( location = 0 ) out vec4 FragColor;
+            //out vec4 FragColor;
 
             void blinnPhongModel( vec4 L, vec4 N, vec4 H, out vec3 ambAndDiff, out vec3 spec ) {
                 // Compute the ADS shading model here, return ambient
@@ -198,9 +201,16 @@ namespace Utilities.Shaders
                 vec4 texColor = texture( Tex1, TexCoord );// vec4(0.0, 0.0,0.5,1.0); vec4(0.0, 0.0,0.5,1.0)
                 blinnPhongModel(L, N, H, ambAndDiff, spec);
 
-                FragColor = vec4(ambAndDiff, 1.0) * texColor + vec4(spec, 1.0);
-                //FragColor = vec4(texColor);
-                //FragColor = vec4(1, 0, 0, 1);//vec4(light_intensity, 1.0);
+                if(colored == 0.0){
+                    //FragColor = vec4(ambAndDiff, 1.0) * texColor + vec4(spec, 1.0);
+                    //FragColor = vec4(ambAndDiff, 1.0) * texColor + vec4(spec, 1.0);
+                    FragColor = texColor;
+                }else{
+                    //FragColor = vec4(ambAndDiff, 1.0) * texColor + vec4(spec, 1.0);
+                    //FragColor = vec4(ambAndDiff, 1.0) * texColor + vec4(spec, 1.0);
+                    FragColor = Color;
+                    //FragColor = Color;//vec4(light_intensity, 1.0);
+                }
             }
         ";
         #endregion

@@ -64,3 +64,20 @@ C:\Users\grafica\Desktop\cg-master\CG_TP1\obj\x86\Debug\GenerateResource.read.1.
 C:\Users\grafica\Desktop\cg-master\CG_TP1\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\grafica\Desktop\cg-master\CG_TP1\obj\x86\Debug\CG_TP1.exe
 C:\Users\grafica\Desktop\cg-master\CG_TP1\obj\x86\Debug\CG_TP1.pdb
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\bin\Debug\CG_TP1.exe
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\bin\Debug\CG_TP1.pdb
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\bin\Debug\OpenTK.Compatibility.dll
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\bin\Debug\OpenTK.dll
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\bin\Debug\OpenTK.GLControl.dll
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\bin\Debug\Utilities.dll
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\bin\Debug\Utilities.pdb
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\bin\Debug\OpenTK.xml
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\bin\Debug\OpenTK.Compatibility.xml
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\bin\Debug\OpenTK.GLControl.xml
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\obj\x86\Debug\CG_TP1.MainWindow.resources
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\obj\x86\Debug\CG_TP1.Properties.Resources.resources
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\obj\x86\Debug\GenerateResource.read.1.tlog
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\obj\x86\Debug\GenerateResource.write.1.tlog
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\obj\x86\Debug\CG_TP1.exe
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP1\obj\x86\Debug\CG_TP1.pdb

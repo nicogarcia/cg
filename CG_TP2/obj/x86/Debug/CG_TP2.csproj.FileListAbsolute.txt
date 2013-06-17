@@ -14,3 +14,11 @@ C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x8
 C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Debug\CG_TP2.exe
 C:\Users\grafica\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Debug\CG_TP2.pdb
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\bin\Debug\CG_TP2.exe
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\bin\Debug\CG_TP2.pdb
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Debug\CG_TP2.Properties.Resources.resources
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Debug\GenerateResource.read.1.tlog
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Debug\GenerateResource.write.1.tlog
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Debug\CG_TP2.exe
+c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\CG_TP2\obj\x86\Debug\CG_TP2.pdb

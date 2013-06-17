@@ -5,48 +5,63 @@ using System.Text;
 using Utilities;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using Utilities.Shaders;
 
 namespace Utilities
 {
-    public class Cover
+    public class Cover : Sweep
     {
-        public PolyNet polynet = new PolyNet();
-
-        public Cover(Vertex[] bottom)
+        public Cover(float height, int num_steps, ProgramObject program)
+            : base(num_steps, program)
         {
-            polynet.addFace(bottom);
+            float x = 2.0f;
+            float y = 2.0f;
+            float z = 2f;
+            float aux = 0.15f;
 
+            Vertex[] vertices = new Vertex[]{
+               new Vertex(-x, -y + aux, z, 1.0f),
+               new Vertex(-x + aux, -y, z, 1.0f),
+               new Vertex(x - aux, -y, z, 1.0f),
+               new Vertex(x, -y + aux, z, 1.0f),
+               new Vertex(x, y - aux, z, 1.0f),
+               new Vertex(x - aux, y, z, 1.0f),
+               new Vertex(-x + aux, y, z, 1.0f),
+               new Vertex(-x, y - aux, z, 1.0f)
+            };
 
-            Vertex[] nextFace = new Vertex[8];
-
-            float scale_step = 1.05f;
-
-            Matrix4 transform = Matrix4.Scale(scale_step, scale_step, 1f) * Matrix4.CreateTranslation(new Vector3(0, 0, 0.1f));
-
-            // Generate next section
-            nextFace = new Vertex[]{
-                    new Vertex(Vector4.Transform(bottom[0].position,transform)),
-                    new Vertex(Vector4.Transform(bottom[1].position,transform)),
-                   new Vertex( Vector4.Transform(bottom[2].position,transform)),
-                    new Vertex(Vector4.Transform(bottom[3].position,transform)),
-                   new Vertex( Vector4.Transform(bottom[4].position,transform)),
-                   new Vertex( Vector4.Transform(bottom[5].position,transform)),
-                   new Vertex( Vector4.Transform(bottom[6].position,transform)),
-                    new Vertex(Vector4.Transform(bottom[7].position,transform)),
-                };
-            polynet.addFace(nextFace);
-
-            // Generate Faces
-            for (int j = 0; j < 8; j++)
+            Vector2[][] textures = new Vector2[vertices.Length][];
+            for (int i = 0; i < vertices.Length; i++)
             {
-                Vertex[] v = new Vertex[]{
-                        new Vertex(bottom[j].position),
-                        new Vertex(bottom[(j + 1) % 8].position),
-                        new Vertex(nextFace[(j + 1) % 8].position),
-                        new Vertex(nextFace[j].position),
-                    };
-                polynet.addFace(v);
+                textures[i] = new Vector2[4];
+                textures[i][0] = new Vector2((i % 2) / 2, 0);
+                textures[i][1] = new Vector2((i % 2) / 2 + 0.5f, 0);
+                textures[i][2] = new Vector2((i % 2) / 2, 1f);
+                textures[i][3] = new Vector2((i % 2) / 2 + 0.5f, 1f);
             }
+
+            float height_step = height / num_steps;
+
+            createSweep(vertices, new Vector4(0, 1f, 0, 1f),
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        return Matrix4.CreateTranslation(new Vector3(0, 0, height_step));
+                    }
+                ),
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        return Matrix4.Identity;
+                    }
+                ),
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        return Matrix4.Identity;
+                    }
+                )
+                , textures);
         }
 
     }

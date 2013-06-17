@@ -12,20 +12,53 @@ namespace Utilities
     public class Foot : Sweep
     {
 
-        public Foot(Vertex[] face_vertices, Func<int, int, Matrix4> translation_step,
-            Func<int, int, Matrix4> rotation_step, Func<int, int, Matrix4> scale_step, int steps, ProgramObject program)
-            : base(steps, program)
+        public Foot(float height, int num_steps, ProgramObject program)
+            : base(num_steps, program)
         {
-            Vector2[][] textures = new Vector2[face_vertices.Length][];
-            for (int i = 0; i < face_vertices.Length; i++)
+            Vertex[] vertices = new Vertex[]{
+                new Vertex(new Vector4(1f, -1f, 0, 1f)),
+                new Vertex(new Vector4(-1f, -1f, 0, 1f)),
+                new Vertex(new Vector4(-1f, 1f, 0, 1f)),
+                new Vertex(new Vector4(1f, 1f, 0, 1f)),
+            };
+
+            Vector2[][] textures = new Vector2[vertices.Length][];
+            for (int i = 0; i < vertices.Length; i++)
             {
                 textures[i] = new Vector2[4];
                 textures[i][0] = new Vector2((i % 2) / 2, 0);
-                textures[i][1] = new Vector2((i % 2) / 2 + 0.5f, 0);
+                textures[i][1] = new Vector2((i % 2) / 2 + 1f, 0);
                 textures[i][2] = new Vector2((i % 2) / 2, 1f);
-                textures[i][3] = new Vector2((i % 2) / 2 + 0.5f, 1f);
+                textures[i][3] = new Vector2((i % 2) / 2 + 1f, 1f);
             }
-            createSweep(face_vertices, translation_step, rotation_step, scale_step, textures);
+
+            float height_step = height / num_steps;
+
+            createSweep(vertices, new Vector4(0, 1f, 0, 1f),
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        return Matrix4.CreateTranslation(new Vector3(0, 0, (current + 1) * height_step));
+                    }
+                ),
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        return Matrix4.Identity;
+                    }
+                ),
+                new Func<int, int, Matrix4>(
+                    delegate(int current, int steps)
+                    {
+                        current++;
+
+                        float pend = 4 * 0.5f / (float)Math.Pow(steps * 0.1f, 2);
+                        float scale_factor = (float)(pend * Math.Pow(current * 0.1f - steps * 0.1f / 2f, 2) + 0.5f);
+                        return Matrix4.Scale(scale_factor, scale_factor, 1f);
+                    }
+                )
+                , textures);
+
             /*
             Vertex[][] toDraw = new Vertex[firstFace.Length + 2][];
             //indices = new int[firstFace.Length + 2];
