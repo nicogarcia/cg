@@ -39,11 +39,11 @@ namespace Lab8
                     new FragmentShader(Shaders.FRAGMENT_SHADER_ILLUMINATION));
 
             // Constants
-            int num = 4;
+            int num = 10;
             float radius = 1.0f;
             float height = radius * 4f;
-            cylinder = new Cylinder(radius, height, num, new Vector4(0, 1f, 1f, 1f), program);
-            cylinder.colored = false;
+            cylinder = new Cylinder(radius, height, num, new Vector4(0, 1f, 0, 1f), program);
+            //cylinder.colored = false;
             
             cover = new Cover(0.5f, 5, program);
             cover.colored = false;

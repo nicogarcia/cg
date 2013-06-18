@@ -203,12 +203,10 @@ namespace Utilities.Shaders
 
                 if(colored == 0.0){
                     //FragColor = vec4(ambAndDiff, 1.0) * texColor + vec4(spec, 1.0);
-                    //FragColor = vec4(ambAndDiff, 1.0) * texColor + vec4(spec, 1.0);
                     FragColor = texColor;
                 }else{
-                    //FragColor = vec4(ambAndDiff, 1.0) * texColor + vec4(spec, 1.0);
-                    //FragColor = vec4(ambAndDiff, 1.0) * texColor + vec4(spec, 1.0);
                     FragColor = Color;
+                    //FragColor = vec4(ambAndDiff, 1.0) * Color + vec4(spec, 1.0);
                     //FragColor = Color;//vec4(light_intensity, 1.0);
                 }
             }

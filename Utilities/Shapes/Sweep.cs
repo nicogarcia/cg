@@ -131,6 +131,7 @@ namespace Utilities
                 Vertex first = current.origin;
                 first.texture = TextureMapper.map(current.origin.position);
                 first.normal = new Vector4(current.face.normal);
+
                 vertexList.Add(first);
 
                 // Alternate between left and right, "steps" times
@@ -234,9 +235,9 @@ namespace Utilities
             GL.Uniform3(material_ks_location, 0.508273f, 0.508273f, 0.508273f);
             GL.Uniform1(material_shine_location, 0.4f);
             GL.Uniform1(colored_location, colored ? 1.0f : 0f);
-
+            
             GL.BindVertexArray(VAO_ID);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
             GL.DrawElements(BeginMode.Triangles, ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
             //GL.MultiDrawArrays(BeginMode.TriangleStrip, indices, count, count.Length);
 
@@ -244,7 +245,7 @@ namespace Utilities
 
             GL.BindVertexArray(NVAO_ID);
 
-            //GL.DrawElements(BeginMode.Lines, normals_ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.DrawElements(BeginMode.Lines, normals_ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
 
             GL.BindVertexArray(0);
 

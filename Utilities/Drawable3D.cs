@@ -146,10 +146,12 @@ namespace Utilities
             Vector4[] normalsArray = new Vector4[toDraw.Length * 2];
             for (int i = 0; i < toDraw.Length; i++)
             {
-                normalsArray[2 * i] = vertexArray[i];
+                normalsArray[2 * i] = new Vector4(vertexArray[i]);
                 Vector4 normalized;
-                //Vector4.Normalize(ref vertexArray[i + toDraw.Length], out normalized);
-                normalsArray[2 * i + 1] = vertexArray[i + toDraw.Length] + vertexArray[i];
+                Vector4.Normalize(ref vertexArray[i + toDraw.Length], out normalized);
+                Vector4.Multiply(normalized, -1.0f);
+                //normalsArray[2 * i + 1] = vertexArray[i + toDraw.Length] + vertexArray[i];
+                Vector4.Add(ref normalized, ref vertexArray[i], out normalsArray[2 * i + 1]);
                 //Vector4.Transform(normalsArray[2 * i + 1],Matrix4.CreateRotationX(0.2f) * Matrix4.CreateRotationY(0.2f));
             }
 
@@ -160,11 +162,11 @@ namespace Utilities
 
             /**************/
             /**** NEBO ****/
-            normals_ebo_array = new int[toDraw.Length];
+            normals_ebo_array = new int[toDraw.Length * 2];
 
-            for (int i = 0; i < toDraw.Length; i++)
+            for (int i = 0; i < normalsArray.Length; i++)
             {
-                normals_ebo_array[i] = 2 * i;
+                normals_ebo_array[i] = i;
             }
 
             GL.GenBuffers(1, out NEBO_ID);
