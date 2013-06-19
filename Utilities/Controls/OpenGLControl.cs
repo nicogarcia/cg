@@ -6,26 +6,42 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Timers;
 
 namespace Utilities
 {
     public class OpenGLControl : GLControl
     {
         public List<Drawable3D> objects = new List<Drawable3D>();
-        Camera camera;
+        GhostCamera camera;
+        GhostCamera lastCameraState;
+
+        System.Timers.Timer refreshTimer = new System.Timers.Timer();
 
         private Matrix4 projMatrix;
         private Matrix4 zoomMatrix;
 
+        bool[] pressed_keys = new bool[256];
+
         public OpenGLControl()
         {
-            camera = new Camera(new Spherical(8f, (float)Math.PI / 4,(float) Math.PI / 2));
-            //camera = new GhostCamera();
+            //camera = new Camera(new Spherical(8f, (float)Math.PI / 4,(float) Math.PI / 2));
+            //lastCameraState = new Camera(new Spherical(8f, (float)Math.PI / 4, (float)Math.PI / 2));
+            camera = new GhostCamera();
+            lastCameraState = new GhostCamera();
 
             //projMatrix = Matrix4.CreateOrthographicOffCenter(-10f, 10f, -10f, 10f, 0.0001f, 10000f);
-            projMatrix = Matrix4.CreatePerspectiveFieldOfView(1f, this.Width / this.Height, 1f, 100f);
+            projMatrix = Matrix4.CreatePerspectiveFieldOfView(0.1f, this.Width / this.Height, 1f, 1000f);
             zoomMatrix = camera.lookAt();
 
+            refreshTimer.Interval = 20;
+            refreshTimer.Elapsed += new ElapsedEventHandler(refreshTimer_Elapsed);
+            refreshTimer.Enabled = true;
+        }
+
+        void refreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            refreshView();
         }
 
         public void load()
@@ -39,8 +55,7 @@ namespace Utilities
             this.Paint += new PaintEventHandler(this.paint);
             this.Resize += new EventHandler(this.resize);
             this.MouseWheel += new MouseEventHandler(OpenGLControl_MouseWheel);
-            this.KeyPress += new KeyPressEventHandler(OpenGLControl_KeyPress);
-        }       
+        }
 
         public void paint(object sender, PaintEventArgs e)
         {
@@ -63,9 +78,10 @@ namespace Utilities
         {
             OpenGLControl control = (OpenGLControl)sender;
 
-            projMatrix = Matrix4.CreatePerspectiveFieldOfView(1f, this.Width / (float) this.Height, 1f, 100f);
+            projMatrix = Matrix4.CreatePerspectiveFieldOfView(0.1f, this.Width / (float)this.Height, 1f, 100f);
 
             GL.Viewport(0, 0, control.Width, control.Height);
+            //GL.Viewport(control.Width - 100, control.Height - 100, 100, 100);
 
             control.Invalidate();
         }
@@ -73,40 +89,32 @@ namespace Utilities
         public void OpenGLControl_MouseWheel(object sender, MouseEventArgs e)
         {
             if (e.Delta < 0)
-                camera.position.growRadio();
+                camera.moveBack();
             else
-                camera.position.shrinkRadio();
+                camera.moveForward();
 
             zoomMatrix = camera.lookAt();
             this.Invalidate();
         }
 
-        public void OpenGLControl_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        public void refreshView()
         {
-            switch (e.KeyChar)
-            {
-                case 'w':
-                    camera.position.growTheta();
-                    break;
-                case 's':
-                    camera.position.shrinkTheta();
-                    break;
-                case 'd':
-                    camera.position.growPhi();
-                    break;
-                case 'a':
-                    camera.position.shrinkPhi();
-                    break;
-                case '-':
-                    camera.position.growRadio();
-                    break;
-                case '+':
-                    camera.position.shrinkRadio();
-                    break;
-            }
+            MotionControl.refreshCamera(camera);
 
             zoomMatrix = camera.lookAt();
             this.Invalidate();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            MotionControl.keyDown(e.KeyValue);
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            base.OnKeyUp(e);
+            MotionControl.keyUp(e.KeyValue);
         }
     }
 }

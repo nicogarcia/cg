@@ -29,14 +29,6 @@ namespace Utilities
             this.color = color;
             this.texture = texture;
         }
-        /*
-        public Vertex(Vertex otherVertex, Vector4 texture)
-        {
-            position = otherVertex.position;
-            normals = otherVertex.normals;
-            color = otherVertex.color;
-            this.textures.Add(texture);
-        }*/
 
         public Vertex(float x,float y,float z,float w)
         {

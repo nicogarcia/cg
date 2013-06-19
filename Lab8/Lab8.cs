@@ -19,6 +19,9 @@ namespace Lab8
         Foot foot;
         Cover cover;
         Cylinder cylinder;
+        Cylinder cylinder1;
+        Cylinder cylinder2;
+        Cylinder cylinder3;
         Cone cone_x;
         Cone cone_y;
         Cone cone_z;
@@ -39,14 +42,30 @@ namespace Lab8
                     new FragmentShader(Shaders.FRAGMENT_SHADER_ILLUMINATION));
 
             // Constants
-            int num = 10;
+            int num = 100;
             float radius = 1.0f;
             float height = radius * 4f;
             cylinder = new Cylinder(radius, height, num, new Vector4(0, 1f, 0, 1f), program);
+            cylinder.transformation = Matrix4.CreateTranslation(-10f, 4f,0f);
             cylinder.colored = false;
-            
+
+
+            cylinder1 = new Cylinder(radius, height, num, new Vector4(0, 1f, 0, 1f), program);
+            cylinder1.transformation = Matrix4.CreateTranslation(-10f, 4f, 0f);
+            cylinder1.colored = false;
+
+
+            cylinder2 = new Cylinder(radius, height, num, new Vector4(0, 1f, 0, 1f), program);
+            cylinder2.transformation = Matrix4.CreateTranslation(-15f, 4f, 0f);
+            cylinder2.colored = false;
+
+
+            cylinder3 = new Cylinder(radius, height, num, new Vector4(0, 1f, 0, 1f), program);
+            cylinder3.transformation = Matrix4.CreateTranslation(-20f, 4f, 0f);
+            cylinder3.colored = false;
+                        
             cover = new Cover(0.5f, 5, program);
-            cover.colored = true;
+            cover.colored = false;
 
             foot = new Foot(2f, 20, program);
             foot.colored = false;
@@ -75,7 +94,8 @@ namespace Lab8
 
 
             /**************/
-            floor = new Cylinder(100f, 0.1f, 4,new Vector4(0.5f, 0.5f, 0.5f, 1f), program);            
+            floor = new Cylinder(1000f, 0.1f, 4,new Vector4(0.5f, 0.5f, 0.5f, 1f), program);
+            floor.colored = false;
 
             // Load texture
             Utilities.LoadImageTexture.LoadTexture(@"..\..\texture.jpg");
@@ -91,12 +111,19 @@ namespace Lab8
             objectSelector1.AddObject(cover);
             objectSelector1.AddObject(cylinder);
             objectSelector1.AddObject(floor);
+            objectSelector1.AddObject(cylinder1);
+            objectSelector1.AddObject(cylinder2);
+            objectSelector1.AddObject(cylinder3);
 
             objectSelector1.open_gl_control = openGLControl1;
 
             objectSelector1.SelectedIndices.Add(6);
             objectSelector1.SelectedIndices.Add(7);
+            objectSelector1.SelectedIndices.Add(8);
             objectSelector1.SelectedIndices.Add(9);
+            objectSelector1.SelectedIndices.Add(10);
+            objectSelector1.SelectedIndices.Add(11);
+            objectSelector1.SelectedIndices.Add(12);
 
             openGLControl1.load();
         }

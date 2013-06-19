@@ -17,19 +17,19 @@ namespace Utilities
         {
             Vertex[] vertices = new Vertex[]{
                 new Vertex(new Vector4(1f, -1f, 0, 1f)),
-                new Vertex(new Vector4(-1f, -1f, 0, 1f)),
-                new Vertex(new Vector4(-1f, 1f, 0, 1f)),
                 new Vertex(new Vector4(1f, 1f, 0, 1f)),
+                new Vertex(new Vector4(-1f, 1f, 0, 1f)),
+                new Vertex(new Vector4(-1f, -1f, 0, 1f)),
             };
 
             Vector2[][] textures = new Vector2[vertices.Length][];
             for (int i = 0; i < vertices.Length; i++)
             {
                 textures[i] = new Vector2[4];
-                textures[i][0] = new Vector2((i % 2) / 2 + 0.2f, 0);
-                textures[i][1] = new Vector2((i % 2) / 2 + 1f, 0);
-                textures[i][2] = new Vector2((i % 2) / 2 + 0.2f, 1f);
-                textures[i][3] = new Vector2((i % 2) / 2 + 1f, 1f);
+                textures[i][0] = new Vector2((i % 2) / 2, 0);
+                textures[i][1] = new Vector2((i % 2) / 2 + 0.75f, 0);
+                textures[i][2] = new Vector2((i % 2) / 2, 1f);
+                textures[i][3] = new Vector2((i % 2) / 2 + 0.75f, 1f);
             }
 
             float height_step = height / num_steps;

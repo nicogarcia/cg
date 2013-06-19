@@ -9,7 +9,7 @@ namespace Utilities
 {
     public class Cylinder : Sweep
     {
-        public Cylinder(float radius, float height, int faces, Vector4 color, ProgramObject program) : base(3, program)
+        public Cylinder(float radius, float height, int faces, Vector4 color, ProgramObject program) : base(1, program)
         {
             float step = 2 * (float)Math.PI / faces;
             float theta = (float) Math.PI / 4;

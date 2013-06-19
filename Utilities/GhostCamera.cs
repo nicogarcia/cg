@@ -6,10 +6,10 @@ using OpenTK;
 
 namespace Utilities
 {
-    class GhostCamera
+    public class GhostCamera
     {
-        Vector4 normal;
-        Vector4 lookat;
+        public Vector4 normal;
+        public Vector4 lookat;
         public Vector4 position;
         float angle;
 
@@ -18,8 +18,15 @@ namespace Utilities
 
             this.normal = new Vector4(0, 0, 1f, 1f);
             this.position = new Vector4(3f, 0f, 1f,1f);
-            this.lookat = new Vector4(-0.1f, 0, 0, 1f);
-            angle = 0.1f;
+            this.lookat = new Vector4(-3f, 0, 0, 1f);
+            angle = 0.03f;
+        }
+
+        public GhostCamera(GhostCamera camera)
+        {
+            this.position = camera.position;
+            this.normal = camera.normal;
+            this.lookat = camera.lookat;
         }
 
         public Matrix4 lookAt()
@@ -110,5 +117,14 @@ namespace Utilities
         }
 
 
+        public void rotate(float d_angle)
+        {
+            lookat = Vector4.Transform(lookat, Matrix4.CreateRotationZ(d_angle));
+        }
+
+        public void move(float d_pos)
+        {
+            position = Vector4.Transform(position, Matrix4.CreateTranslation(lookat.X * d_pos, lookat.Y* d_pos, lookat.Z * d_pos));
+        }
     }
 }

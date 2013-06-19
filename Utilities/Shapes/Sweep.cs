@@ -30,20 +30,18 @@ namespace Utilities
             this.translation_step = translation_step;
             this.textures = textures;
 
-
+            // Generate first face reversing input vertex order
             Vertex[] backwards = new Vertex[face_vertices.Length];
             backwards[0] = face_vertices[0];
             for (int i = 1; i < backwards.Length; i++)
-            {
                 backwards[i] = face_vertices[backwards.Length - i];
-            }
-
             firstFace = backwards;
 
-            polynet.addFace(face_vertices);
+            // Add first face (input reversed)
+            polynet.addFace(firstFace);
 
-            Vertex[] currentFace = backwards;
-            Vertex[] nextFace = new Vertex[backwards.Length];
+            Vertex[] currentFace = face_vertices;
+            Vertex[] nextFace = new Vertex[face_vertices.Length];
 
             // For each division
             for (int i = 0; i < steps; i++)
@@ -51,20 +49,20 @@ namespace Utilities
                 Matrix4 transform = translation_step(i, steps) * scale_step(i, steps);
 
                 // Generate next section
-                nextFace = new Vertex[backwards.Length];
-                for (int j = 0; j < backwards.Length; j++)
+                nextFace = new Vertex[face_vertices.Length];
+                for (int j = 0; j < face_vertices.Length; j++)
                 {
-                    Vertex new_vertex = new Vertex(Vector4.Transform(backwards[j].position, transform), color, backwards[j].texture);
+                    Vertex new_vertex = new Vertex(Vector4.Transform(face_vertices[j].position, transform), color, face_vertices[j].texture);
                     nextFace[j] = new_vertex;
                 }
 
                 // Generate Faces
-                for (int j = 0; j < backwards.Length; j++)
+                for (int j = 0; j < face_vertices.Length; j++)
                 {
                     Vertex[] v = new Vertex[]{
                         currentFace[j],
-                        currentFace[(j + 1) % backwards.Length],
-                        nextFace[(j + 1) % backwards.Length],
+                        currentFace[(j + 1) % face_vertices.Length],
+                        nextFace[(j + 1) % face_vertices.Length],
                         nextFace[j],
                     };
                     polynet.addFace(v);
@@ -127,43 +125,43 @@ namespace Utilities
             for (int i = 0; i < firstFace.Length; i++)
             {
                 // Get HalfEdge from i to the next
-                HalfEdge current = polynet.halfEdges[firstFace[i]][firstFace[(i + 1) % firstFace.Length]];
+                HalfEdge current = polynet.halfEdges[firstFace[i]][firstFace[(i + 1) % firstFace.Length]].twin;
 
                 TextureMapper.normal = current.face.normal;
                 TextureMapper.textureExtents = textures[i];
-                TextureMapper.faceExtents = faceExtents(firstFace[0], firstFace[1]);
+                TextureMapper.faceExtents = faceExtents(firstFace[i], firstFace[(i + 1) % firstFace.Length]);
 
                 indices[i] = vertexList.Count;
                 // Start from vertex i (origin of current half edge)
                 Vertex first = current.origin;
                 first.texture = TextureMapper.map(current.origin.position);
-                first.normal = new Vector4(current.face.normal);
+                first.normal = new Vector4(polynet.normal(first));
 
                 vertexList.Add(new Vertex(first));
 
                 // Alternate between left and right, "steps" times
                 for (int j = 0; j < steps; j++)
                 {
-                    // Left vertex
-                    Vertex left = current.next.origin;
-                    left.texture = TextureMapper.map(left.position);
-                    left.normal = new Vector4(current.face.normal);
-                    vertexList.Add(new Vertex(left));
-
                     // Right vertex
-                    Vertex right = current.prev.origin;
+                    Vertex right = current.next.origin;
                     right.texture = TextureMapper.map(right.position);
-                    right.normal = new Vector4(current.face.normal);
+                    right.normal = new Vector4(polynet.normal(right));
                     vertexList.Add(new Vertex(right));
 
+                    // Left vertex
+                    Vertex left = current.prev.origin;
+                    left.texture = TextureMapper.map(left.position);
+                    left.normal = new Vector4(polynet.normal(left));
+                    vertexList.Add(new Vertex(left));
+
                     // Advance
-                    current = polynet.halfEdges[current.prev.origin][current.next.next.origin];
+                    current = polynet.halfEdges[current.next.next.origin][left].twin;
                 }
 
                 // Last vertex
                 Vertex last = current.next.origin;
                 last.texture = TextureMapper.map(last.position);
-                last.normal = new Vector4(current.face.normal);
+                last.normal = new Vector4(polynet.normal(last));
                 vertexList.Add(new Vertex(last));
 
                 count[i] = vertexList.Count - indices[i];
@@ -214,29 +212,28 @@ namespace Utilities
             GL.UniformMatrix4(model_view_location, false, ref modelViewMatrix);
             GL.UniformMatrix4(normal_location, false, ref normalMatrix);
             
-            GL.Uniform4(light_position_location, -3.0f, -3.0f, -3.0f, 1f);
+            GL.Uniform4(light_position_location, -5.0f, -5.0f, 10.0f, 1f);
 
-            GL.Uniform3(light_intensity_location, 1.0f, 1.0f, 1.0f);
             // Light Intensity?
+            GL.Uniform3(light_intensity_location, 0.5f, 0.5f, 0.5f);
+
             // Silver ADSs
             // 0.19225	0.19225	0.19225	0.50754	0.50754	0.50754	0.508273	0.508273	0.508273	0.4
-
-            GL.Uniform3(material_ka_location, 0.19225f, 0.19225f, 0.19225f);
-            GL.Uniform3(material_kd_location, 0.50754f, 0.50754f, 0.50754f);
-            GL.Uniform3(material_ks_location, 0.508273f, 0.508273f, 0.508273f);
+            GL.Uniform3(material_ka_location, 1f, 1f, 1f);
+            GL.Uniform3(material_kd_location, 1f, 1f, 1f);
+            GL.Uniform3(material_ks_location, 0.3f, 0.3f, 0.3f);
             GL.Uniform1(material_shine_location, 0.4f);
             GL.Uniform1(colored_location, colored ? 1.0f : 0f);
             
             GL.BindVertexArray(VAO_ID);
             //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-            //GL.DrawElements(BeginMode.Triangles, ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
-            //GL.MultiDrawArrays(BeginMode.TriangleStrip, indices, count, count.Length);
+            GL.DrawElements(BeginMode.Triangles, ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
 
             GL.BindVertexArray(0);
 
             GL.BindVertexArray(NVAO_ID);
 
-            GL.DrawElements(BeginMode.Lines, normals_ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            //GL.DrawElements(BeginMode.Lines, normals_ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
 
             GL.BindVertexArray(0);
 

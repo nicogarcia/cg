@@ -20,6 +20,15 @@ namespace Utilities
             setXYZ();
         }
 
+        public Spherical(Spherical pos)
+        {
+            this.radio = pos.radio;
+            this.theta = pos.theta;
+            this.phi = pos.phi;
+
+            setXYZ();
+        }
+
         private void setXYZ()
         {
             x = (float)(radio * Math.Sin(theta) * Math.Cos(phi));

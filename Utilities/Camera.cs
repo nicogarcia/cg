@@ -16,7 +16,7 @@ namespace Utilities
         public Camera(Spherical position)
         {
             this.normal = new Vector4(0, 0, 1f, 1f);
-            this.position = position;
+            this.position = new Spherical(position);
             this.lookat = new Vector4(0, 0, 0, 1f);
         }
 
