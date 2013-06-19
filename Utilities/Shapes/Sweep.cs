@@ -30,7 +30,6 @@ namespace Utilities
             this.translation_step = translation_step;
             this.textures = textures;
 
-            polynet.addFace(face_vertices);
 
             Vertex[] backwards = new Vertex[face_vertices.Length];
             backwards[0] = face_vertices[0];
@@ -40,6 +39,8 @@ namespace Utilities
             }
 
             firstFace = backwards;
+
+            polynet.addFace(face_vertices);
 
             Vertex[] currentFace = backwards;
             Vertex[] nextFace = new Vertex[backwards.Length];
@@ -89,24 +90,30 @@ namespace Utilities
             List<Vertex> Top = new List<Vertex>();
             List<Vertex> Base = new List<Vertex>();
 
-            Top.Add(tapa[0]);
-            Base.Add(firstFace[0]);
+            for (int i = 0; i < tapa.Length; i++)
+                tapa[i].normal = new Vector4(0, 0, 1f, 0f);
+
+            for (int i = 0; i < firstFace.Length; i++)
+                firstFace[i].normal = new Vector4(0, 0, -1f, 0f);
+
+            Top.Add(new Vertex(tapa[0]));
+            Base.Add(new Vertex(firstFace[0]));
 
             int len = firstFace.Length + 1;
 
             for (int i = 1; i < len / 2; i++)
             {
-                Base.Add(firstFace[i]);
-                Top.Add(tapa[i]);
+                Base.Add(new Vertex(firstFace[i]));
+                Top.Add(new Vertex(tapa[i]));
 
-                Base.Add(firstFace[firstFace.Length - i]);
-                Top.Add(tapa[firstFace.Length - i]);
+                Base.Add(new Vertex(firstFace[firstFace.Length - i]));
+                Top.Add(new Vertex(tapa[firstFace.Length - i]));
             }
 
             if (len % 2 != 0)
             { // Face has odd number of vertices
-                Base.Add(firstFace[firstFace.Length / 2]);
-                Top.Add(tapa[firstFace.Length / 2]);
+                Base.Add(new Vertex(firstFace[firstFace.Length / 2]));
+                Top.Add(new Vertex(tapa[firstFace.Length / 2]));
             }
 
             // Generate i triangle strips
@@ -132,7 +139,7 @@ namespace Utilities
                 first.texture = TextureMapper.map(current.origin.position);
                 first.normal = new Vector4(current.face.normal);
 
-                vertexList.Add(first);
+                vertexList.Add(new Vertex(first));
 
                 // Alternate between left and right, "steps" times
                 for (int j = 0; j < steps; j++)
@@ -141,13 +148,13 @@ namespace Utilities
                     Vertex left = current.next.origin;
                     left.texture = TextureMapper.map(left.position);
                     left.normal = new Vector4(current.face.normal);
-                    vertexList.Add(left);
+                    vertexList.Add(new Vertex(left));
 
                     // Right vertex
                     Vertex right = current.prev.origin;
                     right.texture = TextureMapper.map(right.position);
                     right.normal = new Vector4(current.face.normal);
-                    vertexList.Add(right);
+                    vertexList.Add(new Vertex(right));
 
                     // Advance
                     current = polynet.halfEdges[current.prev.origin][current.next.next.origin];
@@ -157,16 +164,12 @@ namespace Utilities
                 Vertex last = current.next.origin;
                 last.texture = TextureMapper.map(last.position);
                 last.normal = new Vector4(current.face.normal);
-                vertexList.Add(last);
+                vertexList.Add(new Vertex(last));
 
                 count[i] = vertexList.Count - indices[i];
-                //toEBO(vertexList.GetRange(verticesLastCount, vertexList.Count-verticesLastCount), verticesLastCount);
                 verticesLastCount = vertexList.Count;
             }
 
-            //toEBO(vertexList, 0);
-            //toEBO(Base, vertexList.Count);
-            //toEBO(Top, vertexList.Count + Base.Count);
             
             // Add vertices to "toDraw" single linear array
             indices[indices.Length - 2] = vertexList.Count;
@@ -178,18 +181,6 @@ namespace Utilities
             vertexList.AddRange(Top);
 
             toDraw = vertexList.ToArray();
-        }
-
-        // Converts a list of triangle strips to triangle indices in ebo_list
-        private void toEBO(List<Vertex> face, int offset)
-        {
-            for (int i = 0; i < face.Count - 2; i++)
-            {
-                ebo_list.Add(i + offset);
-                ebo_list.Add(i + 1 + offset);
-                ebo_list.Add(i + 2 + offset);
-            }
-
         }
 
         /*
@@ -237,8 +228,8 @@ namespace Utilities
             GL.Uniform1(colored_location, colored ? 1.0f : 0f);
             
             GL.BindVertexArray(VAO_ID);
-            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-            GL.DrawElements(BeginMode.Triangles, ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+            //GL.DrawElements(BeginMode.Triangles, ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
             //GL.MultiDrawArrays(BeginMode.TriangleStrip, indices, count, count.Length);
 
             GL.BindVertexArray(0);

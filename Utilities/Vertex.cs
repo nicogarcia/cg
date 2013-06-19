@@ -12,9 +12,6 @@ namespace Utilities
         public Vector4 normal = new Vector4(0, 0, 0, 1f);
         public Vector4 color = new Vector4(1.0f, 0, 0, 1f);
         public Vector4 texture = new Vector4(0, 0, 0, 0);
-        private Vector4 vector4;
-        private Vector4 color_2;
-        private Vector4 vector4_2;
 
         public Vertex(Vector4 position)
         {
@@ -44,6 +41,14 @@ namespace Utilities
         public Vertex(float x,float y,float z,float w)
         {
             position = new Vector4(x, y, z, w);
+        }
+
+        public Vertex(Vertex vertex)
+        {
+            this.position = vertex.position;
+            this.color = vertex.color;
+            this.texture = vertex.texture;
+            this.normal = vertex.normal;
         }
         
         public Vector4[] ToArray()

@@ -26,9 +26,9 @@ namespace Utilities
             for (int i = 0; i < vertices.Length; i++)
             {
                 textures[i] = new Vector2[4];
-                textures[i][0] = new Vector2((i % 2) / 2, 0);
+                textures[i][0] = new Vector2((i % 2) / 2 + 0.2f, 0);
                 textures[i][1] = new Vector2((i % 2) / 2 + 1f, 0);
-                textures[i][2] = new Vector2((i % 2) / 2, 1f);
+                textures[i][2] = new Vector2((i % 2) / 2 + 0.2f, 1f);
                 textures[i][3] = new Vector2((i % 2) / 2 + 1f, 1f);
             }
 

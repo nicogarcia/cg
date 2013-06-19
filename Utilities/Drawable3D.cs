@@ -59,24 +59,7 @@ namespace Utilities
 
         }
 
-        public virtual void paint(Matrix4 projMatrix, Matrix4 modelViewMatrix)
-        {
-            /* GL.UseProgram(program.program_handle);
-
-             GL.BindVertexArray(VAO_ID);
-             GL.BindBuffer(BufferTarget.ArrayBuffer, VBO_ID);
-
-             modelViewMatrix *= transformation;
-             Matrix4 normalMatrix = Matrix4.Invert(Matrix4.Transpose(projMatrix));
-
-             GL.UniformMatrix4(projection_location, false, ref projMatrix);
-             GL.UniformMatrix4(model_view_location, false, ref modelViewMatrix);
-             GL.UniformMatrix4(normal_location, false, ref normalMatrix);
-
-             GL.DrawArrays(begin_mode, 0, toDraw.Length / 3);
-
-             GL.UseProgram(0);*/
-        }
+        public virtual void paint(Matrix4 projMatrix, Matrix4 modelViewMatrix) { }
 
         public void fillArrayBuffer()
         {
@@ -138,8 +121,7 @@ namespace Utilities
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO_ID);
 
             GL.BindVertexArray(0);
-
-
+            
 
             /**** NBO ****/
 
@@ -149,10 +131,8 @@ namespace Utilities
                 normalsArray[2 * i] = new Vector4(vertexArray[i]);
                 Vector4 normalized;
                 Vector4.Normalize(ref vertexArray[i + toDraw.Length], out normalized);
-                Vector4.Multiply(normalized, -1.0f);
-                //normalsArray[2 * i + 1] = vertexArray[i + toDraw.Length] + vertexArray[i];
+                //Vector4.Multiply(normalized, -1.0f);
                 Vector4.Add(ref normalized, ref vertexArray[i], out normalsArray[2 * i + 1]);
-                //Vector4.Transform(normalsArray[2 * i + 1],Matrix4.CreateRotationX(0.2f) * Matrix4.CreateRotationY(0.2f));
             }
 
             GL.GenBuffers(1, out NVBO_ID);

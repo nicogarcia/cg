@@ -43,10 +43,10 @@ namespace Lab8
             float radius = 1.0f;
             float height = radius * 4f;
             cylinder = new Cylinder(radius, height, num, new Vector4(0, 1f, 0, 1f), program);
-            //cylinder.colored = false;
+            cylinder.colored = false;
             
             cover = new Cover(0.5f, 5, program);
-            cover.colored = false;
+            cover.colored = true;
 
             foot = new Foot(2f, 20, program);
             foot.colored = false;
