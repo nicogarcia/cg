@@ -129,6 +129,7 @@ namespace Lab8
             little_view.setMatrices(Matrix4.CreatePerspectiveFieldOfView(1f, 1f,1f,100f), openGLControl1.camera.lookAt());
             openGLControl1.AddViewport(little_view);
 
+
             openGLControl1.load();
         }
 

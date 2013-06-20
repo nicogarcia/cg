@@ -13,9 +13,9 @@ namespace Utilities
         // Deacceleration constant
         static float k_deaccel = -0.05f;
         // Friction constant
-        static float k_friction = -k_accel / 30;
+        static float k_friction = -k_accel / 10;
         // Handling constant (speed incidence over turn angle)
-        static float k_handling = 0.005f;
+        static float k_handling = 0.006f;
 
         static float speed = 0;
 

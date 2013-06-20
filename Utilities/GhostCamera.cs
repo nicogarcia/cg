@@ -46,9 +46,9 @@ namespace Utilities
             double sin = Math.Sin(angle);
             Vector3 cross = Vector3.Cross(rot, aro);
             double dot = Vector3.Dot(aro, rot);
-            rotated.X *= (float)(cosin + cross.X * sin + dot * aro.X * (1 - cosin));//vx*ca + crossx*sa + dot*ax*(1-ca);
-            rotated.Y *= (float)(cosin + cross.Y * sin + dot * aro.Y * (1 - cosin));//vy*ca + crossy*sa + dot*ay*(1-ca);
-            rotated.Z *= (float)(cosin + cross.Z * sin + dot * aro.Z * (1 - cosin));//vz*ca + crossz*sa + dot*az*(1-ca);
+            rotated.X= (float)(rotated.X * cosin + cross.X * sin + dot * aro.X * (1 - cosin));//vx*ca + crossx*sa + dot*ax*(1-ca);
+            rotated.Y= (float)(rotated.Y * cosin + cross.Y * sin + dot * aro.Y * (1 - cosin));//vy*ca + crossy*sa + dot*ay*(1-ca);
+            rotated.Z= (float)(rotated.Z * cross.Z * sin + dot * aro.Z * (1 - cosin));//vz*ca + crossz*sa + dot*az*(1-ca);
         }
 
         Vector4 calculateRightVector()
@@ -76,50 +76,51 @@ namespace Utilities
 
         public void rotateUp()
         {
-            lookat = Vector4.Transform(lookat, Matrix4.CreateRotationX(angle));
+            //lookat = Vector4.Transform(lookat, Matrix4.CreateRotationX(angle));
             //normal = Vector4.Transform(normal, Matrix4.CreateRotationX(angle));
             //normal = Vector4.Transform(normal, Matrix4.Invert(Matrix4.Transpose(Matrix4.CreateRotationX(angle))));
 
-            /*
+            
             //calculate right vector
             Vector4 rightVector = calculateRightVector();
 
             //rotate up
             rotate(ref normal, rightVector, angle);
-            rotate(ref lookat,rightVector, angle);*/
+            rotate(ref lookat,rightVector, angle);
              
         }
 
         public void rotateDown()
         {
-            lookat = Vector4.Transform(lookat, Matrix4.CreateRotationX(-angle));
+            //lookat = Vector4.Transform(lookat, Matrix4.CreateRotationX(-angle));
             //normal = Vector4.Transform(normal, Matrix4.CreateRotationX(-angle));
             //normal = Vector4.Transform(normal, Matrix4.Invert(Matrix4.Transpose(Matrix4.CreateRotationX(-angle))));
-            /*
+            
             //calculate right vector
             Vector4 rightVector = calculateRightVector();
 
             //rotate down
             rotate(ref normal, rightVector, -angle);
-            rotate(ref lookat, rightVector, -angle);*/
+            rotate(ref lookat, rightVector, -angle);
         }
 
         public void rotateLeft()
         {
-            lookat = Vector4.Transform(lookat, Matrix4.CreateRotationZ(angle));
-            //rotate(ref lookat, normal, -angle); 
+            //lookat = Vector4.Transform(lookat, Matrix4.CreateRotationZ(angle));
+            rotate(ref lookat, normal, -angle); 
         }
 
         public void rotateRight()
         {
-            lookat = Vector4.Transform(lookat, Matrix4.CreateRotationZ(-angle));
-            //rotate(ref lookat, normal, angle);
+            //lookat = Vector4.Transform(lookat, Matrix4.CreateRotationZ(-angle));
+            rotate(ref lookat, normal, angle);
         }
 
 
         public void rotate(float d_angle)
         {
-            lookat = Vector4.Transform(lookat, Matrix4.CreateRotationZ(d_angle));
+            //lookat = Vector4.Transform(lookat, Matrix4.CreateRotationZ(d_angle));
+            rotate(ref lookat, normal, -d_angle);
         }
 
         public void move(float d_pos)
