@@ -40,8 +40,7 @@ namespace Lab8
             ProgramObject program = new ProgramObject(
                 new VertexShader(Shaders.VERTEX_SHADER_TEXTURE),
                     new FragmentShader(Shaders.FRAGMENT_SHADER_ILLUMINATION));
-
-            // Constants
+                    
             int num = 100;
             float radius = 1.0f;
             float height = radius * 4f;
@@ -125,7 +124,18 @@ namespace Lab8
             objectSelector1.SelectedIndices.Add(11);
             objectSelector1.SelectedIndices.Add(12);
 
+            Viewport little_view = new Viewport(0, 0, 100, 100);
+            little_view.AddObjects(objectSelector1.objects);
+            little_view.setMatrices(Matrix4.CreatePerspectiveFieldOfView(1f, 1f,1f,100f), openGLControl1.camera.lookAt());
+            openGLControl1.AddViewport(little_view);
+
             openGLControl1.load();
+        }
+
+        private void Lab8_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == (int) Keys.Escape)
+                this.Dispose();
         }
 
     }

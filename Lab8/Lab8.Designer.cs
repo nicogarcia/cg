@@ -65,9 +65,12 @@
             this.ClientSize = new System.Drawing.Size(519, 419);
             this.Controls.Add(this.objectSelector1);
             this.Controls.Add(this.openGLControl1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.KeyPreview = true;
             this.Name = "Lab8";
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Lab8_KeyUp);
             this.ResumeLayout(false);
 
         }

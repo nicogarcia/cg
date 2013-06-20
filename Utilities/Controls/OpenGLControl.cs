@@ -13,8 +13,9 @@ namespace Utilities
     public class OpenGLControl : GLControl
     {
         public List<Drawable3D> objects = new List<Drawable3D>();
-        GhostCamera camera;
-        GhostCamera lastCameraState;
+        public GhostCamera camera;
+
+        List<Viewport> viewports = new List<Viewport>();
 
         System.Timers.Timer refreshTimer = new System.Timers.Timer();
 
@@ -28,10 +29,9 @@ namespace Utilities
             //camera = new Camera(new Spherical(8f, (float)Math.PI / 4,(float) Math.PI / 2));
             //lastCameraState = new Camera(new Spherical(8f, (float)Math.PI / 4, (float)Math.PI / 2));
             camera = new GhostCamera();
-            lastCameraState = new GhostCamera();
 
             //projMatrix = Matrix4.CreateOrthographicOffCenter(-10f, 10f, -10f, 10f, 0.0001f, 10000f);
-            projMatrix = Matrix4.CreatePerspectiveFieldOfView(0.1f, this.Width / this.Height, 1f, 1000f);
+            projMatrix = Matrix4.CreatePerspectiveFieldOfView(1f, this.Width / this.Height, 1f, 1000f);
             zoomMatrix = camera.lookAt();
 
             refreshTimer.Interval = 20;
@@ -49,9 +49,7 @@ namespace Utilities
             GL.ClearColor(Color.Azure);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Texture2D);
-
-            GL.Viewport(0, 0, this.Width, this.Height);
-
+            
             this.Paint += new PaintEventHandler(this.paint);
             this.Resize += new EventHandler(this.resize);
             this.MouseWheel += new MouseEventHandler(OpenGLControl_MouseWheel);
@@ -66,9 +64,17 @@ namespace Utilities
             GL.Clear(ClearBufferMask.ColorBufferBit);
             GL.Clear(ClearBufferMask.DepthBufferBit);
 
+            GL.Viewport(0, 0, this.Width, this.Height);
+
             foreach (Drawable3D draw in objects)
             {
                 draw.paint(projMatrix, zoomMatrix);
+            }
+
+            foreach (Viewport viewport in viewports)
+            {
+                GL.Viewport(viewport.x, viewport.y, viewport.width, viewport.height);
+                viewport.paint();
             }
 
             control.SwapBuffers();
@@ -79,11 +85,18 @@ namespace Utilities
             OpenGLControl control = (OpenGLControl)sender;
 
             projMatrix = Matrix4.CreatePerspectiveFieldOfView(0.1f, this.Width / (float)this.Height, 1f, 100f);
-
-            GL.Viewport(0, 0, control.Width, control.Height);
-            //GL.Viewport(control.Width - 100, control.Height - 100, 100, 100);
-
+            
             control.Invalidate();
+        }
+
+        public void AddViewport(Viewport viewport)
+        {
+            // If the viewport doesn't have matrix, add this' by default
+            if (!viewport.matrix_set)
+                viewport.setMatrices(projMatrix, zoomMatrix);
+
+            viewports.Add(viewport);
+
         }
 
         public void OpenGLControl_MouseWheel(object sender, MouseEventArgs e)

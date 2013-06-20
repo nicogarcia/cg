@@ -11,7 +11,7 @@ namespace Utilities
         // Acceleration constant
         static float k_accel = 0.08f;
         // Deacceleration constant
-        static float k_deaccel = -0.075f;
+        static float k_deaccel = -0.05f;
         // Friction constant
         static float k_friction = -k_accel / 30;
         // Handling constant (speed incidence over turn angle)
@@ -52,16 +52,16 @@ namespace Utilities
             if (Math.Sign(speed) != Math.Sign(speed + friction_accel))
                 speed = 0;
             else
-                speed += k_accel * accel;
+                speed += k_accel * (float) Math.Sqrt(Math.Abs(accel)) * (float) Math.Sign(accel);
 
             bool moving = speed != 0;
 
             if(moving && turning){
                 int side = turning_left ? 1 : -1;
                 int sign = speed > 0 ? side : -side;
-                angle = k_handling / speed * sign;
+                angle = k_handling / (float) Math.Sqrt(Math.Abs(speed)) * sign;
             }
-                        
+
             camera.move(speed);
             camera.rotate(angle);
         }
