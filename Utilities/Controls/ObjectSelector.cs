@@ -8,7 +8,7 @@ namespace Utilities.Controls
 {
     public class ObjectSelector : ListView
     {
-        List<Drawable3D> objects = new List<Drawable3D>();
+        public List<Drawable3D> objects = new List<Drawable3D>();
         public OpenGLControl open_gl_control;
 
         public ObjectSelector()

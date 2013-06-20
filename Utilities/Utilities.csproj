@@ -84,6 +84,7 @@
     <Compile Include="Triangle.cs" />
     <Compile Include="TriangleCollection.cs" />
     <Compile Include="Vertex.cs" />
+    <Compile Include="Viewport.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\ObjectSelector.resx">
