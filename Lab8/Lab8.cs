@@ -29,6 +29,7 @@ namespace Lab8
         Cylinder y_axis;
         Cylinder z_axis;
         Cylinder floor;
+        public static WavefrontObj car;
 
         public Lab8()
         {
@@ -96,8 +97,14 @@ namespace Lab8
             floor = new Cylinder(1000f, 0.1f, 4,new Vector4(0.5f, 0.5f, 0.5f, 1f), program);
             floor.colored = false;
 
+            car = new WavefrontObj(@"..\..\Avent.obj", program, BeginMode.Triangles);
+            car.transformation =  Matrix4.CreateRotationX((float)Math.PI / 2) * Matrix4.CreateTranslation(0, 0, 0f);
+            car.colored = false;
+            openGLControl1.camera.car = car;
+
             // Load texture
-            Utilities.LoadImageTexture.LoadTexture(@"..\..\texture.jpg");
+            //Utilities.LoadImageTexture.LoadTexture(@"..\..\0000.BMP");
+            Utilities.LoadImageTexture.LoadTexture(@"..\..\interior_lod0.png");
 
             // Add the objects to the selector
             objectSelector1.AddObject(cone_x);
@@ -113,16 +120,18 @@ namespace Lab8
             objectSelector1.AddObject(cylinder1);
             objectSelector1.AddObject(cylinder2);
             objectSelector1.AddObject(cylinder3);
+            objectSelector1.AddObject(car);
 
             objectSelector1.open_gl_control = openGLControl1;
 
-            objectSelector1.SelectedIndices.Add(6);
+            /*objectSelector1.SelectedIndices.Add(6);
             objectSelector1.SelectedIndices.Add(7);
             objectSelector1.SelectedIndices.Add(8);
             objectSelector1.SelectedIndices.Add(9);
             objectSelector1.SelectedIndices.Add(10);
             objectSelector1.SelectedIndices.Add(11);
-            objectSelector1.SelectedIndices.Add(12);
+            objectSelector1.SelectedIndices.Add(12);*/
+            objectSelector1.SelectedIndices.Add(13);
 
             Viewport little_view = new Viewport(0, 0, 100, 100);
             little_view.AddObjects(objectSelector1.objects);

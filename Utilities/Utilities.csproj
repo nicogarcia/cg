@@ -51,12 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Camera.cs" />
+    <Compile Include="Cameras\Camera.cs" />
     <Compile Include="Controls\ObjectSelector.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GhostCamera.cs" />
-    <Compile Include="Illumination.cs" />
+    <Compile Include="Cameras\GhostCamera.cs" />
+    <Compile Include="Attributes\Materials.cs" />
     <Compile Include="MotionControl.cs" />
     <Compile Include="Shapes\Cone.cs" />
     <Compile Include="Shapes\Cover.cs" />
@@ -67,7 +67,8 @@
     <Compile Include="Exercise.cs" />
     <Compile Include="GLManager.cs" />
     <Compile Include="Shapes\Foot.cs" />
-    <Compile Include="ObjLoader.cs" />
+    <Compile Include="Shapes\HelixObjLoader.cs" />
+    <Compile Include="Shapes\ObjLoader.cs" />
     <Compile Include="Controls\OpenGLControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -78,13 +79,14 @@
     <Compile Include="Shaders\Shader.cs" />
     <Compile Include="Shaders\Shaders.cs" />
     <Compile Include="Shaders\VertexShader.cs" />
-    <Compile Include="Spherical.cs" />
+    <Compile Include="Shapes\SharpObjLoader.cs" />
+    <Compile Include="Cameras\Spherical.cs" />
     <Compile Include="Shapes\Sweep.cs" />
-    <Compile Include="Texture\LoadImageTexture.cs" />
-    <Compile Include="Triangle.cs" />
-    <Compile Include="TriangleCollection.cs" />
-    <Compile Include="Vertex.cs" />
+    <Compile Include="Attributes\LoadImageTexture.cs" />
+    <Compile Include="Attributes\Vertex.cs" />
+    <Compile Include="Attributes\Textures.cs" />
     <Compile Include="Viewport.cs" />
+    <Compile Include="Shapes\WavefrontObj.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\ObjectSelector.resx">

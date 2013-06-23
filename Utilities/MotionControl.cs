@@ -9,7 +9,7 @@ namespace Utilities
     public class MotionControl
     {
         // Acceleration constant
-        static float k_accel = 0.08f;
+        static float k_accel = 0.05f;
         // Deacceleration constant
         static float k_deaccel = -0.05f;
         // Friction constant

@@ -75,7 +75,7 @@ namespace Utilities
 
             // Fill ArrayBuffer
             triangulate();
-            base.fillArrayBuffer();
+            base.fillArrayBuffer(true);
         }
 
         public void triangulate()
@@ -231,11 +231,14 @@ namespace Utilities
 
             GL.BindVertexArray(0);
 
-            GL.BindVertexArray(NVAO_ID);
+            if (draw_normals)
+            {
+                GL.BindVertexArray(NVAO_ID);
 
-            //GL.DrawElements(BeginMode.Lines, normals_ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
+                GL.DrawElements(BeginMode.Lines, normals_ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
 
-            GL.BindVertexArray(0);
+                GL.BindVertexArray(0);
+            }
 
             GL.UseProgram(0);
         }

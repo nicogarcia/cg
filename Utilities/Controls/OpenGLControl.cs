@@ -31,14 +31,17 @@ namespace Utilities
             camera = new GhostCamera();
 
             //projMatrix = Matrix4.CreateOrthographicOffCenter(-10f, 10f, -10f, 10f, 0.0001f, 10000f);
-            projMatrix = Matrix4.CreatePerspectiveFieldOfView(1f, this.Width / this.Height, 1f, 1000f);
+            projMatrix = Matrix4.CreatePerspectiveFieldOfView(0.7f, this.Width / this.Height, 0.15f, 1000f);
             zoomMatrix = camera.lookAt();
 
             refreshTimer.Interval = 20;
             refreshTimer.Elapsed += new ElapsedEventHandler(refreshTimer_Elapsed);
-            refreshTimer.Enabled = true;
         }
 
+        public void enable_timer()
+        {
+            refreshTimer.Enabled = true;
+        }
         void refreshTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             refreshView();
@@ -49,6 +52,8 @@ namespace Utilities
             GL.ClearColor(Color.Azure);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Texture2D);
+
+            enable_timer();
             
             this.Paint += new PaintEventHandler(this.paint);
             this.Resize += new EventHandler(this.resize);
