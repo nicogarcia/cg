@@ -97,42 +97,45 @@ namespace Lab8
             floor = new Cylinder(1000f, 0.1f, 4,new Vector4(0.5f, 0.5f, 0.5f, 1f), program);
             floor.colored = false;
 
-            car = new WavefrontObj(@"..\..\Avent.obj", program, BeginMode.Triangles);
-            car.transformation =  Matrix4.CreateRotationX((float)Math.PI / 2) * Matrix4.CreateTranslation(0, 0, 0f);
-            car.colored = false;
+            Material mat = new Material("crown_tex", new Texture(@"..\..\0000.BMP"));
+            car = new WavefrontObj(@"..\..\crown_victoria.obj", program, BeginMode.Triangles, mat);
+            car.transformation =  Matrix4.CreateRotationX((float)Math.PI / 2) * Matrix4.CreateTranslation(0, 0, 1f) * Matrix4.CreateRotationZ((float)Math.PI / 2);
+       
+
             openGLControl1.camera.car = car;
 
-            // Load texture
-            //Utilities.LoadImageTexture.LoadTexture(@"..\..\0000.BMP");
-            Utilities.LoadImageTexture.LoadTexture(@"..\..\interior_lod0.png");
+            //Gas station
+            Material mat1 = new Material("gasStation_tex", new Texture(@"..\..\gasStation\gasStation.jpg"));
+            WavefrontObj gasStation;
+            gasStation = new WavefrontObj(@"..\..\gasStation\gasStation.obj", program, BeginMode.Triangles, mat1);
+            gasStation.transformation = Matrix4.CreateTranslation(10, 10, 5f) * Matrix4.CreateRotationX((float) Math.PI/2) * Matrix4.Scale(0.16f);
+
+            //House
+            Material mat_house = new Material("house_corner", new Texture(@"..\..\houseCorner\houseCorner.jpg"));
+            WavefrontObj house;
+            house = new WavefrontObj(@"..\..\houseCorner\houseCorner.obj", program, BeginMode.Triangles, mat_house);
+            house.transformation = Matrix4.CreateTranslation(10, 10, 5f) * Matrix4.CreateRotationX((float)Math.PI / 2) * Matrix4.Scale(0.16f);
 
             // Add the objects to the selector
-            objectSelector1.AddObject(cone_x);
+            /*objectSelector1.AddObject(cone_x);
             objectSelector1.AddObject(cone_y);
             objectSelector1.AddObject(cone_z);
             objectSelector1.AddObject(x_axis);
             objectSelector1.AddObject(y_axis);
             objectSelector1.AddObject(z_axis);
             objectSelector1.AddObject(foot);
-            objectSelector1.AddObject(cover);
+            objectSelector1.AddObject(cover);*/
             objectSelector1.AddObject(cylinder);
-            objectSelector1.AddObject(floor);
             objectSelector1.AddObject(cylinder1);
             objectSelector1.AddObject(cylinder2);
             objectSelector1.AddObject(cylinder3);
+            objectSelector1.AddObject(floor);
             objectSelector1.AddObject(car);
+            objectSelector1.AddObject(gasStation);
+            objectSelector1.AddObject(house);
 
             objectSelector1.open_gl_control = openGLControl1;
-
-            /*objectSelector1.SelectedIndices.Add(6);
-            objectSelector1.SelectedIndices.Add(7);
-            objectSelector1.SelectedIndices.Add(8);
-            objectSelector1.SelectedIndices.Add(9);
-            objectSelector1.SelectedIndices.Add(10);
-            objectSelector1.SelectedIndices.Add(11);
-            objectSelector1.SelectedIndices.Add(12);*/
-            objectSelector1.SelectedIndices.Add(13);
-
+            
             Viewport little_view = new Viewport(0, 0, 100, 100);
             little_view.AddObjects(objectSelector1.objects);
             little_view.setMatrices(Matrix4.CreatePerspectiveFieldOfView(1f, 1f,1f,100f), openGLControl1.camera.lookAt());

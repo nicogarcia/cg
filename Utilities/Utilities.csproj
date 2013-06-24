@@ -57,6 +57,7 @@
     </Compile>
     <Compile Include="Cameras\GhostCamera.cs" />
     <Compile Include="Attributes\Materials.cs" />
+    <Compile Include="EBO.cs" />
     <Compile Include="MotionControl.cs" />
     <Compile Include="Shapes\Cone.cs" />
     <Compile Include="Shapes\Cover.cs" />

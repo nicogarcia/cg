@@ -20,6 +20,7 @@ namespace Utilities.Controls
         {
             objects.Add(Object);
             Items.Add(Object.ToString());
+            SelectedIndices.Add(Items.Count - 1);
         }
 
         public void AddGroup(string name)

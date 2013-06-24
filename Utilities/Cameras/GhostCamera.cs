@@ -17,7 +17,7 @@ namespace Utilities
         public GhostCamera()
         {
             this.normal = new Vector4(0, 0, 1f, 1f);
-            this.position = new Vector4(5f, -0.1f, 1f,1f);
+            this.position = new Vector4(5f, -0.1f, 1.5f,1f);
             this.lookat = new Vector4(-3f, 0, 0, 1f);
             angle = 0.03f;
         }
@@ -33,7 +33,6 @@ namespace Utilities
         {
             return Matrix4.LookAt(position.X, position.Y, position.Z, position.X + lookat.X, position.Y +lookat.Y, position.Z + lookat.Z, normal.X, normal.Y, normal.Z);
         }
-
 
         // rotate the vector (vx, vy, vz) around (ax, ay, az) by an angle "angle"
 
@@ -120,8 +119,12 @@ namespace Utilities
         public void rotate(float d_angle)
         {
             //lookat = Vector4.Transform(lookat, Matrix4.CreateRotationZ(d_angle));
+            //car.transformation *= Matrix4.CreateRotationZ(d_angle);
+            car.transformation *= Matrix4.CreateTranslation(-position.X, -position.Y, -position.Z);
             car.transformation *= Matrix4.CreateRotationZ(d_angle);
-            rotate(ref lookat, normal, -d_angle);
+            car.transformation *= Matrix4.CreateTranslation(position.X, position.Y, position.Z);
+
+            lookat = Vector4.Transform(lookat,Matrix4.CreateFromAxisAngle(new Vector3(normal.X,normal.Y,normal.Z),d_angle));
         }
 
         public void move(float d_pos)

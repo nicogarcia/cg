@@ -96,7 +96,10 @@ namespace Utilities.Shaders
             out vec4 Normal;
             out vec4 Color;
             out vec2 TexCoord; 
+            out vec3 vLE;
                 
+            uniform vec4 light_position;
+
             uniform mat4 modelView;
             uniform mat4 projectionMatrix;
             uniform mat4 normalMatrix;
@@ -106,6 +109,7 @@ namespace Utilities.Shaders
                 TexCoord = vec2(VertexTexCoord);
                 Normal = normalize( normalMatrix * VertexNormal);
                 Position = modelView * VertexPosition;
+                vLE = vec3(light_position - modelView * VertexPosition);
                 Color = VertexColor;
                 gl_Position = projectionMatrix * modelView * VertexPosition;
             }
@@ -168,14 +172,16 @@ namespace Utilities.Shaders
             in vec4 Normal;
             in vec4 Color;
             in vec2 TexCoord;
+            in vec3 vLE;            
+
             uniform sampler2D Tex1;
 
-            uniform vec4 light_position;
             uniform vec3 light_intensity;
             uniform vec3 material_ka;
             uniform vec3 material_kd;
             uniform vec3 material_ks;
             uniform float material_shine;
+            uniform float alpha;
 
             uniform float colored;
 
@@ -193,7 +199,7 @@ namespace Utilities.Shaders
 
             void main() {
                 vec4 V = normalize(Position);
-                vec4 L= normalize(light_position);
+                vec4 L= vec4(normalize(vLE), 1.0);
                 vec4 N = normalize(Normal);            
                 vec4 H = normalize(L+V);
 
@@ -202,11 +208,11 @@ namespace Utilities.Shaders
                 blinnPhongModel(L, N, H, ambAndDiff, spec);
 
                 if(colored == 0.0){
-                    FragColor = vec4(ambAndDiff, 1.0) * texColor + vec4(spec, 1.0);
-                    //FragColor = texColor;
+                    //FragColor = vec4(ambAndDiff, alpha) * texColor + vec4(spec, 1.0);
+                    FragColor = texColor;
                 }else{
                     //FragColor = Color;
-                    FragColor = vec4(ambAndDiff, 1.0) * Color + vec4(spec, 1.0);
+                    FragColor = vec4(ambAndDiff, alpha) + vec4(spec, 1.0);
                     //FragColor = Color;//vec4(light_intensity, 1.0);
                 }
             }

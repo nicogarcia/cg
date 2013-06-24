@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Drawing;
-
+using OpenTK;
+using System.ComponentModel;
 namespace Utilities
 {
     public class Materials : Dictionary<string, Material>
@@ -21,12 +21,28 @@ namespace Utilities
     public class Material
     {
         public string Name { get; set; }
-        public Color Ambient { get; set; }
-        public Color Diffuse { get; set; }
-        public Color Specular { get; set; }
-        public Color Emission { get; set; }
+        public Vector3 Ambient { get; set; }
+        public Vector3 Diffuse { get; set; }
+        public Vector3 Specular { get; set; }
+        public Vector3 Emission { get; set; }
         public float Shininess { get; set; }
 
+        [DefaultValue(1f)]
+        public float Alpha { get; set; }
+
         public Texture Texture { get; set; }
+
+        public Material(string name, Texture texture)
+        {
+            Name = name;
+            Texture = texture;
+            Textures.AddTexture(texture);
+        }
+
+        public Material()
+        {
+            // TODO: Complete member initialization
+        }
+
     }
 }

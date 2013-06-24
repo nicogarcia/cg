@@ -13,34 +13,21 @@ namespace Utilities
     public class SharpObjLoader
     {
         public List<Vertex> vertices = new List<Vertex>();
+        public List<EBO> ebos = new List<EBO>();
 
-        private System.Drawing.Color ReadMaterialColor(string line, float alpha)
+        private Vector3 ReadMaterialColor(string line, float alpha)
         {
             string[] lineParts = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            if (lineParts.Length >= 4)
-            {
-                // Convert float a,r,g,b values to byte values.  Make sure they fall in 0-255 range.
-                int a = Convert.ToInt32(255 * alpha);
-                if (a < 0) a = 0; if (a > 255) a = 255;
-                int r = Convert.ToInt32(255 * Convert.ToSingle(lineParts[1]));
-                if (r < 0) r = 0; if (r > 255) r = 255;
-                int g = Convert.ToInt32(255 * Convert.ToSingle(lineParts[2]));
-                if (g < 0) g = 0; if (g > 255) g = 255;
-                int b = Convert.ToInt32(255 * Convert.ToSingle(lineParts[3]));
-                if (b < 0) b = 0; if (b > 255) b = 255;
-                return System.Drawing.Color.FromArgb(a, r, g, b);
-            }
-            else
-                return System.Drawing.Color.White;
+            return new Vector3(float.Parse(lineParts[1]), float.Parse(lineParts[2]), float.Parse(lineParts[3]));
         }
 
         private void SetAlphaForMaterial(Material material, float alpha)
         {
-            int a = Convert.ToInt32(255 * alpha);
-            material.Ambient = System.Drawing.Color.FromArgb(a, material.Ambient);
-            material.Diffuse = System.Drawing.Color.FromArgb(a, material.Diffuse);
-            material.Specular = System.Drawing.Color.FromArgb(a, material.Specular);
-            material.Emission = System.Drawing.Color.FromArgb(a, material.Emission);
+            /* int a = Convert.ToInt32(255 * alpha);
+             material.Ambient = System.Drawing.Color.FromArgb(a, material.Ambient);
+             material.Diffuse = System.Drawing.Color.FromArgb(a, material.Diffuse);
+             material.Specular = System.Drawing.Color.FromArgb(a, material.Specular);
+             material.Emission = System.Drawing.Color.FromArgb(a, material.Emission);*/
         }
 
         private string ReadMaterialValue(string line)
@@ -53,7 +40,7 @@ namespace Utilities
             //  Return the material path.
             return line.Substring(spacePos + 1);
         }
-        
+
         private void LoadMaterials(string path)
         {
 
@@ -76,12 +63,13 @@ namespace Utilities
                     // newmatl indicates start of material definition.
                     if (line.StartsWith("newmtl"))
                     {
+
                         // Add new material to scene's assets.
                         mtl = new Material();
+
                         // Name of material is on same line, immediately follows newmatl.
                         mtl.Name = ReadMaterialValue(line);
                         Materials.Singleton.AddMaterial(mtl);
-
 
                         // Reset assumed alpha.
                         alpha = 1;
@@ -120,7 +108,7 @@ namespace Utilities
                                     textureFile = Path.Combine(Path.GetDirectoryName(path),
                                         Path.GetFileName(textureFile));
                                 }
-                                
+
                                 // Create/load texture.
                                 theTexture = new Texture(textureFile);
                                 Textures.AddTexture(theTexture);
@@ -132,8 +120,8 @@ namespace Utilities
                         }
                         else if (line.StartsWith("d") || line.StartsWith("Tr"))
                         {
-                            alpha = Convert.ToSingle(ReadMaterialValue(line));
-                            SetAlphaForMaterial(mtl, alpha);
+                            alpha = float.Parse(ReadMaterialValue(line));
+                            mtl.Alpha = alpha;
                         }
                         // TODO: Handle illumination mode (illum)                    	                    
                     }
@@ -142,7 +130,7 @@ namespace Utilities
             }
         }
 
-        public SharpObjLoader(string path)
+        public SharpObjLoader(string path, Material material)
         {
             string errors = "";
             List<Vector4> positions = new List<Vector4>();
@@ -152,8 +140,14 @@ namespace Utilities
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 
             char[] split = new char[] { ' ' };
-            
+
             string mtlName = null;
+
+            if (material != null)
+            {
+                Materials.Singleton.AddMaterial(material);
+                mtlName = material.Name;
+            }
 
             //  Create a stream reader.
             using (StreamReader reader = new StreamReader(path))
@@ -260,7 +254,7 @@ namespace Utilities
 
                         continue;
                     }
-                    
+
                     if (line.StartsWith("mtllib"))
                     {
                         // Set current directory in case a relative path to material file is used.
@@ -277,18 +271,47 @@ namespace Utilities
                         mtlName = ReadMaterialValue(line);
                         continue;
                     }
-                    
+
+                    if (line.StartsWith("g"))
+                    {
+                        // Group name is evth after the space after 'g'
+                        string group_name = line.Substring(line.IndexOf(' ') + 1);
+
+                        if (ebos.Count != 0)
+                            ebos[ebos.Count - 1].lastIndex = vertices.Count - 1;
+
+                        EBO ebo = new EBO();
+                        ebo.Name = group_name;
+
+                        if (mtlName != null)
+                            ebo.material = Materials.Singleton[mtlName];
+                        else
+                            ebo.material = new Material();
+
+                        ebo.firstIndex = vertices.Count;
+
+                        ebos.Add(ebo);
+
+                        continue;
+                    }
+
                     errors += "Unsupported keyword " + line + "\n";
 
                 }
+
+                if (ebos.Count > 0)
+                    ebos[ebos.Count - 1].lastIndex = vertices.Count - 1;
             }
 
+
+
             // Print Errors in different thread
-            Thread t = new Thread(new ThreadStart(delegate(){
+            Thread t = new Thread(new ThreadStart(delegate()
+            {
                 Console.WriteLine(errors);
             }));
             t.Start();
-            
+
             //scene.SceneContainer.AddChild(polygon);
 
             //return scene;
