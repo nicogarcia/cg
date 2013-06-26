@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cameras\Camera.cs" />
+    <Compile Include="Cameras\SphericalCamera.cs" />
     <Compile Include="Controls\ObjectSelector.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -68,7 +69,6 @@
     <Compile Include="Exercise.cs" />
     <Compile Include="GLManager.cs" />
     <Compile Include="Shapes\Foot.cs" />
-    <Compile Include="Shapes\HelixObjLoader.cs" />
     <Compile Include="Shapes\ObjLoader.cs" />
     <Compile Include="Controls\OpenGLControl.cs">
       <SubType>UserControl</SubType>

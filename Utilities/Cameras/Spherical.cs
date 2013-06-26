@@ -36,9 +36,9 @@ namespace Utilities
             z = (float)(radio * Math.Cos(theta));
         }
 
-        public void growRadio()
+        public void moveBack()
         {
-            radio += 0.2f;
+            radio += 0.5f;
             setXYZ();
         }
 
@@ -54,11 +54,11 @@ namespace Utilities
             setXYZ();
         }
 
-        public void shrinkRadio()
+        public void moveForward()
         {
             if (radio <= 0.2f)
                 return;
-            radio -= 0.2f;
+            radio -= 0.5f;
             setXYZ();
         }
 

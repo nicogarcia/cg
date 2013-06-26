@@ -20,7 +20,7 @@ namespace Utilities.Controls
         {
             objects.Add(Object);
             Items.Add(Object.ToString());
-            SelectedIndices.Add(Items.Count - 1);
+            Items[Items.Count - 1].Checked = true;
         }
 
         public void AddGroup(string name)
@@ -48,15 +48,11 @@ namespace Utilities.Controls
             updateObjects();
         }
 
-        private void updateObjects()
+        public void updateObjects()
         {
             if (open_gl_control != null)
             {
                 open_gl_control.objects.Clear();
-                foreach (int item in SelectedIndices)
-                {
-                    open_gl_control.objects.Add(objects[item]);
-                }
                 foreach (int item in this.CheckedIndices)
                 {
                     open_gl_control.objects.Add(objects[item]);

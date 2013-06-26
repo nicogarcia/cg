@@ -208,11 +208,11 @@ namespace Utilities.Shaders
                 blinnPhongModel(L, N, H, ambAndDiff, spec);
 
                 if(colored == 0.0){
-                    //FragColor = vec4(ambAndDiff, alpha) * texColor + vec4(spec, 1.0);
+                    //FragColor = vec4(ambAndDiff, alpha) * texColor + vec4(spec, alpha);
                     FragColor = texColor;
                 }else{
-                    //FragColor = Color;
-                    FragColor = vec4(ambAndDiff, alpha) + vec4(spec, 1.0);
+                    //FragColor = vec4(vec3(Color), 0);
+                    FragColor = vec4(ambAndDiff, alpha) + vec4(spec, alpha);
                     //FragColor = Color;//vec4(light_intensity, 1.0);
                 }
             }

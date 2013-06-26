@@ -6,18 +6,17 @@ using OpenTK;
 
 namespace Utilities
 {
-    public class GhostCamera
+    public class GhostCamera : Camera
     {
         public Vector4 normal;
         public Vector4 lookat;
         public Vector4 position;
         float angle;
-        public WavefrontObj car;
 
         public GhostCamera()
         {
             this.normal = new Vector4(0, 0, 1f, 1f);
-            this.position = new Vector4(5f, -0.1f, 1.5f,1f);
+            this.position = new Vector4(5f, -0.1f, 2f,1f);
             this.lookat = new Vector4(-3f, 0, 0, 1f);
             angle = 0.03f;
         }
@@ -29,13 +28,17 @@ namespace Utilities
             this.lookat = camera.lookat;
         }
 
-        public Matrix4 lookAt()
+        public override Matrix4 lookAt()
         {
             return Matrix4.LookAt(position.X, position.Y, position.Z, position.X + lookat.X, position.Y +lookat.Y, position.Z + lookat.Z, normal.X, normal.Y, normal.Z);
         }
 
-        // rotate the vector (vx, vy, vz) around (ax, ay, az) by an angle "angle"
+        public override void refreshCamera()
+        {
+            MotionControl.refreshCamera(this);
+        }
 
+        // rotate the vector (vx, vy, vz) around (ax, ay, az) by an angle "angle"
         
         void rotate(ref Vector4 rotated, Vector4 around, float angle)
         {
@@ -61,13 +64,13 @@ namespace Utilities
             return new Vector4(cross, 1f);
         }
 
-        public void moveForward()
+        public override void moveForward()
         {
             position = Vector4.Transform(position, Matrix4.CreateTranslation(lookat.X, lookat.Y, lookat.Z));
             //position += lookat;
         }
 
-        public void moveBack()
+        public override void moveBack()
         {
             position = Vector4.Transform(position, Matrix4.CreateTranslation(-lookat.X, -lookat.Y, -lookat.Z));
             //position -= lookat;

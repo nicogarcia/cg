@@ -41,12 +41,12 @@ namespace Lab8
             ProgramObject program = new ProgramObject(
                 new VertexShader(Shaders.VERTEX_SHADER_TEXTURE),
                     new FragmentShader(Shaders.FRAGMENT_SHADER_ILLUMINATION));
-                    
+
             int num = 100;
             float radius = 1.0f;
             float height = radius * 4f;
             cylinder = new Cylinder(radius, height, num, new Vector4(0, 1f, 0, 1f), program);
-            cylinder.transformation = Matrix4.CreateTranslation(-10f, 4f,0f);
+            cylinder.transformation = Matrix4.CreateTranslation(-10f, 4f, 0f);
             cylinder.colored = false;
 
 
@@ -63,7 +63,7 @@ namespace Lab8
             cylinder3 = new Cylinder(radius, height, num, new Vector4(0, 1f, 0, 1f), program);
             cylinder3.transformation = Matrix4.CreateTranslation(-20f, 4f, 0f);
             cylinder3.colored = false;
-                        
+
             cover = new Cover(0.5f, 5, program);
             cover.colored = false;
 
@@ -76,7 +76,7 @@ namespace Lab8
             cone_x = new Cone(0.1f, 0.2f, 10, new Vector4(1, 0, 0, 1f), program);
             cone_x.transformation = Matrix4.CreateRotationY((float)Math.PI / 2);
             cone_x.transformation *= Matrix4.CreateTranslation(1f, 0f, 0f);
-            x_axis = new Cylinder(0.05f, 1f,  10,new Vector4(1, 0, 0, 1f), program);
+            x_axis = new Cylinder(0.05f, 1f, 10, new Vector4(1, 0, 0, 1f), program);
             x_axis.transformation = Matrix4.CreateRotationY((float)Math.PI / 2);
 
             /* Y */
@@ -94,13 +94,13 @@ namespace Lab8
 
 
             /**************/
-            floor = new Cylinder(1000f, 0.1f, 4,new Vector4(0.5f, 0.5f, 0.5f, 1f), program);
+            floor = new Cylinder(1000f, 0.1f, 4, new Vector4(0.5f, 0.5f, 0.5f, 1f), program);
             floor.colored = false;
 
-            Material mat = new Material("crown_tex", new Texture(@"..\..\0000.BMP"));
-            car = new WavefrontObj(@"..\..\crown_victoria.obj", program, BeginMode.Triangles, mat);
-            car.transformation =  Matrix4.CreateRotationX((float)Math.PI / 2) * Matrix4.CreateTranslation(0, 0, 1f) * Matrix4.CreateRotationZ((float)Math.PI / 2);
-       
+            //Material mat = new Material("crown_tex", new Texture(@"..\..\Avent.jpg"));
+            car = new WavefrontObj(@"..\..\Avent.obj", program, BeginMode.Triangles);
+            car.transformation = Matrix4.CreateRotationX((float)Math.PI / 2) * Matrix4.CreateTranslation(0, 0, 1f) * Matrix4.CreateRotationZ((float)Math.PI / 2);
+
 
             openGLControl1.camera.car = car;
 
@@ -108,37 +108,48 @@ namespace Lab8
             Material mat1 = new Material("gasStation_tex", new Texture(@"..\..\gasStation\gasStation.jpg"));
             WavefrontObj gasStation;
             gasStation = new WavefrontObj(@"..\..\gasStation\gasStation.obj", program, BeginMode.Triangles, mat1);
-            gasStation.transformation = Matrix4.CreateTranslation(10, 10, 5f) * Matrix4.CreateRotationX((float) Math.PI/2) * Matrix4.Scale(0.16f);
+            gasStation.transformation = Matrix4.Scale(0.06f) * Matrix4.CreateRotationX((float)Math.PI / 2) * Matrix4.CreateTranslation(0, -10, 0);
 
             //House
             Material mat_house = new Material("house_corner", new Texture(@"..\..\houseCorner\houseCorner.jpg"));
             WavefrontObj house;
             house = new WavefrontObj(@"..\..\houseCorner\houseCorner.obj", program, BeginMode.Triangles, mat_house);
-            house.transformation = Matrix4.CreateTranslation(10, 10, 5f) * Matrix4.CreateRotationX((float)Math.PI / 2) * Matrix4.Scale(0.16f);
+            house.transformation = Matrix4.Scale(0.06f) * Matrix4.CreateRotationX((float)Math.PI / 2)* Matrix4.CreateTranslation(-15, -10, 0);
 
-            // Add the objects to the selector
-            /*objectSelector1.AddObject(cone_x);
-            objectSelector1.AddObject(cone_y);
-            objectSelector1.AddObject(cone_z);
-            objectSelector1.AddObject(x_axis);
-            objectSelector1.AddObject(y_axis);
-            objectSelector1.AddObject(z_axis);
-            objectSelector1.AddObject(foot);
-            objectSelector1.AddObject(cover);*/
-            objectSelector1.AddObject(cylinder);
-            objectSelector1.AddObject(cylinder1);
-            objectSelector1.AddObject(cylinder2);
-            objectSelector1.AddObject(cylinder3);
-            objectSelector1.AddObject(floor);
+
+            // Road straight
+            Material mat_road = new Material("road_straight", new Texture(@"..\..\roadStrait\roadStraight.jpg"));
+            WavefrontObj road;
+            road = new WavefrontObj(@"..\..\roadStrait\roadStraight.obj", program, BeginMode.Triangles, mat_road);
+            road.transformation = Matrix4.Scale(0.06f)*Matrix4.CreateRotationX((float)Math.PI / 2) *Matrix4.CreateTranslation(0, 10, 0);
+
+            // RoadT
+            Material mat_roadt = new Material("RoadT", new Texture(@"..\..\RoadT\RoadT.jpg"));
+            WavefrontObj road_t;
+            road_t = new WavefrontObj(@"..\..\RoadT\RoadT.obj", program, BeginMode.Triangles, mat_roadt);
+            road_t.transformation = Matrix4.CreateRotationX((float)Math.PI / 2) * Matrix4.CreateTranslation(0, 0, 0);
+
+
+            objectSelector1.open_gl_control = openGLControl1;
+
+            //objectSelector1.AddObject(cylinder);
+            //objectSelector1.AddObject(cylinder1);
+            //objectSelector1.AddObject(cylinder2);
+            //objectSelector1.AddObject(cylinder3);
+            //objectSelector1.AddObject(floor);
             objectSelector1.AddObject(car);
             objectSelector1.AddObject(gasStation);
             objectSelector1.AddObject(house);
+            objectSelector1.AddObject(road);
+            objectSelector1.AddObject(road_t);
 
-            objectSelector1.open_gl_control = openGLControl1;
-            
+
+            objectSelector1.updateObjects();
+
+
             Viewport little_view = new Viewport(0, 0, 100, 100);
             little_view.AddObjects(objectSelector1.objects);
-            little_view.setMatrices(Matrix4.CreatePerspectiveFieldOfView(1f, 1f,1f,100f), openGLControl1.camera.lookAt());
+            little_view.setMatrices(Matrix4.CreatePerspectiveFieldOfView(1f, 1f, 1f, 100f), openGLControl1.camera.lookAt());
             openGLControl1.AddViewport(little_view);
 
 
@@ -147,8 +158,18 @@ namespace Lab8
 
         private void Lab8_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyValue == (int) Keys.Escape)
+            if (e.KeyValue == (int)Keys.Escape)
                 this.Dispose();
+
+            if (e.KeyValue == (int)Keys.NumPad1)
+                openGLControl1.camera = (Camera) new SphericalCamera(new Spherical(20,0,0));
+
+            if (e.KeyValue == (int)Keys.NumPad2)
+            {
+                openGLControl1.camera = (Camera)new GhostCamera();
+                openGLControl1.camera.car = car;
+            }
+            openGLControl1.Invalidate();
         }
 
     }

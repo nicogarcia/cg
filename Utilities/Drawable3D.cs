@@ -90,7 +90,7 @@ namespace Utilities
                     GL.GenBuffers(1, out id);
                     ebo.id = id;
 
-                    ebo.indices = new int[ebo.lastIndex - ebo.firstIndex];
+                    ebo.indices = new int[ebo.lastIndex - ebo.firstIndex + 1];
                     for (int i = 0; i < ebo.indices.Length; i++)
                         ebo.indices[i] = i + ebo.firstIndex;
 

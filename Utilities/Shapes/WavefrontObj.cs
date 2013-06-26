@@ -70,6 +70,7 @@ namespace Utilities
                     Textures.LoadTexture(ebo.material.Texture.filename);
                 }
 
+
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo.id);
                 GL.DrawElements(BeginMode.Triangles, ebo.indices.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
 

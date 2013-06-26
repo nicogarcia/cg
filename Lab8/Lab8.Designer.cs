@@ -30,6 +30,7 @@
         {
             this.objectSelector1 = new Utilities.Controls.ObjectSelector();
             this.openGLControl1 = new Utilities.OpenGLControl();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // objectSelector1
@@ -58,11 +59,22 @@
             this.openGLControl1.VSync = false;
             this.openGLControl1.Load += new System.EventHandler(this.openGLControl1_Load);
             // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Location = new System.Drawing.Point(385, 354);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(135, 67);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "label1";
+            // 
             // Lab8
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(519, 419);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.objectSelector1);
             this.Controls.Add(this.openGLControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -79,6 +91,7 @@
 
         private Utilities.OpenGLControl openGLControl1;
         private Utilities.Controls.ObjectSelector objectSelector1;
+        private System.Windows.Forms.Label label1;
     }
 }
 

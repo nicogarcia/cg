@@ -225,14 +225,16 @@ namespace Utilities
                         //  Get the face indices
                         string[] indices = line.Substring(2).Split(split,
                             StringSplitOptions.RemoveEmptyEntries);
+                        if (indices.Length == 4)
+                            Console.Write("");
 
                         //  Add each index.
-                        for (int i = 0; i < indices.Length - 2; i++)
+                        for (int i = 0; i < indices.Length - 1; i+=2)
                         {
                             for (int j = 0; j < 3; j++)
                             {
                                 //  Split the parts.
-                                string[] parts = indices[j + i].Split(new char[] { '/' }, StringSplitOptions.None);
+                                string[] parts = indices[(j + i) % indices.Length].Split(new char[] { '/' }, StringSplitOptions.None);
 
                                 //  Add each part.
                                 int position_index = (parts.Length > 0 && parts[0].Length > 0) ? int.Parse(parts[0]) - 1 : -1;

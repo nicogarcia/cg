@@ -66,6 +66,28 @@ namespace Utilities
             camera.rotate(angle);
         }
 
+        public static void refreshCamera(SphericalCamera camera)
+        {
+
+            bool accelerating = pressed_keys[(int)Keys.W];
+            bool deaccelerating = pressed_keys[(int)Keys.S];
+            bool turning_right = pressed_keys[(int)Keys.D];
+            bool turning_left = pressed_keys[(int)Keys.A];
+
+            if (accelerating)
+                camera.position.growTheta();
+
+            if (deaccelerating)
+                camera.position.shrinkTheta();
+
+            if (turning_right)
+                camera.position.growPhi();
+
+            if (turning_left)
+                camera.position.shrinkPhi();
+            
+        }
+
         public static void keyDown(int key)
         {
             pressed_keys[key] = true;            

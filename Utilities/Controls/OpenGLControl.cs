@@ -13,7 +13,7 @@ namespace Utilities
     public class OpenGLControl : GLControl
     {
         public List<Drawable3D> objects = new List<Drawable3D>();
-        public GhostCamera camera;
+        public Camera camera;
 
         List<Viewport> viewports = new List<Viewport>();
 
@@ -49,9 +49,12 @@ namespace Utilities
 
         public void load()
         {
-            GL.ClearColor(Color.Azure);
+            GL.ClearColor(Color.LightBlue);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Texture2D);
+
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             enable_timer();
             
@@ -117,7 +120,7 @@ namespace Utilities
 
         public void refreshView()
         {
-            MotionControl.refreshCamera(camera);
+            camera.refreshCamera();
 
             zoomMatrix = camera.lookAt();
             this.Invalidate();
