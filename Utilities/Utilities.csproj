@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Cameras\Camera.cs" />
     <Compile Include="Cameras\SphericalCamera.cs" />
+    <Compile Include="Car.cs" />
     <Compile Include="Controls\ObjectSelector.cs">
       <SubType>Component</SubType>
     </Compile>

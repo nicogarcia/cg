@@ -13,17 +13,19 @@ namespace Utilities
         // Deacceleration constant
         static float k_deaccel = -0.2f;
         // Friction constant
-        static float k_friction = -k_accel / 10;
+        static float k_friction = -k_accel / 5;
         // Handling constant (speed incidence over turn angle)
         static float k_handling = 0.01f;
 
-        static float speed = 0;
+        public static float speed = 0;
 
         static PositionTracking position_tracking = new PositionTracking();
 
         static bool[] pressed_keys = new bool[256];
 
-        public static void refreshCamera(CarCamera camera)
+		public static Car car;
+
+        public static void refreshCamera()
         {
             bool accelerating = pressed_keys[(int)Keys.W];
             bool deaccelerating = pressed_keys[(int)Keys.S];
@@ -68,10 +70,10 @@ namespace Utilities
                 angle = k_handling / (float) Math.Sqrt(Math.Abs(speed)) * sign;
             }
 
-            camera.move(speed);
-            camera.rotate(angle);
+			car.rotate(angle);
+			car.move(speed);
 
-            //position_tracking.Teletransport(camera.car.position);
+            position_tracking.Teletransport(car.position);
         }
 
         public static void refreshCamera(SphericalCamera camera)

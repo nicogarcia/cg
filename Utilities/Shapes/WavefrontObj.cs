@@ -10,9 +10,7 @@ namespace Utilities
 {
     public class WavefrontObj : Drawable3D
     {
-
-        //public Vector4 position = new Vector4();
-        public Material material { get; set; }
+		public Material material { get; set; }
 
         public WavefrontObj(string path, ProgramObject program, BeginMode begin_mode, Material material = null)
             : base(program, begin_mode)
@@ -23,6 +21,8 @@ namespace Utilities
             ebos = obj.ebos;
 
             toDraw = obj.vertices.ToArray();
+
+			//draw_normals = true;
 
             base.fillArrayBuffer(false);
         }

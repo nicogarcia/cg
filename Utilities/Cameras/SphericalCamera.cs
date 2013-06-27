@@ -25,17 +25,17 @@ namespace Utilities
             return Matrix4.LookAt(position.x, position.y, position.z, lookat.X, lookat.Y, lookat.Z, normal.X, normal.Y, normal.Z);
         }
 
-        public override void refreshCamera()
+        public void refreshCamera()
         {
             MotionControl.refreshCamera(this);
         }
 
-        public override void moveBack()
+        public void moveBack()
         {
             position.moveBack();
         }
 
-        public override void moveForward()
+        public void moveForward()
         {
             position.moveForward();
         }

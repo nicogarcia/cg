@@ -14,6 +14,7 @@ namespace Utilities
         public int VAO_ID, VBO_ID, EBO_ID, NVBO_ID, NEBO_ID, NVAO_ID;
 
         public Matrix4 transformation = Matrix4.Identity;
+
         public ProgramObject program;
         public BeginMode begin_mode;
         public bool colored = true;

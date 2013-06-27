@@ -189,9 +189,6 @@ namespace Utilities.Shaders
             //out vec4 FragColor;
 
             void blinnPhongModel( vec4 L, vec4 N, vec4 H, out vec3 ambAndDiff, out float spec ) {
-                // Compute the ADS shading model here, return ambient
-                // and diffuse color in ambAndDiff, and return specular
-                // color in spec
                 float diffuse = max( dot(L, N), 0.0);
                 ambAndDiff = material_ka + material_kd * diffuse;
 
@@ -201,7 +198,7 @@ namespace Utilities.Shaders
             }
 
             void main() {
-                vec4 V = normalize(-Position);
+                vec4 V = normalize(Position);
                 vec4 L= vec4(normalize(vLE), 1.0);
                 vec4 N = normalize(Normal);            
                 vec4 H = normalize(L+V);
