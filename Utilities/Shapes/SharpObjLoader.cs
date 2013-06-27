@@ -173,7 +173,7 @@ namespace Utilities
 
                         //  Add the texture coordinate.
                         //polygon.UVs.Add(new UV(u, v));
-                        textures.Add(new Vector4(u, v, 0f, 1f));
+                        textures.Add(new Vector4(u, 1-v, 0f, 1f));
 
                         continue;
                     }
@@ -264,13 +264,14 @@ namespace Utilities
 
                         // Load materials file.
                         string mtlPath = ReadMaterialValue(line);
-                        LoadMaterials("../../" + mtlPath);
+                        LoadMaterials(Path.GetDirectoryName(path) + "\\" + mtlPath);
                         continue;
                     }
 
                     if (line.StartsWith("usemtl"))
                     {
                         mtlName = ReadMaterialValue(line);
+                        ebos[ebos.Count -1 ].material = Materials.Singleton[mtlName];
                         continue;
                     }
 

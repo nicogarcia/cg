@@ -11,6 +11,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK;
 using Utilities.Shaders;
 using Utilities.Shapes;
+using System.IO;
 
 namespace Lab8
 {
@@ -97,38 +98,17 @@ namespace Lab8
             floor = new Cylinder(1000f, 0.1f, 4, new Vector4(0.5f, 0.5f, 0.5f, 1f), program);
             floor.colored = false;
 
-            //Material mat = new Material("crown_tex", new Texture(@"..\..\Avent.jpg"));
-            car = new WavefrontObj(@"..\..\Avent.obj", program, BeginMode.Triangles);
-            car.transformation = Matrix4.CreateRotationX((float)Math.PI / 2) * Matrix4.CreateTranslation(0, 0, 1f) * Matrix4.CreateRotationZ((float)Math.PI / 2);
+            // Set current directory in case a relative path to material file is used.
+            Environment.CurrentDirectory = Path.GetDirectoryName(@"..\..\");
+
+            car = new WavefrontObj(@"objs_proyecto\crown_victoria.obj", program, BeginMode.Triangles);
+            //car.transformation = Matrix4.CreateRotationX((float)Math.PI / 2) * Matrix4.CreateTranslation(0, 0, 1f) * Matrix4.CreateRotationZ((float)Math.PI / 2);
 
 
             openGLControl1.camera.car = car;
-
-            //Gas station
-            Material mat1 = new Material("gasStation_tex", new Texture(@"..\..\gasStation\gasStation.jpg"));
-            WavefrontObj gasStation;
-            gasStation = new WavefrontObj(@"..\..\gasStation\gasStation.obj", program, BeginMode.Triangles, mat1);
-            gasStation.transformation = Matrix4.Scale(0.06f) * Matrix4.CreateRotationX((float)Math.PI / 2) * Matrix4.CreateTranslation(0, -10, 0);
-
-            //House
-            Material mat_house = new Material("house_corner", new Texture(@"..\..\houseCorner\houseCorner.jpg"));
-            WavefrontObj house;
-            house = new WavefrontObj(@"..\..\houseCorner\houseCorner.obj", program, BeginMode.Triangles, mat_house);
-            house.transformation = Matrix4.Scale(0.06f) * Matrix4.CreateRotationX((float)Math.PI / 2)* Matrix4.CreateTranslation(-15, -10, 0);
-
-
-            // Road straight
-            Material mat_road = new Material("road_straight", new Texture(@"..\..\roadStrait\roadStraight.jpg"));
-            WavefrontObj road;
-            road = new WavefrontObj(@"..\..\roadStrait\roadStraight.obj", program, BeginMode.Triangles, mat_road);
-            road.transformation = Matrix4.Scale(0.06f)*Matrix4.CreateRotationX((float)Math.PI / 2) *Matrix4.CreateTranslation(0, 10, 0);
-
-            // RoadT
-            Material mat_roadt = new Material("RoadT", new Texture(@"..\..\RoadT\RoadT.jpg"));
-            WavefrontObj road_t;
-            road_t = new WavefrontObj(@"..\..\RoadT\RoadT.obj", program, BeginMode.Triangles, mat_roadt);
-            road_t.transformation = Matrix4.CreateRotationX((float)Math.PI / 2) * Matrix4.CreateTranslation(0, 0, 0);
-
+            
+            WavefrontObj city;
+            city = new WavefrontObj(@"objs_proyecto\proy_casas_finished.obj", program, BeginMode.Triangles);
 
             objectSelector1.open_gl_control = openGLControl1;
 
@@ -138,18 +118,15 @@ namespace Lab8
             //objectSelector1.AddObject(cylinder3);
             //objectSelector1.AddObject(floor);
             objectSelector1.AddObject(car);
-            objectSelector1.AddObject(gasStation);
-            objectSelector1.AddObject(house);
-            objectSelector1.AddObject(road);
-            objectSelector1.AddObject(road_t);
-
+            objectSelector1.AddObject(city);
 
             objectSelector1.updateObjects();
 
 
-            Viewport little_view = new Viewport(0, 0, 100, 100);
+            Viewport little_view = new Viewport(0, 0, 300, 300);
             little_view.AddObjects(objectSelector1.objects);
-            little_view.setMatrices(Matrix4.CreatePerspectiveFieldOfView(1f, 1f, 1f, 100f), openGLControl1.camera.lookAt());
+            little_view.setMatrices(Matrix4.CreatePerspectiveFieldOfView(1f, 1, 1f, 100f),
+                Matrix4.LookAt(new Vector3(0, 0, 100f), new Vector3(), new Vector3(-1, 0, 0)));
             openGLControl1.AddViewport(little_view);
 
 
@@ -166,7 +143,7 @@ namespace Lab8
 
             if (e.KeyValue == (int)Keys.NumPad2)
             {
-                openGLControl1.camera = (Camera)new GhostCamera();
+                openGLControl1.camera = (Camera)new CarCamera();
                 openGLControl1.camera.car = car;
             }
             openGLControl1.Invalidate();

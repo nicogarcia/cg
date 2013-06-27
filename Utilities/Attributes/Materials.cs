@@ -27,7 +27,6 @@ namespace Utilities
         public Vector3 Emission { get; set; }
         public float Shininess { get; set; }
 
-        [DefaultValue(1f)]
         public float Alpha { get; set; }
 
         public Texture Texture { get; set; }
@@ -36,12 +35,21 @@ namespace Utilities
         {
             Name = name;
             Texture = texture;
+            Ambient = new Vector3(0.5f, 0.5f, 0.5f);
+            Diffuse = new Vector3(0.5f, 0.5f, 0.5f);
+            Specular = new Vector3(0.5f, 0.5f, 0.5f);
+            Shininess = 200;
+            Alpha = 1f;
             Textures.AddTexture(texture);
         }
 
         public Material()
         {
-            // TODO: Complete member initialization
+            Ambient = new Vector3(0.05f, 0.05f, 0.05f);
+            Diffuse = new Vector3(0.5f, 0.5f, 0.5f);
+            Specular = new Vector3(0.5f, 0.5f, 0.5f);
+            Shininess = 200;
+            Alpha = 1f;
         }
 
     }

@@ -11,17 +11,19 @@ namespace Utilities
         // Acceleration constant
         static float k_accel = 0.05f;
         // Deacceleration constant
-        static float k_deaccel = -0.05f;
+        static float k_deaccel = -0.2f;
         // Friction constant
         static float k_friction = -k_accel / 10;
         // Handling constant (speed incidence over turn angle)
-        static float k_handling = 0.006f;
+        static float k_handling = 0.01f;
 
         static float speed = 0;
 
+        static PositionTracking position_tracking = new PositionTracking();
+
         static bool[] pressed_keys = new bool[256];
 
-        public static void refreshCamera(GhostCamera camera)
+        public static void refreshCamera(CarCamera camera)
         {
             bool accelerating = pressed_keys[(int)Keys.W];
             bool deaccelerating = pressed_keys[(int)Keys.S];
@@ -34,7 +36,11 @@ namespace Utilities
 
             // Accelerating
             if (accelerating)
-                accel = k_accel;
+                // Check if it is going forward or braking
+                if (speed >= 0)
+                    accel = k_accel;
+                else
+                    accel = -k_deaccel;
 
             // Deaccelerating
             if (deaccelerating)
@@ -64,6 +70,8 @@ namespace Utilities
 
             camera.move(speed);
             camera.rotate(angle);
+
+            //position_tracking.Teletransport(camera.car.position);
         }
 
         public static void refreshCamera(SphericalCamera camera)

@@ -56,10 +56,11 @@
     <Compile Include="Controls\ObjectSelector.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Cameras\GhostCamera.cs" />
+    <Compile Include="Cameras\CarCamera.cs" />
     <Compile Include="Attributes\Materials.cs" />
     <Compile Include="EBO.cs" />
     <Compile Include="MotionControl.cs" />
+    <Compile Include="PositionTracking.cs" />
     <Compile Include="Shapes\Cone.cs" />
     <Compile Include="Shapes\Cover.cs" />
     <Compile Include="Shapes\Cylinder.cs" />

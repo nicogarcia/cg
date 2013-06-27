@@ -28,7 +28,7 @@ namespace Utilities
         {
             //camera = new Camera(new Spherical(8f, (float)Math.PI / 4,(float) Math.PI / 2));
             //lastCameraState = new Camera(new Spherical(8f, (float)Math.PI / 4, (float)Math.PI / 2));
-            camera = new GhostCamera();
+            camera = new CarCamera();
 
             //projMatrix = Matrix4.CreateOrthographicOffCenter(-10f, 10f, -10f, 10f, 0.0001f, 10000f);
             projMatrix = Matrix4.CreatePerspectiveFieldOfView(0.7f, this.Width / this.Height, 0.15f, 1000f);

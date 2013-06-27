@@ -109,7 +109,7 @@ namespace Utilities.Shaders
                 TexCoord = vec2(VertexTexCoord);
                 Normal = normalize( normalMatrix * VertexNormal);
                 Position = modelView * VertexPosition;
-                vLE = vec3(light_position - modelView * VertexPosition);
+                vLE = vec3(light_position - VertexPosition);
                 Color = VertexColor;
                 gl_Position = projectionMatrix * modelView * VertexPosition;
             }
@@ -188,31 +188,35 @@ namespace Utilities.Shaders
             layout( location = 0 ) out vec4 FragColor;
             //out vec4 FragColor;
 
-            void blinnPhongModel( vec4 L, vec4 N, vec4 H, out vec3 ambAndDiff, out vec3 spec ) {
+            void blinnPhongModel( vec4 L, vec4 N, vec4 H, out vec3 ambAndDiff, out float spec ) {
                 // Compute the ADS shading model here, return ambient
                 // and diffuse color in ambAndDiff, and return specular
                 // color in spec
                 float diffuse = max( dot(L, N), 0.0);
                 ambAndDiff = material_ka + material_kd * diffuse;
-                spec = dot(L, N) < 0.0 ? vec3(0,0,0) :material_ks* pow(max(dot(N, H), 0.0), material_shine);
+
+                spec = pow(max(dot(N, H), 0.0), material_shine);
+                if(dot(L,N) < 0.0)
+                    spec = 0.0;
             }
 
             void main() {
-                vec4 V = normalize(Position);
+                vec4 V = normalize(-Position);
                 vec4 L= vec4(normalize(vLE), 1.0);
                 vec4 N = normalize(Normal);            
                 vec4 H = normalize(L+V);
 
-                vec3 ambAndDiff, spec;
+                vec3 ambAndDiff;
+                float spec;
                 vec4 texColor = texture( Tex1, TexCoord );// vec4(0.0, 0.0,0.5,1.0); vec4(0.0, 0.0,0.5,1.0)
                 blinnPhongModel(L, N, H, ambAndDiff, spec);
 
                 if(colored == 0.0){
-                    //FragColor = vec4(ambAndDiff, alpha) * texColor + vec4(spec, alpha);
-                    FragColor = texColor;
+                    FragColor = vec4(ambAndDiff, alpha) * texColor + vec4(material_ks * spec, alpha);
+                    //FragColor = texColor;
                 }else{
                     //FragColor = vec4(vec3(Color), 0);
-                    FragColor = vec4(ambAndDiff, alpha) + vec4(spec, alpha);
+                    FragColor = vec4(ambAndDiff, alpha) + vec4(material_ks * spec, alpha);
                     //FragColor = Color;//vec4(light_intensity, 1.0);
                 }
             }

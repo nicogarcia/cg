@@ -11,7 +11,7 @@ namespace Utilities
     public class WavefrontObj : Drawable3D
     {
 
-        public Vector4 position = new Vector4();
+        //public Vector4 position = new Vector4();
         public Material material { get; set; }
 
         public WavefrontObj(string path, ProgramObject program, BeginMode begin_mode, Material material = null)
@@ -32,7 +32,7 @@ namespace Utilities
             GL.UseProgram(program.program_handle);
 
             #region Light Uniforms
-            GL.Uniform4(light_position_location, 0.0f, 0.0f, 5.0f, 1f);
+            GL.Uniform4(light_position_location, 5.0f, 5.0f, 50.0f, 1f);
             // Light Intensity? Not used in shaders!
             GL.Uniform3(light_intensity_location, 0.5f, 0.5f, 0.5f);
             #endregion
@@ -74,6 +74,7 @@ namespace Utilities
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo.id);
                 GL.DrawElements(BeginMode.Triangles, ebo.indices.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
 
+                GL.BindTexture(TextureTarget.Texture2D, 0);
             }
 
             GL.BindVertexArray(0);

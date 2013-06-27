@@ -1,0 +1,112 @@
+# Blender MTL File: 'proy_casas_finished.blend'
+# Material Count: 11
+
+newmtl Material
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.005000 0.005000 0.005000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd roadStraitNoZebra\\roadStraightNoZebra.jpg
+
+newmtl Material.003
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.005000 0.005000 0.005000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd houseCorner\\houseCorner.jpg
+
+newmtl Material.004
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd houseGreenRoof\\houseGreenRoof.jpg
+
+newmtl cruce
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd roadStraitNoZebra\\roadStraightNoZebra.jpg
+
+newmtl grass
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd grass.jpg
+
+newmtl house_small
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd houseSmall\\houseSmall.jpg
+
+newmtl house_t
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd houseT\\houseT.jpg
+
+newmtl pillar
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd housePillar\\housePillar.jpg
+
+newmtl ramp
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd houseRamp\\houseRamp.jpg
+
+newmtl shop
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd houseShop\\houseShop.jpg
+
+newmtl warehouse
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd wareHouse\\warehouse.jpg
