@@ -49,7 +49,7 @@ namespace Utilities
 
 		public void load()
 		{
-			GL.ClearColor(Color.White);
+			GL.ClearColor(Color.LightBlue);
 			GL.Enable(EnableCap.DepthTest);
 			GL.Enable(EnableCap.Texture2D);
 

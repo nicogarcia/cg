@@ -32,7 +32,7 @@ namespace Utilities
             GL.UseProgram(program.program_handle);
 
             #region Light Uniforms
-            GL.Uniform4(light_position_location, 5.0f, 5.0f, 50.0f, 1f);
+            GL.Uniform4(light_position_location, 25.0f, 25.0f, 550.0f, 1f);
             // Light Intensity? Not used in shaders!
             GL.Uniform3(light_intensity_location, 0.5f, 0.5f, 0.5f);
             #endregion
@@ -62,7 +62,8 @@ namespace Utilities
                 GL.Uniform3(material_kd_location, ebo.material.Diffuse);
                 GL.Uniform3(material_ks_location, ebo.material.Specular);
                 GL.Uniform1(material_shine_location, ebo.material.Shininess);
-                GL.Uniform1(alpha_location, ebo.material.Alpha);
+				GL.Uniform1(alpha_location, ebo.material.Alpha);
+				GL.Uniform1(colored_location, colored ? 1.0f : 0f);
 
                 if (ebo.material.Texture != null)
                 {

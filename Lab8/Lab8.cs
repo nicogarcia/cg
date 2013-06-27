@@ -32,6 +32,7 @@ namespace Lab8
 		Car car;
 		ProgramObject program;
 		System.Timers.Timer timer;
+		CarCamera car_camera;
 
 		public Lab8()
 		{
@@ -52,7 +53,8 @@ namespace Lab8
 			Environment.CurrentDirectory = Path.GetDirectoryName(@"..\..\");
 
 			car = new Car(@"objs_proyecto\Avent.obj", program, BeginMode.Triangles);
-			openGLControl1.camera = new CarCamera(car);
+			car_camera = new CarCamera(car);
+			openGLControl1.camera = car_camera;
 			MotionControl.car = car;
 
 			timer = new System.Timers.Timer();
@@ -162,6 +164,15 @@ namespace Lab8
 			{
 				openGLControl1.camera = (Camera)new CarCamera(car);
 			}
+
+			if (e.KeyValue == (int)Keys.I)
+				car_camera.distance.Z += 0.5f;
+			if (e.KeyValue == (int)Keys.K)
+				car_camera.distance.Z -= 0.5f;
+			if (e.KeyValue == (int)Keys.J)
+				car_camera.distance.X -= 0.5f;
+			if (e.KeyValue == (int)Keys.L)
+				car_camera.distance.X += 0.5f;
 			openGLControl1.Invalidate();
 		}
 

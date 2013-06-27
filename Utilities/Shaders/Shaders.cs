@@ -96,7 +96,7 @@ namespace Utilities.Shaders
             out vec4 Normal;
             out vec4 Color;
             out vec2 TexCoord; 
-            out vec3 vLE;
+            out vec4 vLE;
                 
             uniform vec4 light_position;
 
@@ -109,7 +109,7 @@ namespace Utilities.Shaders
                 TexCoord = vec2(VertexTexCoord);
                 Normal = normalize( normalMatrix * VertexNormal);
                 Position = modelView * VertexPosition;
-                vLE = vec3(light_position - VertexPosition);
+                vLE = light_position - VertexPosition;
                 Color = VertexColor;
                 gl_Position = projectionMatrix * modelView * VertexPosition;
             }
@@ -172,7 +172,7 @@ namespace Utilities.Shaders
             in vec4 Normal;
             in vec4 Color;
             in vec2 TexCoord;
-            in vec3 vLE;            
+            in vec4 vLE;            
 
             uniform sampler2D Tex1;
 
@@ -188,35 +188,36 @@ namespace Utilities.Shaders
             layout( location = 0 ) out vec4 FragColor;
             //out vec4 FragColor;
 
-            void blinnPhongModel( vec4 L, vec4 N, vec4 H, out vec3 ambAndDiff, out float spec ) {
-                float diffuse = max( dot(L, N), 0.0);
-                ambAndDiff = material_ka + material_kd * diffuse;
+			void main()
+			{
+				vec4 n,halfV,viewV,ldir;
+				float NdotL,NdotHV;
+				vec4 color;
 
-                spec = pow(max(dot(N, H), 0.0), material_shine);
-                if(dot(L,N) < 0.0)
-                    spec = 0.0;
-            }
+				if(colored == 0.0)
+					color = texture(Tex1, TexCoord);
+				else
+					color = vec4(0,0,0,0);
 
-            void main() {
-                vec4 V = normalize(Position);
-                vec4 L= vec4(normalize(vLE), 1.0);
-                vec4 N = normalize(Normal);            
-                vec4 H = normalize(L+V);
+				/* a fragment shader can't write a varying variable, hence we need
+				a new variable to store the normalized interpolated normal */
+				n = normalize(Normal);
+		
+				/* compute the dot product between normal and normalized lightdir */
+				NdotL = max(dot(n,normalize(vLE)),0.0);
+	
+				if (NdotL > 0.0) {
+					color += vec4(material_kd * NdotL + material_ka, 0);
+		
+					halfV = normalize(vLE + Position);
+					NdotHV = max(dot(n,halfV),0.0);
+					color += vec4(material_ks * pow(NdotHV,material_shine), 1);
+				}
+	
+				FragColor = color;
+			}
 
-                vec3 ambAndDiff;
-                float spec;
-                vec4 texColor = texture( Tex1, TexCoord );// vec4(0.0, 0.0,0.5,1.0); vec4(0.0, 0.0,0.5,1.0)
-                blinnPhongModel(L, N, H, ambAndDiff, spec);
-
-                if(colored == 0.0){
-                    FragColor = vec4(ambAndDiff, alpha) * texColor + vec4(material_ks * spec, alpha);
-                    //FragColor = texColor;
-                }else{
-                    //FragColor = vec4(vec3(Color), 0);
-                    FragColor = vec4(ambAndDiff, alpha) + vec4(material_ks * spec, alpha);
-                    //FragColor = Color;//vec4(light_intensity, 1.0);
-                }
-            }
+            
         ";
         #endregion
     }
