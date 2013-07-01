@@ -14,8 +14,8 @@ namespace Utilities
         public int height;
         public List<Drawable3D> objects = new List<Drawable3D>();
 
-        Matrix4 projMatrix;
-        Matrix4 zoomMatrix;
+        public Matrix4 projMatrix;
+        public Matrix4 zoomMatrix;
 
         public bool matrix_set = false;
 

@@ -10,11 +10,11 @@ namespace Utilities.Shaders
         #region V_DEFAULT
         public const string DEFAULT_VERTEX_SHADER = @"
             #version 330
+            layout (location = 0) in vec4 position;
+            layout (location = 1) in vec4 input_color;
+            //in vec4 position;
+            //in vec4 input_color;
             out vec4 fragment_input_color;
-            //layout (location = 0) in vec4 position;
-            //layout (location = 1) in vec4 input_color;
-            in vec4 position;
-            in vec4 input_color;
             void main()
             { 
                 gl_Position = position;
@@ -24,15 +24,15 @@ namespace Utilities.Shaders
         #endregion
 
         #region V_TRANSF
-        public const string VERTEX_TRANSF_SHADER = @"
+        public const string VERTEX_TRANSFORMATION_SHADER = @"
             #version 330
-            out vec4 fragment_input_color;
-            //layout (location = 0) in vec4 position;
-            //layout (location = 1) in vec4 input_color;
-            in vec4 position;
-            in vec4 input_color;
+            layout (location = 0) in vec4 position;
+            layout (location = 1) in vec4 input_color;
+            //in vec4 position;
+            //in vec4 input_color;
             uniform mat4 projectionMatrix;
             uniform mat4 modelView;
+			out vec4 fragment_input_color;
             void main(){
                 gl_Position = projectionMatrix * modelView * position;
 
@@ -40,42 +40,7 @@ namespace Utilities.Shaders
                 float verde = 1.0 - abs(position.y);
                 float azul = abs(position.x + position.y);
 
-                fragment_input_color = vec4(0, 0, 0, 1.0);
-            } 
-            "; 
-        #endregion
-
-        #region V_LATEST
-        public const string VERTEX_SHADER_LATEST = @"
-            #version 330
-            //layout (location = 0) in vec4 position;
-            //layout (location = 1) in vec4 color;
-            //layout (location = 2) in vec4 normal;
-            in vec4 position;
-            in vec4 normal;
-            in vec4 color;
-            in vec4 texture;
-
-            out vec4 Position; 
-            out vec4 Normal;  
-            out vec4 Color;
-            out vec2 TexCoord;
-
-            uniform mat4 projectionMatrix;
-            uniform mat4 modelView;
-
-            void main(){
-                Position = position;
-                Normal = normal;
-                TexCoord = vec2(texture);
-
-                gl_Position = projectionMatrix * modelView * position;
-
-                float rojo = 1.0 - abs(position.x);
-                float verde = 1.0 - abs(position.y);
-                float azul = abs(position.x + position.y);
-
-                Color = vec4(1.0, 0, 0, 1.0);
+                fragment_input_color = vec4(rojo, verde, azul, 1.0);
             } 
             "; 
         #endregion
@@ -141,9 +106,9 @@ namespace Utilities.Shaders
             }; 
             uniform LightInfo Light;
             struct MaterialInfo { 
-                vec3 Ka; // Ambient reflectivity
-                vec3 Kd; // Diffuse reflectivity
-                vec3 Ks; // Specular reflectivity
+                vec3 material_ka; // Ambient reflectivity
+                vec3 material_kd; // Diffuse reflectivity
+                vec3 material_ks; // Specular reflectivity
                 float Shininess; // Specular shininess factor 
             }; 
             uniform MaterialInfo Material; 
@@ -168,6 +133,105 @@ namespace Utilities.Shaders
         #region F_ILLUMINATION
         public const string FRAGMENT_SHADER_ILLUMINATION = @"
             #version 140
+            
+            in vec4 Position;
+            in vec4 Normal;
+            in vec4 Color;
+            in vec2 TexCoord;
+            in vec4 vLE;            
+
+            uniform sampler2D Tex1;
+
+            layout(location = 0) out vec4 oColor;  
+
+            uniform vec3 material_ka;
+            uniform vec3 material_kd;
+            uniform vec3 material_ks;
+            uniform float material_shine;   
+            uniform float fRoughness;
+            uniform float reflecAtNormalIncidence;
+            uniform int illum_model;
+            uniform int noise;
+            uniform float alpha;
+
+            uniform float colored;
+
+            float rand(vec2 co){
+				return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+            }
+
+            void main()
+            {
+                //calcular los distintos vectores y normalizarlos
+                vec3 N = vec3(normalize(Normal));
+                vec3 L = vec3(normalize(vLE));
+                vec3 R = reflect(L, N);
+                vec3 V = vec3(normalize(-Position));
+                vec3 H = normalize(L + V);
+                vec4 texColor;
+				
+                if(noise==0){
+					if(colored == 0)
+						texColor = texture(Tex1, TexCoord);
+					else
+						texColor = Color;
+                }else
+                    texColor=vec4(rand(TexCoord));
+
+                // Blinn-Phong
+                if(illum_model == 0)
+                {
+                    //calculo termino difuso+especular de Blinn-Phong
+                    float difuso = max(dot(L,N), 0.0);
+                    float especBlinngPhong = pow(max(dot(N, H), 0.0), material_shine);
+                    if(dot(L,N) < 0.0)
+                        especBlinngPhong = 0.0;
+                    oColor = vec4(material_ka + material_kd * difuso, 1)* texColor  + vec4(material_ks, 1) * especBlinngPhong;
+                }
+
+                // Cook-Torrence
+                if(illum_model == 1)
+                {
+                    //factor de atenuacion geometrica G
+                    float denom = dot(V, H);
+                    float NdotH = dot(N, H);
+                    float NdotV = dot(N, V);
+                    float NdotL = dot(N, L);
+                    float Ge = (2.0 * NdotH * NdotV) / denom;
+                    float Gs = (2.0 * NdotH * NdotL) / denom;
+                    float G = min(1.0f, min(Ge, Gs));
+
+                    //funcion de distribucion de las microfacetas D
+                    float HdotN = dot(H,N); //cos(beta)                    
+                    float b = acos(HdotN); //angulo entre H y N
+                    float exponente = -pow((tan(b)/fRoughness), 2.0);
+                    float terminoDivision = 1.0 / (4.0 * pow(fRoughness, 2.0) * pow(HdotN, 4.0));
+                    float D = terminoDivision * exp(exponente);
+                    
+                    //término de Freshnel
+                    float F = reflecAtNormalIncidence + (1.0 - reflecAtNormalIncidence)*pow((1.0 - dot(H,V)),5.0);
+        
+                    float pi = 3.1415926;
+                    float Rs = (F*D*G)/(pi * NdotV * NdotL);
+                    oColor = vec4(material_ka, 1)* texColor + max(0.0, dot(L,N)) * vec4(material_kd, 1) * texColor + vec4(material_ks, 1) * Rs;
+                }
+                // Oren-Nayar
+                if(illum_model==2)
+                {
+                    float alpha = max(acos(dot(V,N)), acos(dot(L,N)));
+                    float beta = min(acos(dot(V,N)), acos(dot(L,N)));
+                    float gamma = dot(V - N * dot(V,N), L - N * dot(L,N)); //cos(phiR - phiI)
+                    float rough_sq = fRoughness * fRoughness; //(sigma al cuadrado)
+                    float A = 1.0 - 0.5 * (rough_sq / (rough_sq + 0.33));
+                    float B = 0.45 * (rough_sq / (rough_sq + 0.09));
+                    oColor = vec4(material_ka, 1)*texColor + vec4(material_kd, 1)*texColor* max(dot(N, L), 0.0) * (A + B * max(gamma, 0.0) * sin(alpha)*tan(beta));
+                }              
+            }";
+			/*
+			
+			
+			@"
+            #version 140
             in vec4 Position;
             in vec4 Normal;
             in vec4 Color;
@@ -177,48 +241,94 @@ namespace Utilities.Shaders
             uniform sampler2D Tex1;
 
             uniform vec3 light_intensity;
-            uniform vec3 material_ka;
-            uniform vec3 material_kd;
-            uniform vec3 material_ks;
+            uniform vec3 material_material_ka;
+            uniform vec3 material_material_kd;
+            uniform vec3 material_material_ks;
             uniform float material_shine;
             uniform float alpha;
 
             uniform float colored;
+			uniform float noise;
+			uniform float illum_model;
 
             layout( location = 0 ) out vec4 FragColor;
             //out vec4 FragColor;
 
+			float rand(vec2 co){
+				return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+			}
+
 			void main()
 			{
-				vec4 n,halfV,viewV,ldir;
-				float NdotL,NdotHV;
+				vec3 N = vec3(normalize(Normal));
+                vec3 L = vec3(normalize(vLE));
+                vec3 R = reflect(L, N);
+                vec3 V = vec3(normalize(Position));
+                vec3 H = normalize(L + V);
+
 				vec4 color;
+				vec4 texColor;
 
-				if(colored == 0.0)
-					color = texture(Tex1, TexCoord);
-				else
-					color = vec4(0,0,0,0);
+				if(colored == 0.0){
+					if(noise > 0)
+						texColor = vec4(rand(TexCoord));
+					else
+						texColor = texture(Tex1, TexCoord);
+				}else
+					texColor = vec4(0,0,0,0);
 
-				/* a fragment shader can't write a varying variable, hence we need
-				a new variable to store the normalized interpolated normal */
-				n = normalize(Normal);
-		
-				/* compute the dot product between normal and normalized lightdir */
-				NdotL = max(dot(n,normalize(vLE)),0.0);
-	
-				if (NdotL > 0.0) {
-					color += vec4(material_kd * NdotL + material_ka, 0);
-		
-					halfV = normalize(vLE + Position);
-					NdotHV = max(dot(n,halfV),0.0);
-					color += vec4(material_ks * pow(NdotHV,material_shine), 1);
-				}
+                //illum_model Blinn-Phong
+                if(illum_model == 0)
+                {
+                    //calculo termino difuso+especular de Blinn-Phong
+                    float difuso = max(dot(L,N), 0.0);
+                    float especBlinngPhong = pow(max(dot(N, H), 0.0), material_shine);
+                    if(dot(L,N) < 0.0)
+                        especBlinngPhong = 0.0;
+                    color = vec4((material_material_ka + material_material_kd * difuso)* texColor, 1)  + vec4(material_material_ks * especBlinngPhong, 1);
+                }
+
+                // Cook-Torrence
+                if(illum_model == 1)
+                {
+                    float denom = dot(V, H);
+                    float NdotH = dot(N, H);
+                    float NdotV = dot(N, V);
+                    float NdotL = dot(N, L);
+                    float Ge = (2.0 * NdotH * NdotV) / denom;
+                    float Gs = (2.0 * NdotH * NdotL) / denom;
+                    float G = min(1.0f, min(Ge, Gs));
+
+                    float HdotN = dot(H,N); //cos(beta)                    
+                    float b = acos(HdotN); //angulo entre H y N
+                    float exponente = -pow((tan(b)/fRoughness), 2.0);
+                    float terminoDivision = 1.0 / (4.0 * pow(fRoughness, 2.0) * pow(HdotN, 4.0));
+                    float D = terminoDivision * exp(exponente);
+                    
+                    float F = reflecAtNormalIncidence + (1.0 - reflecAtNormalIncidence)*pow((1.0 - dot(H,V)),5.0);
+        
+                    float pi = 3.1415926;
+                    float Rs = (F*D*G)/(pi * NdotV * NdotL);
+                    color = material_material_ka * texColor + max(0.0, dot(L,N)) * (material_material_kd * texColor + material_material_ks * Rs);
+                }
+
+                //Oren-Nayar
+                if(illum_model == 2)
+                {
+                    float alpha = max(acos(dot(V,N)), acos(dot(L,N)));
+                    float beta = min(acos(dot(V,N)), acos(dot(L,N)));
+                    float gamma = dot(V - N * dot(V,N), L - N * dot(L,N)); //cos(phiR - phiI)
+                    float rough_sq = fRoughness * fRoughness; //(sigma al cuadrado)
+                    float A = 1.0 - 0.5 * (rough_sq / (rough_sq + 0.33));
+                    float B = 0.45 * (rough_sq / (rough_sq + 0.09));
+                    color = material_material_ka*texColor + material_material_kd*texColor* max(dot(N, L), 0.0) * (A + B * max(gamma, 0.0) * sin(alpha)*tan(beta));
+                }      
 	
 				FragColor = color;
 			}
 
             
-        ";
+        ";*/
         #endregion
     }
 }

@@ -12,8 +12,8 @@ namespace Utilities
     {
 		public Material material { get; set; }
 
-        public WavefrontObj(string path, ProgramObject program, BeginMode begin_mode, Material material = null)
-            : base(program, begin_mode)
+        public WavefrontObj(string path, ProgramObject program, Material material = null)
+            : base(program)
         {
             this.material = material;
             SharpObjLoader obj = new SharpObjLoader(path, material);
@@ -31,8 +31,8 @@ namespace Utilities
         {
             GL.UseProgram(program.program_handle);
 
-            #region Light Uniforms
-            GL.Uniform4(light_position_location, 25.0f, 25.0f, 550.0f, 1f);
+			#region Light Uniforms
+			GL.Uniform4(light_position_location, light.position.x, light.position.y, light.position.z, 1f);
             // Light Intensity? Not used in shaders!
             GL.Uniform3(light_intensity_location, 0.5f, 0.5f, 0.5f);
             #endregion
@@ -47,10 +47,10 @@ namespace Utilities
             #endregion
 
             #region Material Uniforms
-            GL.Uniform3(material_ka_location, 1f, 1f, 1f);
-            GL.Uniform3(material_kd_location, 0.02f, 0.02f, 0.05f);
+            GL.Uniform3(material_ka_location, 0.5f, 0.5f, 0.5f);
+            GL.Uniform3(material_kd_location, 0.5f, 0.5f, 0.5f);
             GL.Uniform3(material_ks_location, 0.5f, 0.5f, 0.5f);
-            GL.Uniform1(material_shine_location, 2f);
+            GL.Uniform1(material_shine_location, 52f);
             GL.Uniform1(colored_location, colored ? 1.0f : 0f);
             #endregion
 
@@ -64,6 +64,11 @@ namespace Utilities
                 GL.Uniform1(material_shine_location, ebo.material.Shininess);
 				GL.Uniform1(alpha_location, ebo.material.Alpha);
 				GL.Uniform1(colored_location, colored ? 1.0f : 0f);
+
+
+				GL.Uniform1(illumination_model_location, illumination_model);
+				GL.Uniform1(roughness_location, 0.3f);
+				GL.Uniform1(reflect_location, 1f);
 
                 if (ebo.material.Texture != null)
                 {

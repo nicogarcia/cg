@@ -15,8 +15,8 @@ namespace Utilities
 
 		public List<CarCamera> car_cameras = new List<CarCamera>();
 
-		public Car(string path, ProgramObject program, BeginMode begin_mode, Material material = null) :
-			base(path, program, begin_mode, material)
+		public Car(string path, ProgramObject program, Material material = null) :
+			base(path, program, material)
 		{
 			transformation = Matrix4.CreateRotationZ((float)Math.PI) * transformation;
 		}

@@ -23,7 +23,7 @@ namespace Utilities
             };
 
             Vector2[][] textures = new Vector2[vertices.Length][];
-            for (int i = 0; i < vertices.Length; i++)
+            for (int i = 0; i < vertices.Length; i+=2)
             {
                 textures[i] = new Vector2[4];
                 textures[i][0] = new Vector2((i % 2) / 2, 0);
@@ -31,6 +31,15 @@ namespace Utilities
                 textures[i][2] = new Vector2((i % 2) / 2, 1f);
                 textures[i][3] = new Vector2((i % 2) / 2 + 0.75f, 1f);
             }
+
+			for (int i = 1; i < vertices.Length; i+= 2)
+			{
+				textures[i] = new Vector2[4];
+				textures[i][0] = new Vector2((i % 2) / 2 + 0.75f, 0);
+				textures[i][1] = new Vector2(1f, 0);
+				textures[i][2] = new Vector2((i % 2) / 2 + 0.75f, 1f);
+				textures[i][3] = new Vector2(1f, 1f);
+			}
 
             float height_step = height / num_steps;
 
@@ -58,36 +67,6 @@ namespace Utilities
                     }
                 )
                 , textures);
-
-            /*
-            Vertex[][] toDraw = new Vertex[firstFace.Length + 2][];
-            //indices = new int[firstFace.Length + 2];
-            //count = new int[firstFace.Length + 2];
-
-            // agregar caras extrudadas
-            for (int i = 0; i < firstFace.Length; i++)
-            {
-                int messi = 0;
-                toDraw[i] = new Vertex[(2 + 2 * steps)*4];
-                HalfEdge current = polynet.halfEdges[firstFace[i]][firstFace[(i + 1) % firstFace.Length]];
-
-                // first
-                toDraw[i][messi++] = current.origin.position;
-
-                for (int j = 0; j < steps; j++)
-                {
-                    // right (all parameters)
-                    toDraw[i][messi++] = current.next.origin.position;
-                    // left
-                    toDraw[i][messi++] = current.prev.origin.position;
-
-                    current = polynet.halfEdges[current.prev.origin][current.next.next.origin];
-
-                }
-                // latest
-                toDraw[i][messi++] = current.next.next.origin.position;
-
-            }*/
 
         }
     }

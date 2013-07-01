@@ -16,13 +16,18 @@ namespace Utilities
         public Matrix4 transformation = Matrix4.Identity;
 
         public ProgramObject program;
-        public BeginMode begin_mode;
         public bool colored = true;
-        public bool draw_normals = false;
+		public bool draw_normals = false;
+		public bool noise_texture = false;
+		public int illumination_model = 0;
+
+		public Light light = new Light(new Spherical(5, MathHelper.PiOver2, 0));
 
         protected int projection_location, model_view_location, normal_location, light_position_location;
         protected int light_intensity_location, material_ka_location, material_kd_location;
-        protected int material_ks_location, material_shine_location, colored_location, alpha_location;
+		protected int material_ks_location, material_shine_location, colored_location, alpha_location, noise_location;
+		protected int illumination_model_location;
+		protected int roughness_location, reflect_location;
 
         public int[] indices, count;
         public int[] ebo_array;
@@ -32,9 +37,8 @@ namespace Utilities
         public List<int> ebo_list = new List<int>();
         public List<EBO> ebos = new List<EBO>();
 
-        public Drawable3D(ProgramObject program, BeginMode begin_mode)
+        public Drawable3D(ProgramObject program)
         {
-            this.begin_mode = begin_mode;
             this.program = program;
 
             projection_location = GL.GetUniformLocation(program.program_handle, "projectionMatrix");
@@ -49,6 +53,10 @@ namespace Utilities
             material_shine_location = GL.GetUniformLocation(program.program_handle, "material_shine");
             colored_location = GL.GetUniformLocation(program.program_handle, "colored");
             alpha_location = GL.GetUniformLocation(program.program_handle, "alpha");
+			noise_location = GL.GetUniformLocation(program.program_handle, "noise");
+			illumination_model_location = GL.GetUniformLocation(program.program_handle, "illum_model");
+			roughness_location = GL.GetUniformLocation(program.program_handle, "fRoughness");
+			reflect_location = GL.GetUniformLocation(program.program_handle, "reflecAtNormalIncidence");
 
             // Vertex Data
             GL.GenBuffers(1, out VBO_ID);
@@ -105,8 +113,7 @@ namespace Utilities
 
             set_vao(vertexArray);
 
-            if (draw_normals)
-                set_nvao(vertexArray);
+			set_nvao(vertexArray);
         }
 
         private void set_nvao(Vector4[] vertexArray)
@@ -118,7 +125,6 @@ namespace Utilities
                 normalsArray[2 * i] = new Vector4(vertexArray[i]);
                 Vector4 normalized;
                 Vector4.Normalize(ref vertexArray[i + toDraw.Length], out normalized);
-                //Vector4.Multiply(normalized, -1.0f);
                 Vector4.Add(ref normalized, ref vertexArray[i], out normalsArray[2 * i + 1]);
             }
 
@@ -204,27 +210,3 @@ namespace Utilities
         }
     }
 }
-/* Vertex array of cube */
-
-/*vertexArray = new Vector4[]{
-    // Position
-    new Vector4(1.0f, 1.0f, 1.0f, 1.0f),
-    new Vector4(-1.0f, 1.0f, 1.0f, 1.0f),
-    new Vector4(-1.0f, -1.0f, 1.0f, 1.0f),
-    // Normal
-    new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-    new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-    new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-    // Color
-    new Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-    new Vector4(0.0f, 1.0f, 0.0f, 1.0f),
-    new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-    //Tex
-    new Vector4(0.5f, 0.5f, 1.0f, 1.0f),
-    new Vector4(0.75f, 0.75f, 1.0f, 1.0f),
-    new Vector4(0.0f, 0.25f, 1.0f, 1.0f),
-};*/
-
-/*ebo_array = new int[]{
-    0,1,2
-};*/

@@ -79,24 +79,54 @@ namespace Utilities
         public static void refreshCamera(SphericalCamera camera)
         {
 
-            bool accelerating = pressed_keys[(int)Keys.W];
-            bool deaccelerating = pressed_keys[(int)Keys.S];
-            bool turning_right = pressed_keys[(int)Keys.D];
-            bool turning_left = pressed_keys[(int)Keys.A];
+            bool up = pressed_keys[(int)Keys.W];
+            bool down = pressed_keys[(int)Keys.S];
+            bool right = pressed_keys[(int)Keys.D];
+            bool left = pressed_keys[(int)Keys.A];
+			bool closer = pressed_keys[(int)Keys.Add];
+			bool farther = pressed_keys[(int)Keys.Subtract];
 
-            if (accelerating)
+            if (up)
                 camera.position.growTheta();
 
-            if (deaccelerating)
+            if (down)
                 camera.position.shrinkTheta();
 
-            if (turning_right)
+            if (right)
                 camera.position.growPhi();
 
-            if (turning_left)
+            if (left)
                 camera.position.shrinkPhi();
+
+			if (closer)
+				camera.position.moveForward();
+
+			if (farther)
+				camera.position.moveBack();
             
         }
+
+		public static void refreshLight(Light light)
+		{
+
+			bool up = pressed_keys[(int)Keys.I];
+			bool down = pressed_keys[(int)Keys.K];
+			bool right = pressed_keys[(int)Keys.L];
+			bool left = pressed_keys[(int)Keys.J];
+
+			if (up)
+				light.position.growTheta();
+
+			if (down)
+				light.position.shrinkTheta();
+
+			if (right)
+				light.position.growPhi();
+
+			if (left)
+				light.position.shrinkPhi();
+
+		}
 
         public static void keyDown(int key)
         {

@@ -10,7 +10,7 @@ namespace Utilities
     {
         public Vector4 position = new Vector4(0, 0, 0, 1f);
         public Vector4 normal = new Vector4(0, 0, 0, 1f);
-        public Vector4 color = new Vector4(1.0f, 0, 0, 1f);
+        public Vector4 color = new Vector4(0.5f, 0.5f, 0.5f, 1f);
         public Vector4 texture = new Vector4(0, 0, 0, 0);
 
         public Vertex(Vector4 position)

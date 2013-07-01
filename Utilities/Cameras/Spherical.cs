@@ -62,10 +62,9 @@ namespace Utilities
             setXYZ();
         }
 
-
         public void shrinkTheta()
         {
-            theta -= 0.1f;
+			theta -= 0.1f;
             setXYZ();
         }
 

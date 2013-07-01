@@ -1,0 +1,17 @@
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\bin\Debug\Lab8.exe
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\bin\Debug\Lab8.pdb
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\bin\Debug\OpenTK.Compatibility.dll
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\bin\Debug\OpenTK.dll
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\bin\Debug\OpenTK.GLControl.dll
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\bin\Debug\Utilities.dll
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\bin\Debug\Utilities.pdb
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\bin\Debug\OpenTK.xml
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\bin\Debug\OpenTK.Compatibility.xml
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\bin\Debug\OpenTK.GLControl.xml
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\obj\x86\Debug\Lab8.ProyectoFinal.resources
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\obj\x86\Debug\Lab8.Properties.Resources.resources
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\obj\x86\Debug\Lab8.exe
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab8\obj\x86\Debug\Lab8.pdb

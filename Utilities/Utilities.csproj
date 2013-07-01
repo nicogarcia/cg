@@ -49,6 +49,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tao.FreeGlut">
+      <HintPath>..\Tao.FreeGlut.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.OpenGl">
+      <HintPath>..\Tao.OpenGl.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cameras\Camera.cs" />
@@ -60,9 +66,11 @@
     <Compile Include="Cameras\CarCamera.cs" />
     <Compile Include="Attributes\Materials.cs" />
     <Compile Include="EBO.cs" />
+    <Compile Include="Light.cs" />
     <Compile Include="MotionControl.cs" />
     <Compile Include="PositionTracking.cs" />
     <Compile Include="Shapes\Cone.cs" />
+    <Compile Include="Shapes\GlutDraw.cs" />
     <Compile Include="Shapes\Cover.cs" />
     <Compile Include="Shapes\Cylinder.cs" />
     <Compile Include="Dict.cs" />
@@ -84,6 +92,7 @@
     <Compile Include="Shaders\VertexShader.cs" />
     <Compile Include="Shapes\SharpObjLoader.cs" />
     <Compile Include="Cameras\Spherical.cs" />
+    <Compile Include="Shapes\Sierpinski.cs" />
     <Compile Include="Shapes\Sweep.cs" />
     <Compile Include="Attributes\LoadImageTexture.cs" />
     <Compile Include="Attributes\Vertex.cs" />
@@ -94,6 +103,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Controls\ObjectSelector.resx">
       <DependentUpon>ObjectSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\OpenGLControl.resx">
+      <DependentUpon>OpenGLControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

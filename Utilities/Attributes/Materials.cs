@@ -45,9 +45,9 @@ namespace Utilities
 
         public Material()
         {
-            Ambient = new Vector3(0.05f, 0.05f, 0.05f);
+            Ambient = new Vector3(0.8f, 0.8f, 0.8f);
             Diffuse = new Vector3(0.5f, 0.5f, 0.5f);
-            Specular = new Vector3(0.5f, 0.5f, 0.5f);
+            Specular = new Vector3(0.8f, 0.8f, 0.8f);
             Shininess = 200;
             Alpha = 1f;
         }

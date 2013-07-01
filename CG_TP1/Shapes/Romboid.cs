@@ -27,7 +27,7 @@ namespace CG_TP1.Shapes
             vertices[6] = new Vector4(1f, 1f, 1f, 1f);
             vertices[7] = new Vector4(0f, 1f, 0f, 1f);
 
-            GLManager.addDrawable(this, BeginMode.TriangleFan, new ProgramObject(new VertexShader(Shaders.VERTEX_TRANSF_SHADER),
+            GLManager.addDrawable(this, BeginMode.TriangleFan, new ProgramObject(new VertexShader(Shaders.VERTEX_TRANSFORMATION_SHADER),
                 new FragmentShader(Shaders.DEFAULT_FRAGMENT_SHADER)));
 
         }

@@ -13,13 +13,14 @@ namespace Utilities
     {
         public PolyNet polynet = new PolyNet();
         public Vertex[] firstFace, tapa;
+		public bool wire_mode = false;
 
         int steps;
         Vector2[][] textures;
         Func<int, int, Matrix4> translation_step;
         
         public Sweep(int steps, ProgramObject program) :
-            base(program, BeginMode.TriangleStrip)
+            base(program)
         {
             this.steps = steps;
         }
@@ -211,22 +212,28 @@ namespace Utilities
             GL.UniformMatrix4(projection_location, false, ref projMatrix);
             GL.UniformMatrix4(model_view_location, false, ref modelViewMatrix);
             GL.UniformMatrix4(normal_location, false, ref normalMatrix);
-            
-            GL.Uniform4(light_position_location, -5.0f, -5.0f, 10.0f, 1f);
+
+			GL.Uniform4(light_position_location, light.position.x, light.position.y, light.position.z, 1f);
 
             // Light Intensity?
             GL.Uniform3(light_intensity_location, 0.5f, 0.5f, 0.5f);
 
             // Silver ADSs
             // 0.19225	0.19225	0.19225	0.50754	0.50754	0.50754	0.508273	0.508273	0.508273	0.4
-            GL.Uniform3(material_ka_location, 1f, 1f, 1f);
-            GL.Uniform3(material_kd_location, 1f, 1f, 1f);
-            GL.Uniform3(material_ks_location, 0.3f, 0.3f, 0.3f);
-            GL.Uniform1(material_shine_location, 0.4f);
+            GL.Uniform3(material_ka_location, 0.519225f, 0.519225f, 0.519225f);
+            GL.Uniform3(material_kd_location, 0.50754f, 0.50754f, 0.50754f);
+            GL.Uniform3(material_ks_location, 0.508273f, 0.508273f, 0.508273f);
+            GL.Uniform1(material_shine_location, 51.2f);
+
             GL.Uniform1(colored_location, colored ? 1.0f : 0f);
+			GL.Uniform1(noise_location, noise_texture ? 1 : 0);
+			GL.Uniform1(illumination_model_location, illumination_model);
+			GL.Uniform1(roughness_location, 0.3f);
+			GL.Uniform1(reflect_location, 1f);
             
             GL.BindVertexArray(VAO_ID);
-            //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+            if(wire_mode)
+				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
             GL.DrawElements(BeginMode.Triangles, ebo_array.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
 
             GL.BindVertexArray(0);

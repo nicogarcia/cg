@@ -26,9 +26,9 @@ c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\bin\Debug
 c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\bin\Debug\OpenTK.Compatibility.xml
 c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\bin\Debug\OpenTK.GLControl.xml
 c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\obj\x86\Debug\ResolveAssemblyReference.cache
-c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\obj\x86\Debug\Lab5.Form1.resources
 c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\obj\x86\Debug\Lab5.Properties.Resources.resources
 c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\obj\x86\Debug\GenerateResource.read.1.tlog
 c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\obj\x86\Debug\GenerateResource.write.1.tlog
 c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\obj\x86\Debug\Lab5.exe
 c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\obj\x86\Debug\Lab5.pdb
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Lab5\obj\x86\Debug\Lab5.Lab5.resources

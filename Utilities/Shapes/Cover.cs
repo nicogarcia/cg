@@ -30,6 +30,18 @@ namespace Utilities
                new Vertex(-x, y - aux, z, 1.0f)
             };
 
+			float step = 2 * (float)Math.PI / vertices.Length;
+			float theta = (float)Math.PI / 4;
+			float radius = 2f;
+
+			for (int i = 0; i < vertices.Length; i++, theta += step)
+            {
+                // Bottom normal pointing down and its texture
+                vertices[i].texture = new Vector4(new Vector2((184 + 128 * (float)Math.Cos(theta)) / 500, (188 + 128 * (float)Math.Sin(theta)) / 375));
+                //Console.WriteLine(base_vertices[i].texture.ToString());
+            }
+
+
             Vector2[][] textures = new Vector2[vertices.Length][];
             for (int i = 0; i < vertices.Length; i++)
             {

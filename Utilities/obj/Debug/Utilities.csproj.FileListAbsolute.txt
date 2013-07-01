@@ -56,3 +56,6 @@ c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\obj\
 c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\obj\Debug\Utilities.Controls.ObjectSelector.resources
 c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\obj\Debug\GenerateResource.read.1.tlog
 c:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\obj\Debug\GenerateResource.write.1.tlog
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\obj\Debug\Utilities.OpenGLControl.resources
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\bin\Debug\Tao.FreeGlut.dll
+C:\Users\Winbug\Documents\Visual Studio 2010\Projects\PracticosCG\Utilities\bin\Debug\Tao.OpenGl.dll
