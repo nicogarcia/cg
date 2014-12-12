@@ -9,4 +9,4 @@ Tools used:
 
 *Authors*
   - Nicolás García
-  - Acosta Gonzalo
+  - Gonzalo Acosta
